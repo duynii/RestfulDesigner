@@ -1,0 +1,32 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; 
+    padding: 0;
+}
+ 
+#leftCol {
+    width: 14em;
+}
+ 
+.claro .demoLayout .edgePanel {
+    background-color: #d0e9fc;
+}
+ 
+#viewsChart {
+    width: 550px;
+    height: 550px;
+}
+
+
+#appLayout {
+    height: 100%;
+}
+#topArea {
+    height: 600px
+}
+#bottomArea {
+    height: 600px
+    margin: 0;
+    padding: 0;
+}
