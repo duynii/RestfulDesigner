@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Hello Dojo!</title>
+    <link rel="stylesheet" href="demo.css" media="screen">
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8/dijit/themes/claro/claro.css" media="screen">
+    <link rel="stylesheet" href="style.css" media="screen">
+</head>
+
+<body class="claro">
+    <button id="btn" data-dojo-type="dijit/form/Button"
+        data-dojo-props="
+            onClick:function(){ alert('First button was clicked!'); }">
+        Click Me!
+    </button>
+    <button id="plusID" class="plus" data-dojo-type="dijit/form/Button"
+        >
+        Plus Me!
+    </button>
+    <!-- load dojo and provide config via data attribute -->
+    <script src="../dojo/dojo.js"></script>
+    <script>
+        require(["dojo/parser", "dojo/ready", 
+                 "dijit/registry",
+                 "dojo/query",
+                 "dojo/on",
+                "dijit/layout/BorderContainer", "dijit/form/Button", "dijit/layout/ContentPane"], 
+                                    function(parser, ready, registry, query, on)
+        {
+            ready(function(){
+                parser.parse();
+
+                registry.byId("plusID").set("datapath", "paaa");
+
+                query(".plus").on("click", function(evt) {
+                    console.info("logging: " + evt.target);
+                    var widget = registry.getEnclosingWidget(evt.target);
+                    if(widget){
+                        console.log("click on widget " + widget.id + " - " + widget.get("datapath"));
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
