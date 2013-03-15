@@ -10,21 +10,7 @@
         style="width: 1280px; height:800px"
         data-dojo-type="dijit/layout/BorderContainer"
         data-dojo-props="design: 'headline'">
-        <div id="bottomArea" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-            <!-- Outter center region -->
-            <div id="bottom"
-                    style="width: 1280px; height: 400%; margin: 0; padding: 0"
-                    data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-                <div id="bottomLeft" style="width: 600px"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
-                    Bottom Left
-                </div>
-                <div id="bottomRight"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-                    Bottom Right
-                </div>
-            </div>
-        </div>
+<!-- Top section -->
         <div id="topArea" style="height: 400px"
         data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top', splitter: true">
             <!-- Top Region -->
@@ -34,6 +20,14 @@
                 <div
                         data-dojo-type="dijit/layout/ContentPane"
                         data-dojo-props="title: 'Group 1'">
+                    <div id='rootPlacement'>
+                       <button id='root' data-dojo-type="dijit/form/Button">Click Me</button>
+                       <button id="rootPlus" class="addButton" data-dojo-type="dijit/form/Button"> + </button>
+                    </div>
+                    <div>
+                       <button data-dojo-type="dijit/form/Button">Click Me</button>
+                       <button class="addButton" data-dojo-type="dijit/form/Button"> + </button>
+                    </div>
                     <h4>Group 1 Content</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
                 </div>
@@ -49,19 +43,112 @@
                 </div>
             </div>
         </div>
+<!-- Bottom section -->
+        <div id="bottomArea" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
+            <!-- Outter center region -->
+            <div id="bottom"
+                    style="width: 1280px; height: 400%; margin: 0; padding: 0"
+                    data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
+                <div id="bottomLeft" style="width: 600px"
+                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
+                    Bottom Left
+                </div>
+                <div id="bottomRight"
+                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
+                    Bottom Right
+                </div>
+            </div>
+        </div>
     </div>
     <!-- load Dojo -->
     <script src="../dojo/dojo.js"
                data-dojo-config="async: true">
     </script>
     <script>
-        require([ "dojo/parser", "dojo/ready",
+        require([ "dojo/parser", "dojo/ready", "dijit/form/Button",
+                  "dijit/registry",
+                  "dojo/dom",
+                  "dojo/query",
+                  "dojo/on",
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
-                  "dijit/layout/ContentPane" ], function(parser, ready) {
+                  "dijit/layout/ContentPane" ], function(parser, ready, Button, registry, dom, query, on) {
                     ready(function() {
                         parser.parse();
+
+                        var wid = registry.byId("rootPlus");
+                        if(wid) {
+                            wid.set("p_data", "root");
+                        }
+
+//                        var root = new Button({
+//                            showLabel:true,
+//                            disabled: 'disabled',
+//                            data_path: '/ tip',
+//                            label: "/", // analogous to title when showLabel is false
+//                            onClick: function(){ console.log("Root button was clicked!"); }
+//                        }, "root");
+//                        root.startup();
+
+                        registry.byId("root").set("label", "/").set("disabled", "disabled");
+    
+                        query(".addButton").forEach(function(node, index, nodelist){
+                            console.info("Registering add button event..." + node.p_data);
+                            // for each node in the array returned by query,
+                            // execute the following code
+                            on(node, "click", function(evt) 
+                            {
+                                var widget = registry.getEnclosingWidget(evt.target);
+                                if(widget){
+                                    console.log("click on widget " + widget.id + " " + widget.p_data);
+                                }
+                            });
+                        });
+    
+//                        query(".addButton").on("click", function(evt) {
+//                            console.log("An event triggered!");
+//                        });
+
                     });
+                });
+    </script>
+    <script>
+        require([ "dijit/form/Button", "dojo/dom-construct", 
+                  "dojo/dom",
+                  "dojo/query",
+                  "dojo/on",
+                  "dijit/registry",
+                  "dojo/ready",
+                  "dojo/domReady" ], function(Button, domConstruct, dom, query, on, registry, ready) {
+
+//                    var root = new Button({
+//                        showLabel:true,
+//                        disabled: 'disabled',
+//                        data_path: '/ tip',
+//                        label: "/", // analogous to title when showLabel is false
+//                        onClick: function(){ console.log("Root button was clicked!"); }
+//                    }, "root");
+//                    root.startup();
+//
+//                    query(".addButton").forEach(function(node, index, nodelist){
+//                        console.info("Registering add button event..." + node.p_data);
+//                        // for each node in the array returned by query,
+//                        // execute the following code
+//                        on(node, "click", function(evt) {
+//                            console.log("Add button was clicked: "); 
+//                        });
+//                    });
+//
+//                    query(".addButton").on("click", function(evt) {
+//                        console.log("An event triggered!");
+//                    });
+
+//                    var aWidget = dijit.getEnclosingWidget(root); // pass a domNode
+//                    if(aWidget){
+//                        // found something!
+//                        aWidget.set("value", "clicked!!!");
+//                        console.log("Found parent");
+//                    }
                 });
     </script>
 </body>
