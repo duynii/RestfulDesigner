@@ -30,6 +30,7 @@
                     </div>
                     <h4>Group 1 Content</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
+                    <button data-dojo-type="rfd/Resource"></button>
                 </div>
                 <div
                         data-dojo-type="dijit/layout/ContentPane"
@@ -61,11 +62,28 @@
         </div>
     </div>
     <!-- load Dojo -->
-    <script src="../dojo/dojo.js"
-               data-dojo-config="async: true">
-    </script>
     <script>
-        require([ "dojo/parser", "dojo/ready", "dijit/form/Button",
+        dojoConfig = {
+            has: {
+            "dojo-firebug": true
+            },
+            parseOnLoad: true,
+            async: true
+            baseUrl: "/home/dewey/Documents/RfD",
+            tlmSiblingOfDojo: false,
+            packages: [
+                { name: "dojo", location: "dojo" },
+                { name: "dijit", location: "dijit" },
+                { name: "dojox", location: "dojox" },
+                { name: "Resource", location: "rfd" }
+            ]
+        };
+    </script>
+<script src="../dojo/dojo.js"></script>
+
+<!-- Start of code -->
+    <script>
+        require([ "dojo/parser", "dojo/domReady", "dijit/form/Button",
                   "dijit/registry",
                   "dojo/dom",
                   "dojo/query",
@@ -73,7 +91,6 @@
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
                   "dijit/layout/ContentPane" ], function(parser, ready, Button, registry, dom, query, on) {
-                    ready(function() {
                         parser.parse();
 
                         var wid = registry.byId("rootPlus");
@@ -110,7 +127,6 @@
 //                        });
 
                     });
-                });
     </script>
     <script>
         require([ "dijit/form/Button", "dojo/dom-construct", 
