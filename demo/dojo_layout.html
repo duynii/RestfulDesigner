@@ -68,14 +68,15 @@
             "dojo-firebug": true
             },
             parseOnLoad: true,
-            async: true
-            baseUrl: "/home/dewey/Documents/RfD",
+            async: true,
+            baseUrl: "/RfD/",
             tlmSiblingOfDojo: false,
             packages: [
                 { name: "dojo", location: "dojo" },
                 { name: "dijit", location: "dijit" },
                 { name: "dojox", location: "dojox" },
-                { name: "Button", location: "rfd" }
+                { name: "Button", location: "rfd" },
+                { name: "Resource", location: "rfd" }
             ]
         };
     </script>
@@ -83,15 +84,24 @@
 
 <!-- Start of code -->
     <script>
-        require([ "dojo/parser", "dojo/domReady", "dijit/form/Button",
+        require([ "dojo/parser", 
+                  "dijit/form/Button",
                   "dijit/registry",
                   "dojo/dom",
+                  "dojo/ready",
                   "dojo/query",
                   "dojo/on",
+                  "rfd/Resource",
+                  "rfd/StaticResource",
+                  "dojo/domReady",
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
-                  "dijit/layout/ContentPane" ], function(parser, ready, Button, registry, dom, query, on) {
-                        parser.parse();
+                  "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
+                                                         Resource, StaticResource) {
+                ready(function() { 
+                    parser.parse();
+                        var resource = new StaticResource('root');
+                        console.log('resource name: ' + resource.name);
 
                         var wid = registry.byId("rootPlus");
                         if(wid) {
@@ -127,6 +137,7 @@
 //                        });
 
                     });
+                });
     </script>
     <script>
         require([ "dijit/form/Button", "dojo/dom-construct", 
