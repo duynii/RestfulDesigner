@@ -78,7 +78,9 @@
                 { name: "Button", location: "rfd" },
                 { name: "Resource", location: "rfd" },
                 { name: "StaticResource", location: "rfd" },
-                { name: "TemplatedResource", location: "rfd" }
+                { name: "TemplatedResource", location: "rfd" },
+                { name: "ConceptResource", location: "rfd" },
+                { name: "Concept_R", location: "rfd" }
             ]
         };
     </script>
@@ -98,11 +100,13 @@
                   "rfd/TemplatedResource",
                   "rfd/ConceptResource",
                   "rfd/Representation",
+                  "rfd/Concept_R",
                   "dojo/domReady",
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
                   "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
-                                                         Resource, StaticResource, TemplatedResource, ConceptResource, Representation) {
+                                                         Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
+                                                         Concept_R) {
                 ready(function() { 
                     parser.parse();
                         var resource = new StaticResource('root');
@@ -119,6 +123,9 @@
                         rep.addField({ "phone" : "0295556789", "type": "Integer"});     
 
                         console.log("representation test = " + rep.toString());
+
+                        var cRes = new Concept_R('CResource');
+                        console.log("Concept_R " + cRes.toString());
                                  
 
                         var wid = registry.byId("rootPlus");
