@@ -76,7 +76,9 @@
                 { name: "dijit", location: "dijit" },
                 { name: "dojox", location: "dojox" },
                 { name: "Button", location: "rfd" },
-                { name: "Resource", location: "rfd" }
+                { name: "Resource", location: "rfd" },
+                { name: "StaticResource", location: "rfd" },
+                { name: "TemplatedResource", location: "rfd" }
             ]
         };
     </script>
@@ -93,15 +95,31 @@
                   "dojo/on",
                   "rfd/Resource",
                   "rfd/StaticResource",
+                  "rfd/TemplatedResource",
+                  "rfd/ConceptResource",
+                  "rfd/Representation",
                   "dojo/domReady",
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
                   "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
-                                                         Resource, StaticResource) {
+                                                         Resource, StaticResource, TemplatedResource, ConceptResource, Representation) {
                 ready(function() { 
                     parser.parse();
                         var resource = new StaticResource('root');
-                        console.log('resource name: ' + resource.name);
+                        console.log("Resource: " + resource.toString() + "\n");
+
+                        var templateR = new TemplatedResource('tempR', { "title" : "Castle", "series" : "4", "episode" : "40" },
+                                                              null);
+                        console.log('static resource: ' + templateR.toString()); 
+
+                        var concept = new ConceptResource('test');
+                        console.log('Concept resource: ' + concept.toString()); 
+                        var rep = new Representation(concept);
+                        rep.addField({ "name" : "Royal Children Hospital", "type": "Single String"});     
+                        rep.addField({ "phone" : "0295556789", "type": "Integer"});     
+
+                        console.log("representation test = " + rep.toString());
+                                 
 
                         var wid = registry.byId("rootPlus");
                         if(wid) {
