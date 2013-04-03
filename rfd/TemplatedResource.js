@@ -5,8 +5,8 @@ define([
     "rfd/Resource"
 ], function(declare, Resource){
     return declare("rfd/TemplatedResource", Resource, {
-        constructor: function(name, json_data, template){
-            // 'name' is auto init'ed in parent
+        constructor: function(name, parentId, json_data, template){
+            // 'name' and 'parentId' are auto init'ed in parent
 
             // template string
             this.template = template; 

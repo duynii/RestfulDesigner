@@ -11,7 +11,7 @@ define([
             this.fields = new Array();
         },
 
-        // Push a field (fieldObject) into the array
+        // Push a field (Property object) into the array
         addField: function(field) {
             this.fields.push(field);
         },

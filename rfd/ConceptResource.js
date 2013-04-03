@@ -5,9 +5,6 @@ define([
     "rfd/Resource"
 ], function(declare, Resource){
     return declare("rfd/ConceptResource", Resource, {
-        constructor: function(){
-        },
-
         isConcept: function() { return true; },
 
         toString: function() {
