@@ -9,14 +9,20 @@
 		<script src="../dojo/dojo.js"></script>
 		<script>
 			require([
-				"dojo/dom", "dojo/json", "dojo/ready", "dojo/_base/window", "dojo/store/Memory",
+				"dojo/dom", "dojo/json", "dojo/ready", "dojo/_base/window", 
+                "dojo/aspect",
+                "dojo/query",
+                "dojo/store/Memory",
+				"dojo/store/Observable",
 				"dijit/tree/ObjectStoreModel", "dijit/Tree",
+				"dijit/tree/dndSource",
                 "rfd/StaticResource",
                 "rfd/TemplatedResource",
                 "rfd/Concept_R",
                 "rfd/Collection_R",
                 "rfd/PartialConcept_R"
-			], function(dom, json, ready, win, Memory, ObjectStoreModel, Tree,
+			], function(dom, json, ready, win, aspect, query,
+                        Memory, Observable, ObjectStoreModel, Tree, dndSource,
                         Static_R, Templated_R, Concept_R, Collection_R, PartialConcept_R){
 
 				// set up the store to get the tree data
@@ -34,23 +40,73 @@
 					}
 				});
 
+                // To support dynamic data changes, including DnD,
+                // the store must support put(child, {parent: parent}).
+                // But dojo/store/Memory doesn't, so we have to implement it.
+                // Since our store is relational, that just amounts to setting child.parent
+                // to the parent's id.
+                aspect.around(memStore, "put", function(originalPut){
+                    return function(obj, options){
+                        if(options && options.parent){
+                            obj.parentId = options.parent.id;
+                        }
+                        return originalPut.call(memStore, obj, options);
+                    }
+                });
+
+                // Give the store the observable iterface
+                memStore = new Observable(memStore);
+
 				// set up the model, assigning memStore, and assigning method to identify leaf nodes of tree
 				var dataModel = new ObjectStoreModel({
 					store: memStore,
-					query: {id: '/'},
-					mayHaveChildren: function(item){
-						return memStore.getChildren(item).length > 0;
-					}
+//					mayHaveChildren: function(item){
+//						return memStore.getChildren(item).length > 0;
+//					},
+					query: {id: '/'}
 				});
 
 				// set up the tree, assigning dataModel;
 				// note that all widget creation should be inside a dojo/ready().
 				ready(function(){
-					var governmentTree = new Tree({
+					var tree = new Tree({
 						model: dataModel,
+                        dndController: dndSource,
 						onOpenClick: true
 					}, "divTree");
-					governmentTree.startup();
+
+                    query("#add-new-child").on("click", function(){
+                        // get the selected object from the tree
+                        var selectedObject = tree.get("selectedItems")[0];
+                        if(!selectedObject){
+                            return alert("No object selected");
+                        }
+             
+                        // add a new child item
+                        var childItem = {
+                            name: "New child",
+                            id: Math.random()
+                        };
+                        memStore.put(childItem, {
+                            overwrite: true,
+                            parent: selectedObject
+                        });
+                    });
+ 
+                    query("#remove").on("click", function(){
+                        var selectedObject = tree.get("selectedItems")[0];
+                        if(!selectedObject){
+                            return alert("No object selected");
+                        }
+                        memStore.remove(selectedObject.id);
+                    });
+ 
+                    tree.on("dblclick", function(object){
+                        object.name = prompt("Enter a new name for the object");
+                        memStore.put(object);
+                    }, true);
+
+					tree.startup();
 				});
 			});
 		</script>
@@ -62,8 +118,9 @@
 			<div id="divTree"></div>
 		</div>
 		<div class="column">
-			<h1>Image</h1>
-			<img id="image" />
+			<h1>Actions</h1>
+			<button id="add-new-child">Add new child</button>
+			<button id="remove">Remove child</button>
 		</div>
 	</body>
 </html>
