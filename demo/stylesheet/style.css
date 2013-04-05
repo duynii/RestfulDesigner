@@ -26,7 +26,25 @@ html, body {
     height: 600px
 }
 #bottomArea {
-    height: 600px
+    height: 600px;
     margin: 0;
     padding: 0;
+}
+
+.red {
+    color:red;
+}
+
+.blue {
+    color:blue;
+}
+
+.opened {
+    background-image:url("../data/icons/designs/ic_action_overflow.png");
+}
+.download {
+    background-image:url("../data/icons/download.ico");
+}
+.closed {
+    background-image:url("../data/icons/designs/ic_action_locate.png");
 }

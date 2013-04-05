@@ -70,14 +70,72 @@
 					query: {id: '/'}
 				});
 
+                
+				// set up the store to get the tree data
+				var memStore2 = new Memory({
+					data: [ new Static_R('/', null),
+                            new Templated_R('private2', '/', {}, ""),
+                            new Collection_R('hospitals2', 'private2'),
+                            new Concept_R('hospital2', 'hospitals2')
+                             ],
+                    propertyId: 'id',
+					getChildren: function(object){
+						return memStore2.query({parentId: object.id});
+					}
+				});
+                aspect.around(memStore2, "put", function(originalPut){
+                    return function(obj, options){
+                        if(options && options.parent){
+                            console.log("Put: " + obj.toString());
+                            obj.parentId = options.parent.id;
+                        }
+                        return originalPut.call(memStore2, obj, options);
+                    }
+                });
+				var dataModel2 = new ObjectStoreModel({
+					store: memStore2,
+					query: {id: '/'}
+				});
+
+                // Give the store the observable iterface
+                memStore2 = new Observable(memStore2);
+
 				// set up the tree, assigning dataModel;
 				// note that all widget creation should be inside a dojo/ready().
 				ready(function(){
 					var tree = new Tree({
 						model: dataModel,
                         dndController: dndSource,
-						onOpenClick: true
+						onOpenClick: true,
+                        getIconClass: function(item, /*Boolean*/ opened) {
+                            return (opened ? "download" : "closed");
+                        },
+                        getLabelClass: function(item, /*Boolean*/ opened) {
+                            return (opened ? "red" : "blue");
+                        },
+                        checkItemAcceptance: function(node, source, position) {
+                            console.log("checkItemAcceptance called: " + source);
+
+                            source.forInSelectedItems(function(item){
+                                console.log("testing to drop item of type " + item.type[0] + " and data " + item.data.item.toString() + ", position " + position);
+                            });
+                            var item = dijit.getEnclosingWidget(node).item;
+                            console.log("target node data: " + item);
+                            return true;
+                        },
+                        checkAcceptance: function(source, nodes) {
+                            console.log("checkAcceptance called: " + source.tree.id);
+                            return true;
+                        }
+                        
 					}, "divTree");
+
+
+                    var tree2 = new Tree({
+                        model: dataModel2,
+                        dndController: dndSource,
+                        onOpenClick: true
+                    }, "divTree2");
 
                     query("#add-new-child").on("click", function(){
                         // get the selected object from the tree
@@ -111,6 +169,7 @@
                     }, true);
 
 					tree.startup();
+					tree2.startup();
 
                     var dom = dojo.byId("wishlistNode");
                     var list = new Source(dom, { type: ["text"], singular: true,
@@ -120,7 +179,7 @@
                         }
                     });
 
-                    tgtDom = dojo.byId("tgtList");
+                    var tgtDom = dojo.byId("tgtList");
                     var tgt = new Source(tgtDom, { type: ["text"], singular: true });
 				});
 			});
@@ -131,6 +190,8 @@
 		<div class="column" id="tree">
 			<h1>Tree</h1>
 			<div id="divTree"></div>
+			<h1>Tree2</h1>
+			<div id="divTree2"></div>
 		</div>
 		<div class="column">
 			<h1>Actions</h1>
