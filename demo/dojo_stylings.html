@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Hello Dojo!</title>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8/dijit/themes/claro/claro.css" media="screen">
+</head>
+<body class="claro">
+    <div id="appLayout" class="demoLayout"
+        style="width: 1280px; height:800px"
+        data-dojo-type="dijit/layout/BorderContainer"
+        data-dojo-props="design: 'headline'">
+<!-- Top section -->
+        <div id="topArea" style="height: 400px"
+        data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top', splitter: true">
+            <!-- Top Region -->
+            <div id="topTab"
+                    data-dojo-type="dijit/layout/TabContainer"
+                    data-dojo-props="region: 'center', tabPosition: 'bottom'">
+                <div
+                        data-dojo-type="dijit/layout/ContentPane"
+                        data-dojo-props="title: 'Group Two'">
+                    <h4>Group 2 Content</h4>
+                    <ol>
+                        <button id="0" name="_root">"  /   "</button>
+                    </ol>
+                </div>
+                <div
+                        data-dojo-type="dijit/layout/ContentPane"
+                        data-dojo-props="title: 'Group 1'">
+                    <div id='rootPlacement'>
+                       <button id='root' data-dojo-type="dijit/form/Button">Click Me</button>
+                       <button id="rootPlus" class="addButton" data-dojo-type="dijit/form/Button"> + </button>
+                    </div>
+                    <div>
+                       <button data-dojo-type="dijit/form/Button">Click Me</button>
+                       <button class="addButton" data-dojo-type="dijit/form/Button"> + </button>
+                    </div>
+                    <h4>Group 1 Content</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
+                    <button data-dojo-type="rfd/Button"></button>
+                </div>
+                <div
+                        data-dojo-type="dijit/layout/ContentPane"
+                        data-dojo-props="title: 'Long Tab Label for this One'">
+                    <h4>Group 3 Content</h4>
+                </div>
+            </div>
+        </div>
+<!-- Bottom section -->
+        <div id="bottomArea" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
+            <!-- Outter center region -->
+            <div id="bottom"
+                    style="width: 1280px; height: 400%; margin: 0; padding: 0"
+                    data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
+                <div id="bottomLeft" style="width: 600px"
+                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
+                    Bottom Left
+                </div>
+                <div id="bottomRight"
+                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
+                    Bottom Right
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- load Dojo -->
+    <script>
+        dojoConfig = {
+            has: {
+            "dojo-firebug": true
+            },
+            parseOnLoad: true,
+            async: true,
+            baseUrl: "/RfD/",
+            tlmSiblingOfDojo: false,
+            packages: [
+                { name: "dojo", location: "dojo" },
+                { name: "dijit", location: "dijit" },
+                { name: "dojox", location: "dojox" },
+                { name: "Button", location: "rfd" },
+                { name: "Resource", location: "rfd" },
+                { name: "StaticResource", location: "rfd" },
+                { name: "TemplatedResource", location: "rfd" },
+                { name: "ConceptResource", location: "rfd" },
+                { name: "Concept_R", location: "rfd" }
+            ]
+        };
+    </script>
+<script src="../dojo/dojo.js"></script>
+
+<!-- Start of code -->
+    <script>
+        require([ "dojo/parser", 
+                  "dijit/form/Button",
+                  "dijit/registry",
+                  "dojo/dom",
+                  "dojo/ready",
+                  "dojo/query",
+                  "dojo/on",
+                  "rfd/Resource",
+                  "rfd/StaticResource",
+                  "rfd/TemplatedResource",
+                  "rfd/ConceptResource",
+                  "rfd/Representation",
+                  "rfd/Concept_R",
+                  "dojo/domReady",
+                  "dijit/layout/BorderContainer", 
+                  "dijit/layout/TabContainer", 
+                  "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
+                                                         Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
+                                                         Concept_R) {
+                ready(function() { 
+                    parser.parse();
+                        var resource = new StaticResource('root');
+                        console.log("Resource: " + resource.toString() + "\n");
+
+                        var templateR = new TemplatedResource('tempR', { "title" : "Castle", "series" : "4", "episode" : "40" },
+                                                              null);
+                        console.log('static resource: ' + templateR.toString()); 
+
+                        var concept = new ConceptResource('test');
+                        console.log('Concept resource: ' + concept.toString()); 
+                        var rep = new Representation(concept);
+                        rep.addField({ "name" : "Royal Children Hospital", "type": "Single String"});     
+                        rep.addField({ "phone" : "0295556789", "type": "Integer"});     
+
+                        console.log("representation test = " + rep.toString());
+
+                        var cRes = new Concept_R('CResource');
+                        console.log("Concept_R " + cRes.toString());
+                                 
+
+                        var wid = registry.byId("rootPlus");
+                        if(wid) {
+                            wid.set("p_data", "root");
+                        }
+
+                        registry.byId("root").set("label", "/").set("disabled", "disabled");
+    
+                        query(".addButton").forEach(function(node, index, nodelist){
+                            console.info("Registering add button event..." + node.p_data);
+                            // for each node in the array returned by query,
+                            // execute the following code
+                            on(node, "click", function(evt) 
+                            {
+                                var widget = registry.getEnclosingWidget(evt.target);
+                                if(widget){
+                                    console.log("click on widget " + widget.id + " " + widget.p_data);
+                                }
+                            });
+                        });
+    
+                    });
+                });
+    </script>
+</body>
+</html>
