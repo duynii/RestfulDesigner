@@ -23,7 +23,7 @@ html, body {
     height: 100%;
 }
 #topArea {
-    height: 600px
+    height: 60%;
 }
 #bottomArea {
     height: 600px;
@@ -48,3 +48,84 @@ html, body {
 .closed {
     background-image:url("../data/icons/designs/ic_action_locate.png");
 }
+
+/* Buttons
+*/
+.staticResource {
+  min-height: 35px;
+  background-color: rgb(139, 139, 139);
+}
+.collectionResource {
+  min-height: 35px;
+  background-color: rgb(65, 105, 225);
+  font-weight: bold;
+}
+.collectionResource:hover {
+  cursor: pointer; /* cursor: hand; for IE5 */
+  background-color: rgb(95, 135, 255);
+}
+.individualResource {
+  min-height: 35px;
+  background-color: rgb(65, 105, 225);
+  font-weight: bold;
+}
+.individualResource:hover {
+  cursor: pointer; /* cursor: hand; for IE5 */
+  background-color: rgb(95, 135, 255);
+}
+.customResource {
+/*
+    # Orange
+*/
+  min-height: 35px;
+  background-color: rgb(255, 127, 80);
+  font-weight: bold;
+}
+.customResource:hover {
+  cursor: pointer; /* cursor: hand; for IE5 */
+  background-color: rgb(255, 157, 110);
+}
+.partialResource {
+/*
+    # Indigo purple
+*/
+  min-height: 35px;
+  background-color: rgb(147, 112, 219);
+  font-weight: bold;
+}
+.partialResource:hover {
+  cursor: pointer; /* cursor: hand; for IE5 */
+  background-color: rgb(177, 142, 249);
+}
+.addButton {
+/*
+    # Red
+*/
+  min-height: 30px;
+  color: rgb(139, 0, 0);
+  font-weight: bold;
+  font-size: 100%;
+}
+.rootButton {
+    background-color: White;
+}
+.addButton:hover {
+  cursor: pointer; /* cursor: hand; for IE5 */
+  color: rgb(169, 30, 30);
+}
+
+ol {
+   list-style: none;
+   margin: 5px;
+   padding: 5px;
+}
+li {
+    margin-bottom: 12px;
+}
+
+/* Hidden */
+.hidden {
+    visibility: hidden;
+}
+
+
