@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Dojo Dialogs!</title>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8/dijit/themes/claro/claro.css" media="screen">
+    <link rel="stylesheet" href="stylesheet/style.css" media="screen">
 </head>
 <body class="claro">
     <div id="appLayout" class="demoLayout"
@@ -21,11 +22,26 @@
                         data-dojo-type="dijit/layout/ContentPane"
                         data-dojo-props="title: 'Group Two'">
                     <h4>Group 2 Content</h4>
-                    <div>
-                        <span>
-                            <input id="checkPaging" name="checkPaging">Has Paging</input>
-                            <input id="textPagingNo"/>
-                        <span>
+                    <div class="form_margin_left">
+                        <input id="checkPaging" name="checkPaging">Has Paging</input>
+                        <input id="textPagingNo" type="text"/>
+                        <br/>
+                        <div>
+                            <label>Hospital representation</label>
+                            <!-- TBC use css class left margin -->
+                            <div class="form_margin_left">
+                                <!-- auto generated id/name -->
+                                <input id="hospitals_rep_1" type="checkbox" name="hospiatls_rep_1" value="1">Link 1</input>
+                                <br/>
+                                <input id="hospitals_rep_2" type="checkbox" name="hospiatls_rep_2" value="1">Custom 1</input>
+                                <br/>
+                                <input id="hospitals_rep_3" type="checkbox" name="hospiatls_rep_3" value="1">Custom 2</input>
+                                <br/>
+                            </div>
+                        </div>
+                        <!-- use accordian layout here -->
+                        <div>
+                        </div>
                     </div>
                 </div>
                 <div
@@ -125,7 +141,8 @@ require([ "dojo/parser",
     { 
         parser.parse();
 
-        var checkPaging = new CheckBox( {
+        var checkPaging = new CheckBox( 
+            {
                 value: "paged",
                 checked: false,
                 onChange: function() {
@@ -134,6 +151,14 @@ require([ "dojo/parser",
                 }
             },
             "checkPaging"
+        );
+
+        var textPagingNo = new NumberTextBox( 
+            {
+                style: "max-width: 60px;",
+                value: 100
+            },
+            "textPagingNo"
         );
 
     });

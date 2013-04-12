@@ -181,3 +181,9 @@ table.classTable td {
     border-color: #999999;
 }
 
+/* Form Dialog styles */
+
+.form_margin_left {
+    margin-left: 40px;
+}
+
