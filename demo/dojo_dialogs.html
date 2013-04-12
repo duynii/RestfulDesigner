@@ -111,9 +111,9 @@ require([ "dojo/parser",
           "rfd/ConceptResource",
           "rfd/Representation",
           "rfd/Concept_R",
-          "dojo/domReady",
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
+          "dojo/domReady",
           "dijit/layout/BorderContainer", 
           "dijit/layout/TabContainer", 
           "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
@@ -124,6 +124,17 @@ require([ "dojo/parser",
     ready(function() 
     { 
         parser.parse();
+
+        var checkPaging = new CheckBox( {
+                value: "paged",
+                checked: false,
+                onChange: function() {
+                    // 1. disable textPaging
+                    // 2. set value from textPaging???
+                }
+            },
+            "checkPaging"
+        );
 
     });
 });
