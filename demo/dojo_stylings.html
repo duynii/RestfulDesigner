@@ -29,10 +29,10 @@
                         <li>
                             <button name="_root" class="hidden">      </button>
                             <button name="_public"      class="staticResource">public/</button>
-                            <button name="_hospitals"   class="collectionResource">{hospitals}/</button>
-                            <button name="_hospital"    class="individualResource">{hospital}/</button>
+                            <button id="id_hospitals"   name="_hospitals"   class="collectionResource">{hospitals}/</button>
+                            <button id="id_hospital" name="_hospital"    class="individualResource">{hospital}/</button>
                             <button name="_hospital_address" class="partialResource">address/</button>
-                            <button id="_add" class="addButton" name="_add"> + </button>
+                            <button id="_add1" class="addButton" name="_add"> + </button>
                         </li>
                         <li>
                             <button disabled="disabled" name="_root" class="hidden">      </button>
@@ -138,6 +138,12 @@
                   "rfd/ConceptResource",
                   "rfd/Representation",
                   "rfd/Concept_R",
+                    //Widgets
+                  "dijit/form/Button",
+                  "dijit/form/DropDownButton",
+                  "dijit/TooltipDialog",
+                  "dijit/popup",
+                    // Layout
                   "dojo/domReady",
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
@@ -145,9 +151,59 @@
                                                          domConstruct, domStyle,
                                                          Selector, Container, Target, Moveable,
                                                          Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
-                                                         Concept_R) {
-                ready(function() { 
+                                                         Concept_R,
+                                                         Button, DropDownButton, TooltipDialog, popup
+                                                        ) {
+                ready(function() 
+                { 
                     parser.parse();
+                    
+                    // Buttons and TooltipDialog
+                    var tooltip = new TooltipDialog({
+                        id: 'id_tooltip',
+                        style: "width: 300px;",
+                        content: "<p>I have a mouse leave event handler that will close the dialog.</p>",
+                        onMouseLeave: function(){
+                            popup.close(tooltip);
+                        }
+                    });
+            
+                    //Register event with dom node
+
+    on(dom.byId('id_hospitals'), 'mouseover', function(){
+        popup.open({
+            popup: tooltip,
+            around: dom.byId('id_hospitals')
+        });
+    });
+//                    on(dom.byId("id_hospitals"), 'mouseover', 
+//                        function() 
+//                        {
+//                            popup.open(
+//                            {
+//                                parent: this,
+//                                popup: tooltip,
+//                                around: dom.byId('id_hospitals')
+//                            });
+//                        }
+//                    );
+            
+                    var dropButton = new DropDownButton({
+                            dropDown: tooltip,
+                            label: "{hospital}"
+                        },
+                        "id_hospital"
+                    );
+                    //var w_hospitals = registry.byId("id_hospitals);
+                    //w_hospitals.set("onClick", function() { alert("clicked H"); });
+//                    var b_hospitals = new Button({
+//                        onClick: function(event) {
+//                            alert("clicked hospitals");
+//                        }},
+//                        "id_hospitals"
+//                    );
+
+/*
                     var resource = new StaticResource('root');
                     console.log("Resource: " + resource.toString() + "\n");
 
@@ -186,6 +242,7 @@
                             }
                         });
                     });
+*/
 
                     var table = dojo.byId("classTable");
                     domConstruct.create("th", { innerHTML: "Hospital" }, table);
