@@ -22,7 +22,7 @@
                         data-dojo-type="dijit/layout/ContentPane"
                         data-dojo-props="title: 'Group Two'">
                     <h4>Group 2 Content</h4>
-                    <ol>
+                    <ol id="resourcesList">
                         <li>
                             <label name="_root" class="rootButton">  /   </label>
                         </li>
@@ -44,8 +44,8 @@
                         </li>
                         <li>
                             <button disabled="disabled" name="_root" class="hidden">      </button>
-                            <button disabled="disabled" name="_public">public/</button>
-                            <button disabled="disabled" name="_hospitals">hospitals/</button>
+                            <button disabled="disabled" name="_public"      class="hidden staticResource">public/</button>
+                            <button disabled="disabled" name="_hospitals"   class="hidden collectionResource">{hospitals}/</button>
                             <button enabled="enabled" class="customResource" name="_find_nearest">find_nearest/</button>
                             <button id="_add" class="addButton" name="_add"> + </button>
                         </li>
@@ -77,15 +77,17 @@
         <div id="bottomArea" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
             <!-- Outter center region -->
             <div id="bottom"
-                    style="width: 1280px; height: 400%; margin: 0; padding: 0"
+                    style="width: 1280px; height: 40%; margin: 0; padding: 0"
                     data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-                <div id="bottomLeft" style="width: 600px"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
+                <div id="bottomLeft" style="width: 100%"
+                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left'">
                     Bottom Left
-                </div>
-                <div id="bottomRight"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-                    Bottom Right
+                    <table id="classT" >
+                        <tr><td>row 1</td></tr>
+                    </table>
+                        <table id="classTable"  class="classTable"/>
+                        <table id="classTemp" class="classTable"/>
+
                 </div>
             </div>
         </div>
@@ -124,6 +126,12 @@
                   "dojo/ready",
                   "dojo/query",
                   "dojo/on",
+                  "dojo/dom-construct",
+                  "dojo/dom-style",
+                  "dojo/dnd/Selector",
+                  "dojo/dnd/Container",
+                  "dojo/dnd/Target",
+                  "dojo/dnd/Moveable",
                   "rfd/Resource",
                   "rfd/StaticResource",
                   "rfd/TemplatedResource",
@@ -134,51 +142,77 @@
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
                   "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
+                                                         domConstruct, domStyle,
+                                                         Selector, Container, Target, Moveable,
                                                          Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                          Concept_R) {
                 ready(function() { 
                     parser.parse();
-                        var resource = new StaticResource('root');
-                        console.log("Resource: " + resource.toString() + "\n");
+                    var resource = new StaticResource('root');
+                    console.log("Resource: " + resource.toString() + "\n");
 
-                        var templateR = new TemplatedResource('tempR', { "title" : "Castle", "series" : "4", "episode" : "40" },
-                                                              null);
-                        console.log('static resource: ' + templateR.toString()); 
+                    var templateR = new TemplatedResource('tempR', { "title" : "Castle", "series" : "4", "episode" : "40" },
+                                                          null);
+                    console.log('static resource: ' + templateR.toString()); 
 
-                        var concept = new ConceptResource('test');
-                        console.log('Concept resource: ' + concept.toString()); 
-                        var rep = new Representation(concept);
-                        rep.addField({ "name" : "Royal Children Hospital", "type": "Single String"});     
-                        rep.addField({ "phone" : "0295556789", "type": "Integer"});     
+                    var concept = new ConceptResource('test');
+                    console.log('Concept resource: ' + concept.toString()); 
+                    var rep = new Representation(concept);
+                    rep.addField({ "name" : "Royal Children Hospital", "type": "Single String"});     
+                    rep.addField({ "phone" : "0295556789", "type": "Integer"});     
 
-                        console.log("representation test = " + rep.toString());
+                    console.log("representation test = " + rep.toString());
 
-                        var cRes = new Concept_R('CResource');
-                        console.log("Concept_R " + cRes.toString());
-                                 
+                    var cRes = new Concept_R('CResource');
+                    console.log("Concept_R " + cRes.toString());
+                             
 
-                        var wid = registry.byId("rootPlus");
-                        if(wid) {
-                            wid.set("p_data", "root");
-                        }
+                    var wid = registry.byId("rootPlus");
+                    if(wid) {
+                        wid.set("p_data", "root");
+                    }
 
-                        registry.byId("root").set("label", "/").set("disabled", "disabled");
-    
-                        query(".addButton").forEach(function(node, index, nodelist){
-                            console.info("Registering add button event..." + node.p_data);
-                            // for each node in the array returned by query,
-                            // execute the following code
-                            on(node, "click", function(evt) 
-                            {
-                                var widget = registry.getEnclosingWidget(evt.target);
-                                if(widget){
-                                    console.log("click on widget " + widget.id + " " + widget.p_data);
-                                }
-                            });
+                    registry.byId("root").set("label", "/").set("disabled", "disabled");
+
+                    query(".addButton").forEach(function(node, index, nodelist){
+                        console.info("Registering add button event..." + node.p_data);
+                        // for each node in the array returned by query,
+                        // execute the following code
+                        on(node, "click", function(evt) 
+                        {
+                            var widget = registry.getEnclosingWidget(evt.target);
+                            if(widget){
+                                console.log("click on widget " + widget.id + " " + widget.p_data);
+                            }
                         });
-    
                     });
-                });
+
+                    var table = dojo.byId("classTable");
+                    domConstruct.create("th", { innerHTML: "Hospital" }, table);
+            
+                    var bottomArea = dojo.byId("bottomLeft");
+    
+                    var clUI = new Container(table, { creator: function(item, hint) {
+                        var tr = domConstruct.create("tr");
+                        var td = domConstruct.create("td", { innerHTML: item}, tr);
+                        return { node: tr, data: item, type: ["text"] };
+                    } });
+                    clUI.insertNodes([ "id: string", "name: string", "fax: string" ], false, null);
+                    
+                    var table2 = dojo.byId("classTemp");
+                    domConstruct.create("th", { innerHTML: "Services" }, table2);
+                    var clUI2 = new Container(table2, { creator: function(item, hint) {
+                        var tr = domConstruct.create("tr");
+                        var td = domConstruct.create("td", { innerHTML: item}, tr);
+                        return { node: tr, data: item, type: ["text"] };
+                    } });
+                    clUI2.insertNodes([ "id: string", "name: string", "fax: string" ], false, null);
+
+                    var move = new Moveable("classT");
+                    var span = new Moveable("classTable");
+                    var span2 = new Moveable("classTemp");
+              });
+            });
     </script>
 </body>
 </html>

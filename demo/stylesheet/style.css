@@ -114,12 +114,12 @@ html, body {
   color: rgb(169, 30, 30);
 }
 
-ol {
+#resourcesList {
    list-style: none;
    margin: 5px;
    padding: 5px;
 }
-li {
+#resourcesList li {
     margin-bottom: 12px;
 }
 
@@ -128,4 +128,56 @@ li {
     visibility: hidden;
 }
 
+
+/* ER classes */
+.classesList {
+    border: 1px;
+    background-color: rgb(230, 230, 230);
+}
+
+/* Tables */
+.classTable_greycell {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+}
+.classTable_greycell th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #dedede;
+}
+.classTable_greycell td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #ffffff;
+}
+
+table.classTable {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #999999;
+    border-collapse: collapse;
+}
+table.classTable th {
+    background:#b5cfd2 url('../data/images/cell-blue.jpg');
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+}
+table.classTable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+}
 
