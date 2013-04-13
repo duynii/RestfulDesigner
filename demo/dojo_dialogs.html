@@ -22,12 +22,15 @@
                         data-dojo-type="dijit/layout/ContentPane"
                         data-dojo-props="title: 'Group Two'">
                     <h4>Group 2 Content</h4>
-                    <div class="form_margin_left">
-                        <input id="checkPaging" name="checkPaging">Has Paging</input>
-                        <input id="textPagingNo" type="text"/>
-                        <br/>
+                    <div style="max-width: 600px;" class="form_margin_left form_border">
+                        <h4>Paging</h4>
+                        <div class="form_margin_left">
+                            <input id="checkPaging" name="checkPaging">Has Paging</input>
+                            <input id="textPagingNo" type="text"/>
+                            <br/>
+                        </div>
                         <div>
-                            <label>Hospital representation</label>
+                            <h4>Hospital representation</h4>
                             <!-- TBC use css class left margin -->
                             <div class="form_margin_left">
                                 <!-- auto generated id/name -->
@@ -40,7 +43,19 @@
                             </div>
                         </div>
                         <!-- use accordian layout here -->
-                        <div>
+                        <h4>Search Criteria</h4>
+                        <div style="min-width: 300px; max-width: 500px; height: 100%" class="form_margin_left">
+                            <div data-dojo-type="dijit/layout/AccordionContainer" style="height: 300px;">
+                                <div data-dojo-type="dijit/layout/ContentPane" title="Heeh, this is a content pane">
+                                    Hi!
+                                </div>
+                                <div data-dojo-type="dijit/layout/ContentPane" title="This is as well" selected="true">
+                                    Hi how are you?
+                                </div>
+                                <div data-dojo-type="dijit/layout/ContentPane" title="This too">
+                                    Hi how are you? .....Great, thx
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
