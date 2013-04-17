@@ -22,42 +22,7 @@
                         data-dojo-type="dijit/layout/ContentPane"
                         data-dojo-props="title: 'Group Two'">
                     <h4>Group 2 Content</h4>
-                    <div style="max-width: 600px;" class="form_margin_left form_border">
-                        <h4>Paging</h4>
-                        <div class="form_margin_left">
-                            <input id="checkPaging" name="checkPaging">Has Paging</input>
-                            <input id="textPagingNo" type="text"/>
-                            <br/>
-                        </div>
-                        <div>
-                            <h4>Hospital representation</h4>
-                            <!-- TBC use css class left margin -->
-                            <div class="form_margin_left">
-                                <!-- auto generated id/name -->
-                                <input id="hospitals_rep_1" type="checkbox" name="hospiatls_rep_1" value="1">Link 1</input>
-                                <br/>
-                                <input id="hospitals_rep_2" type="checkbox" name="hospiatls_rep_2" value="1">Custom 1</input>
-                                <br/>
-                                <input id="hospitals_rep_3" type="checkbox" name="hospiatls_rep_3" value="1">Custom 2</input>
-                                <br/>
-                            </div>
-                        </div>
-                        <!-- use accordian layout here -->
-                        <h4>Search Criteria</h4>
-                        <div style="min-width: 300px; max-width: 500px; height: 100%" class="form_margin_left">
-                            <div data-dojo-type="dijit/layout/AccordionContainer" style="height: 300px;">
-                                <div data-dojo-type="dijit/layout/ContentPane" title="Heeh, this is a content pane">
-                                    Hi!
-                                </div>
-                                <div data-dojo-type="dijit/layout/ContentPane" title="This is as well" selected="true">
-                                    Hi how are you?
-                                </div>
-                                <div data-dojo-type="dijit/layout/ContentPane" title="This too">
-                                    Hi how are you? .....Great, thx
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button id="id_hospitals">{hospitals}</button>
                 </div>
                 <div
                         data-dojo-type="dijit/layout/ContentPane"
@@ -87,7 +52,7 @@
             <div id="bottom"
                     style="width: 1280px; height: 400%; margin: 0; padding: 0"
                     data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-                <div id="bottomLeft" style="width: 600px"
+                <div id="bottomLeft" style="width: 60%"
                     data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
                     Bottom Left
                     <table id="classTable" style="border: 1" >
@@ -97,7 +62,53 @@
                 </div>
                 <div id="bottomRight"
                     data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-                    Bottom Right
+                    <p>Bottom Right</p>
+                    <div> some div </div>
+                    <div style="max-width: 600px;"
+                       id="collectionTooltip"
+                    >
+                        <h4>Paging</h4>
+                        <div class="form_margin_left">
+                            <input id="checkPaging" name="checkPaging" 
+                                value="paged"
+                                data-dojo-type="dijit/form/CheckBox"
+                                data-dojo-props="checked: false"
+                                >Has Paging</input>
+                            <input id="textPagingNo" type="text" 
+                                style="max-width: 60px;"
+                                data-dojo-type="dijit/form/NumberTextBox"
+                                data-dojo-props="value: 100"/>
+                            <br/>
+                        </div>
+                        <div>
+                            <h4>Hospital representation</h4>
+                            <!-- TBC use css class left margin -->
+                            <div class="form_margin_left">
+                                <!-- auto generated id/name -->
+                                <input id="hospitals_rep_1" type="checkbox" name="hospiatls_rep_1" value="1">Link 1</input>
+                                <br/>
+                                <input id="hospitals_rep_2" type="checkbox" name="hospiatls_rep_2" value="1">Custom 1</input>
+                                <br/>
+                                <input id="hospitals_rep_3" type="checkbox" name="hospiatls_rep_3" value="1">Custom 2</input>
+                                <br/>
+                            </div>
+                        </div>
+                        <!-- use accordian layout here -->
+                        <h4>Search Criteria</h4>
+                        <div style="min-width: 300px; max-width: 500px; height: 100%" class="form_margin_left">
+                            <div data-dojo-type="dijit/layout/AccordionContainer" style="height: 300px;">
+                                <div data-dojo-type="dijit/layout/ContentPane" title="Filters">
+                                    Filters
+                                </div>
+                                <div data-dojo-type="dijit/layout/ContentPane" title="Order By" selected="true">
+                                    Hi how are you?
+                                </div>
+                                <div data-dojo-type="dijit/layout/ContentPane" title="Limitis">
+                                    Hi how are you? .....Great, thx
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -136,6 +147,7 @@ require([ "dojo/parser",
           "dojo/ready",
           "dojo/query",
           "dojo/on",
+          "dojo/dom-style",
           "rfd/Resource",
           "rfd/StaticResource",
           "rfd/TemplatedResource",
@@ -144,18 +156,54 @@ require([ "dojo/parser",
           "rfd/Concept_R",
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
+          "dijit/popup", 
+          "dijit/TooltipDialog", 
           "dojo/domReady",
           "dijit/layout/BorderContainer", 
           "dijit/layout/TabContainer", 
-          "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
+          "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on, domStyle,
                                                  Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                  Concept_R,
-                                                 CheckBox, NumberTextBox
+                                                 CheckBox, NumberTextBox,
+                                                 popup, TooltipDialog
                                                 ) {
     ready(function() 
     { 
+
+        var assert = function(cond, msg) {
+            if(cond) {
+                console.log("PASS: " + msg); 
+            }
+            else {
+                console.error("FAIL: " + msg); 
+            }
+        }
+
         parser.parse();
 
+//      This is with HTML markup TooltipDialog
+//        var tooltip = registry.byId("collectionTooltip");
+//        assert(tooltip != null, "toottip by registry.ById");
+//        domStyle.set(tooltip.domNode, "visibility", "visible");
+
+//      This is creating TooltipDialog with inner content
+        var toolDom = dojo.byId("collectionTooltip");
+        domStyle.set(toolDom, "visibility", "visible");
+        var tooltip = new TooltipDialog({
+            content: toolDom
+        });
+        // Dojo event for existing widget
+        tooltip.on("mouseleave", function() { popup.close(tooltip); });
+        // DOM event
+        on(dom.byId('id_hospitals'), 'mouseover', function(){
+            popup.open({
+                popup: tooltip,
+                around: dom.byId('id_hospitals')
+            });
+        });
+            
+        
+/*
         var checkPaging = new CheckBox( 
             {
                 value: "paged",
@@ -175,7 +223,7 @@ require([ "dojo/parser",
             },
             "textPagingNo"
         );
-
+*/
     });
 });
     </script>
