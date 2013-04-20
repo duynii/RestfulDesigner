@@ -39,6 +39,7 @@
                             <button disabled="disabled" name="_public"     class="hidden staticResource">public/</button>
                             <button disabled="disabled" name="_hospitals"  class="hidden collectionResource">{hospitals}/</button>
                             <button disabled="disabled" name="_hospital"   class="hidden individualResource">{hospital}/</button>
+                            <button id="templatedButton" data-dojo-type="rfd/widget/CollectionButton" />
                             <button class="collectionResource" name="_services">{services}/</button>
                             <button id="_add" class="addButton" name="_add"> + </button>
                         </li>
@@ -49,6 +50,10 @@
                             <button enabled="enabled" class="customResource" name="_find_nearest">find_nearest/</button>
                             <button id="_add" class="addButton" name="_add"> + </button>
                         </li>
+                        <li>
+                            <label id="authorWidget" data-dojo-type="rfd/widget/AuthorWidget">blah</label>
+                        </li>
+                        <li data-dojo-type="rfd/widget/ListItem" />
                     </ol>
                 </div>
                 <div
@@ -176,32 +181,28 @@
             around: dom.byId('id_hospitals')
         });
     });
-//                    on(dom.byId("id_hospitals"), 'mouseover', 
-//                        function() 
-//                        {
-//                            popup.open(
-//                            {
-//                                parent: this,
-//                                popup: tooltip,
-//                                around: dom.byId('id_hospitals')
-//                            });
-//                        }
-//                    );
             
-                    var dropButton = new DropDownButton({
+                    var dropButton = new Button({
                             dropDown: tooltip,
+                            baseClass: "button collectionResource",
                             label: "{hospital}"
                         },
                         "id_hospital"
                     );
+
+                    console.log("Button base class: " + dropButton.baseClass);
                     //var w_hospitals = registry.byId("id_hospitals);
-                    //w_hospitals.set("onClick", function() { alert("clicked H"); });
 //                    var b_hospitals = new Button({
 //                        onClick: function(event) {
 //                            alert("clicked hospitals");
 //                        }},
 //                        "id_hospitals"
 //                    );
+
+                    var cRes = new Concept_R('CResource');
+                    console.log("Concept_R " + cRes.toString());
+                    var tempButton = registry.byId("templatedButton");
+                    tempButton.set("concept", cRes);
 
 /*
                     var resource = new StaticResource('root');
