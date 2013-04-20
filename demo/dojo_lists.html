@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Demo: Dijit Tree</title>
+		<link rel="stylesheet" href="stylesheet/demo.css" media="screen">
+		<link rel="stylesheet" href="stylesheet/style.css" media="screen">
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dijit/themes/claro/claro.css" media="screen">
+		<script src="../dojo/dojo.js"></script>
+		<script>
+			require([
+				"dojo/dom", "dojo/json", "dojo/ready", "dojo/_base/window", 
+                "dojo/aspect",
+                "dojo/query",
+                "dojo/dnd/Container",
+                "dojo/dnd/Selector",
+                "dojo/dnd/Source",
+                "dojo/store/Memory",
+				"dojo/store/Observable",
+				"dijit/tree/ObjectStoreModel", "dijit/Tree",
+				"dijit/tree/dndSource",
+                "rfd/StaticResource",
+                "rfd/TemplatedResource",
+                "rfd/Concept_R",
+                "rfd/Collection_R",
+                "rfd/PartialConcept_R"
+			], function(dom, json, ready, win, aspect, query,
+                        Container, Selector, Source,
+                        Memory, Observable, ObjectStoreModel, Tree, dndSource,
+                        Static_R, Templated_R, Concept_R, Collection_R, PartialConcept_R){
+
+				// set up the store to get the tree data
+				var memStore = new Memory({
+					data: [ new Static_R('/', null),
+                            new Templated_R('public', '/', {}, ""),
+                            new Templated_R('contact_us', 'public', {}, ""),
+                            new Templated_R('private', '/', {}, ""),
+                            new Collection_R('hospitals', 'private'),
+                            new Concept_R('hospital', 'hospitals')
+                             ],
+                    propertyId: 'id',
+					getChildren: function(object){
+						return memStore.query({parentId: object.id});
+					}
+				});
+
+                // To support dynamic data changes, including DnD,
+                // the store must support put(child, {parent: parent}).
+                // But dojo/store/Memory doesn't, so we have to implement it.
+                // Since our store is relational, that just amounts to setting child.parent
+                // to the parent's id.
+                aspect.around(memStore, "put", function(originalPut){
+                    return function(obj, options){
+                        if(options && options.parent){
+                            obj.parentId = options.parent.id;
+                        }
+                        return originalPut.call(memStore, obj, options);
+                    }
+                });
+
+                // Give the store the observable iterface
+                memStore = new Observable(memStore);
+
+				// set up the model, assigning memStore, and assigning method to identify leaf nodes of tree
+				var dataModel = new ObjectStoreModel({
+					store: memStore,
+//					mayHaveChildren: function(item){
+//						return memStore.getChildren(item).length > 0;
+//					},
+					query: {id: '/'}
+				});
+
+                
+				// set up the store to get the tree data
+				var memStore2 = new Memory({
+					data: [ new Static_R('/', null),
+                            new Templated_R('private2', '/', {}, ""),
+                            new Collection_R('hospitals2', 'private2'),
+                            new Concept_R('hospital2', 'hospitals2')
+                             ],
+                    propertyId: 'id',
+					getChildren: function(object){
+						return memStore2.query({parentId: object.id});
+					}
+				});
+                aspect.around(memStore2, "put", function(originalPut){
+                    return function(obj, options){
+                        if(options && options.parent){
+                            console.log("Put: " + obj.toString());
+                            obj.parentId = options.parent.id;
+                        }
+                        return originalPut.call(memStore2, obj, options);
+                    }
+                });
+				var dataModel2 = new ObjectStoreModel({
+					store: memStore2,
+					query: {id: '/'}
+				});
+
+                // Give the store the observable iterface
+                memStore2 = new Observable(memStore2);
+
+				// set up the tree, assigning dataModel;
+				// note that all widget creation should be inside a dojo/ready().
+				ready(function(){
+					var tree = new Tree({
+						model: dataModel,
+                        dndController: dndSource,
+						onOpenClick: true,
+                        getIconClass: function(item, /*Boolean*/ opened) {
+                            return (opened ? "download" : "closed");
+                        },
+                        getLabelClass: function(item, /*Boolean*/ opened) {
+                            return (opened ? "red" : "blue");
+                        },
+                        checkItemAcceptance: function(node, source, position) {
+                            console.log("checkItemAcceptance called: " + source);
+
+                            source.forInSelectedItems(function(item){
+                                console.log("testing to drop item of type " + item.type[0] + " and data " + item.data.item.toString() + ", position " + position);
+                            });
+                            var item = dijit.getEnclosingWidget(node).item;
+                            console.log("target node data: " + item);
+                            return true;
+                        },
+                        checkAcceptance: function(source, nodes) {
+                            console.log("checkAcceptance called: " + source.tree.id);
+                            return true;
+                        }
+                        
+					}, "divTree");
+
+
+                    var tree2 = new Tree({
+                        model: dataModel2,
+                        dndController: dndSource,
+                        onOpenClick: true
+                    }, "divTree2");
+
+                    query("#add-new-child").on("click", function(){
+                        // get the selected object from the tree
+                        var selectedObject = tree.get("selectedItems")[0];
+                        if(!selectedObject){
+                            return alert("No object selected");
+                        }
+             
+                        // add a new child item
+                        var childItem = {
+                            name: "New child",
+                            id: Math.random()
+                        };
+                        memStore.put(childItem, {
+                            overwrite: true,
+                            parent: selectedObject
+                        });
+                    });
+ 
+                    query("#remove").on("click", function(){
+                        var selectedObject = tree.get("selectedItems")[0];
+                        if(!selectedObject){
+                            return alert("No object selected");
+                        }
+                        memStore.remove(selectedObject.id);
+                    });
+ 
+                    tree.on("dblclick", function(object){
+                        object.name = prompt("Enter a new name for the object");
+                        memStore.put(object);
+                    }, true);
+
+					tree.startup();
+					tree2.startup();
+
+                    var dom = dojo.byId("wishlistNode");
+                    var list = new Source(dom, { type: ["text"], singular: true,
+                        checkAcceptance: function (source, nodes) {
+                            console.log("Source is: " + source );
+                            return true;
+                        }
+                    });
+
+                    var tgtDom = dojo.byId("tgtList");
+                    var tgt = new Source(tgtDom, { type: ["text"], singular: true });
+				});
+			});
+		</script>
+	</head>
+	<body class="claro">
+		<h1>Demo: Dijit Tree</h1>
+		<div class="column" id="tree">
+			<h1>Tree</h1>
+			<div id="divTree"></div>
+			<h1>Tree2</h1>
+			<div id="divTree2"></div>
+		</div>
+		<div class="column">
+			<h1>Actions</h1>
+			<button id="add-new-child">Add new child</button>
+			<button id="remove">Remove child</button>
+            <ol id="wishlistNode">
+                <li id="blah" name="test" class="dojoDndItem">Wrist watch</li>
+                <li class="dojoDndItem">Life jacket</li>
+                <li class="dojoDndItem">Toy bulldozer</li>
+                <li class="dojoDndItem">Vintage microphone</li>
+                <li class="dojoDndItem">TIE fighter</li>
+            </ol>
+            <ol id="tgtList">
+                <li id="bh" name="test" class="dojoDndItem">Wrist</li>
+                <li class="dojoDndItem">Life</li>
+            </ol>
+		</div>
+	</body>
+</html>
+
