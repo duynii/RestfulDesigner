@@ -13,11 +13,19 @@ html, body {
     background-color: #d0e9fc;
 }
  
-#viewsChart {
-    width: 550px;
-    height: 550px;
+
+.window_mins {
+    min-width: 1024px;
+    min-height: 600px;
 }
 
+.window_top_height {
+    height: 60%;
+}
+
+.window_bottom_width {
+    width: 60%;
+}
 
 #appLayout {
     height: 100%;
