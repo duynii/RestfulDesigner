@@ -63,7 +63,8 @@
             has: {
             "dojo-firebug": true
             },
-            parseOnLoad: true,
+            isDebug: true,
+            parseOnLoad: false,
             async: true,
             baseUrl: "/RfD/",
             tlmSiblingOfDojo: false,
@@ -72,46 +73,39 @@
                 { name: "dijit", location: "dijit" },
                 { name: "dojox", location: "dojox" },
                 { name: "Button", location: "rfd" },
+                { name: "page_controller", location: "rfd" },
                 { name: "Resource", location: "rfd" },
                 { name: "StaticResource", location: "rfd" },
                 { name: "TemplatedResource", location: "rfd" },
                 { name: "ConceptResource", location: "rfd" },
                 { name: "Concept_R", location: "rfd" }
-            ]
+            ],
+            flickrRequest: {
+              apikey: "8c6803164dbc395fb7131c9d54843627",
+              sort:[{
+                attribute: "datetaken",
+                descending: true
+              }]
+            }
         };
     </script>
 <script src="../dojo/dojo.js"></script>
 
 <!-- Start of code -->
     <script>
-require([ "dojo/parser", 
-          "dijit/form/Button",
-          "dijit/registry",
-          "dojo/dom",
-          "dojo/ready",
-          "dojo/query",
-          "dojo/on",
-          "rfd/Resource",
-          "rfd/StaticResource",
-          "rfd/TemplatedResource",
-          "rfd/ConceptResource",
-          "rfd/Representation",
-          "rfd/Concept_R",
-          "dijit/form/CheckBox", 
-          "dijit/form/NumberTextBox", 
+require([ 
+        "dojo/ready", "dojo/parser",
+        "rfd/controller/app_controller", 
+          "rfd/controller/app_step2", 
           "dojo/domReady",
-          "dijit/layout/BorderContainer", 
-          "dijit/layout/TabContainer", 
-          "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
-                                                 Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
-                                                 Concept_R,
-                                                 CheckBox, NumberTextBox
-                                                ) {
-    ready(function() 
-    { 
-        parser.parse();
-
-    });
+          ], function(ready, parser, app_controller, app_step2) 
+{
+            ready(function() 
+            { 
+                parser.parse();
+                //app_step2.init();
+                app_controller.init();
+            });
 });
     </script>
 </body>
