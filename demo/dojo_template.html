@@ -7,68 +7,53 @@
     <link rel="stylesheet" href="stylesheet/style.css" media="screen">
 </head>
 <body class="claro">
-    <div id="appLayout" class="demoLayout"
-        style="width: 1280px; height:800px"
+    <div id="appLayout" class="window_mins"
         data-dojo-type="dijit/layout/BorderContainer"
         data-dojo-props="design: 'headline'">
-<!-- Top section -->
-        <div id="topArea" style="height: 400px"
-        data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top', splitter: true">
-            <!-- Top Region -->
-            <div id="topTab"
-                    data-dojo-type="dijit/layout/TabContainer"
-                    data-dojo-props="region: 'center', tabPosition: 'bottom'">
-                <div
-                        data-dojo-type="dijit/layout/ContentPane"
-                        data-dojo-props="title: 'Group Two'">
-                    <h4>Group 2 Content</h4>
-                    <div>
-                        <span>
-                            <input id="checkPaging" name="checkPaging">Has Paging</input>
-                            <input id="textPagingNo"/>
-                        <span>
-                    </div>
+        <!-- Top Region -->
+        <div id="topTab"
+                class="window_top_height"
+                data-dojo-type="dijit/layout/TabContainer"
+                data-dojo-props="region: 'top', splitter: true, tabPosition: 'bottom'">
+            <div
+                    data-dojo-type="dijit/layout/ContentPane"
+                    data-dojo-props="title: 'Group 1'">
+                <div id='rootPlacement'>
+                   <button id='root' data-dojo-type="dijit/form/Button">Click Me</button>
+                   <button id="rootPlus" class="addButton" data-dojo-type="dijit/form/Button"> + </button>
                 </div>
-                <div
-                        data-dojo-type="dijit/layout/ContentPane"
-                        data-dojo-props="title: 'Group 1'">
-                    <div id='rootPlacement'>
-                       <button id='root' data-dojo-type="dijit/form/Button">Click Me</button>
-                       <button id="rootPlus" class="addButton" data-dojo-type="dijit/form/Button"> + </button>
-                    </div>
-                    <div>
-                       <button data-dojo-type="dijit/form/Button">Click Me</button>
-                       <button class="addButton" data-dojo-type="dijit/form/Button"> + </button>
-                    </div>
-                    <h4>Group 1 Content</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
-                    <button data-dojo-type="rfd/Button"></button>
+                <div>
+                   <button data-dojo-type="dijit/form/Button">Click Me</button>
+                   <button class="addButton" data-dojo-type="dijit/form/Button"> + </button>
                 </div>
-                <div
-                        data-dojo-type="dijit/layout/ContentPane"
-                        data-dojo-props="title: 'Long Tab Label for this One'">
-                    <h4>Group 3 Content</h4>
-                </div>
+                <h4>Group 1 Content</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
+                <button data-dojo-type="rfd/Button"></button>
+            </div>
+            <div
+                    data-dojo-type="dijit/layout/ContentPane"
+                    data-dojo-props="title: 'Group Two'">
+                <h4>Group 2 Content</h4>
+            </div>
+            <div
+                    data-dojo-type="dijit/layout/ContentPane"
+                    data-dojo-props="title: 'Long Tab Label for this One'">
+                <h4>Group 3 Content</h4>
             </div>
         </div>
 <!-- Bottom section -->
-        <div id="bottomArea" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-            <!-- Outter center region -->
-            <div id="bottom"
-                    style="width: 1280px; height: 400%; margin: 0; padding: 0"
-                    data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-                <div id="bottomLeft" style="width: 600px"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
-                    Bottom Left
-                    <table id="classTable" style="border: 1" >
-                        <tr><td>row 1</td></tr>
-                    </table>
+        <!-- Outter center region -->
+        <div id="bottom"
+                style="margin: 0; padding: 0"
+                data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline', region: 'center'">
+            <div id="bottomLeft" class="window_bottom_width"
+                data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
+                Bottom Left
 
-                </div>
-                <div id="bottomRight"
-                    data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-                    Bottom Right
-                </div>
+            </div>
+            <div id="bottomRight"
+                data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
+                Bottom Right
             </div>
         </div>
     </div>
