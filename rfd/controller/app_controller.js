@@ -18,6 +18,11 @@ define([
           "rfd/Collection_R", 
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
+          "dijit/Menu", 
+          "dijit/MenuItem", 
+          "dijit/PopupMenuItem", 
+          "dijit/CheckedMenuItem", 
+          "dijit/MenuSeparator", 
     "dojox/image/LightboxNano",
     "dojox/data/FlickrRestStore",
     "rfd/module"
@@ -28,6 +33,7 @@ function(
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
+            Menu, MenuItem, PopupMenuItem, CheckedMenuItem, MenuSeparator,
             LightboxNano,
             FlickrRestStore) 
 {
@@ -63,10 +69,52 @@ function(
         //      Create HTML string to represent the given item
         console.log("renderItem called");
     };
+
+    var createMenuFunc = function(contextOfIds, selector_str) {
+        var pMenu;
+        // Ids array, nodes to attach menu to - right click
+        var menuSelection = { targetNodeIds: contextOfIds };
+        // If a selector string is specified, we want to select sub-nodes of the contextOfIds
+        if(selector_str != null) { menuSelection.selector = selector_str; }
+        pMenu = new Menu(menuSelection);
+
+        console.log("Menu add to '" + contextOfIds);
+        pMenu.addChild(new MenuItem({
+            label: "Simple menu item"
+        }));
+        pMenu.addChild(new MenuItem({
+            label: "Disabled menu item",
+            disabled: true
+        }));
+        pMenu.addChild(new MenuItem({
+            label: "Menu Item With an icon",
+            iconClass: "dijitEditorIcon dijitEditorIconCut",
+            onClick: function(){alert('i was clicked')}
+        }));
+        pMenu.addChild(new CheckedMenuItem({
+            label: "checkable menu item"
+        }));
+        pMenu.addChild(new MenuSeparator());
+
+        var pSubMenu = new Menu();
+        pSubMenu.addChild(new MenuItem({
+            label: "Submenu item"
+        }));
+        pSubMenu.addChild(new MenuItem({
+            label: "Submenu item"
+        }));
+        pMenu.addChild(new PopupMenuItem({
+            label: "Submenu",
+            popup: pSubMenu
+        }));
+
+        pMenu.startup();
+    };
     return {
         init: function() {
             // proceed directly with startup
             startup();
-        }
+        },
+        createMenu: createMenuFunc
     };
 });
