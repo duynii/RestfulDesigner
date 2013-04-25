@@ -96,14 +96,12 @@
 require([ 
         "dojo/ready", "dojo/parser",
         "rfd/controller/app_controller", 
-          "rfd/controller/app_step2", 
           "dojo/domReady",
-          ], function(ready, parser, app_controller, app_step2) 
+          ], function(ready, parser, app_controller) 
 {
             ready(function() 
             { 
                 parser.parse();
-                //app_step2.init();
                 app_controller.init();
             });
 });
