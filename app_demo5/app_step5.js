@@ -18,7 +18,10 @@ define([
 	"dojo/_base/window",
 	"app_demo5/module"
 	], 
-	function(dom, domStyle, domClass, domConstruct, domGeometry, string, on, aspect, keys, lang, baseFx, registry, parser, ContentPane, FlickrRestStore, LightboxNano, win) {
+	function(dom, domStyle, domClass, domConstruct, 
+            domGeometry, string, on, aspect, keys, 
+            lang, baseFx, registry, parser, ContentPane, 
+            FlickrRestStore, LightboxNano, win) {
 
 	var store = null,
 		preloadDelay = 500,
