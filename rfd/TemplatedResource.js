@@ -14,7 +14,7 @@ define([
             this.source = json_data;
         },
 
-        toString: function() {
+        print: function() {
             var str = this.inherited(arguments);
             str += "\ntemplate: " + this.template;
             str += "\nsource: " + JSON.stringify(this.source);

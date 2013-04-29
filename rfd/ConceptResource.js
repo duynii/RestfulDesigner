@@ -13,8 +13,11 @@ define([
             this.is_concept = true;
         },
         isConcept: function() { return true; },
-
         toString: function() 
+        {
+            return "{" + this.name + "}";
+        },
+        print: function() 
         {
             var str = " = " +
                 "name: " + this.name + "\n" +

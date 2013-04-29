@@ -49,15 +49,15 @@
             <div id="bottomLeft" class="window_bottom_width"
                 data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
                 Bottom Left
-                <list id="leftList">
-                </list>
+                <ol id="leftList">
+                </ol>
 
             </div>
             <div id="bottomRight"
                 data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
                 Bottom Right
-                <list id="rightList">
-                </list>
+                <ol id="rightList">
+                </ol>
             </div>
         </div>
     </div>
@@ -101,6 +101,9 @@ require([
             { 
                 parser.parse();
                 app.init();
+
+                app.leftTree("leftList");
+                app.rightTree("rightList");
             });
 });
     </script>

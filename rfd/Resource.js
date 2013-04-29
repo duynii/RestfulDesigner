@@ -11,16 +11,22 @@ define([
     "dojo/_base/declare"
 ], function(declare){
     return declare("rfd/Resource", null, {
-        constructor: function(name, parentid){
+        constructor: function(name, parentId){
             this.id = name;
             this.name = name;
             this.parentId = parentId;
             this.methods = new Array();
+
+            this.type = [ "resource" ];
         },
 
         isConcept: function() { return false; },
 
-        toString: function() {
+        toString: function()
+        {
+            return this.name;
+        },
+        print: function() {
             var str = " = " +
                 "name: " + this.name + "\n" +
                 "parentId: " + this.parentId + "\n" +
