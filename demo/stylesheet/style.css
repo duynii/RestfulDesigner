@@ -12,15 +12,31 @@ html, body {
 .claro .demoLayout .edgePanel {
     background-color: #d0e9fc;
 }
+
+/* This works, ref: http://dojotoolkit.org/reference-guide/1.8/dijit/layout.html
+ mainDiv is outer most div
+ */
+html, body, #mainDiv {
+    width: 100%; height: 100%;
+    border: 0; padding: 0; margin: 0;
+}
  
 
 .window_mins {
     min-width: 1024px;
     min-height: 600px;
 }
+.window_top_mins {
+    min-width: 1024px;
+    min-height: 400px;
+}
 
 .window_top_height {
     height: 60%;
+}
+
+.window_top_width {
+    width: 30%;
 }
 
 .window_bottom_width {
@@ -202,3 +218,16 @@ table.classTable td {
     border-color: rgb(200,200,200);
 }
 
+.erSize {
+  width: 400px;
+  height: 400px;
+}
+
+.absolute {
+  position: "absolute";
+}
+
+.zeroPosition {
+  top: 0px;
+  left: 0px;
+}
