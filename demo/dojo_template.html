@@ -13,11 +13,12 @@
         <!-- Top Region -->
         <div id="topTab"
                 class="window_top_height"
-                data-dojo-type="dijit/layout/TabContainer"
+                data-dojo-type="dijit/layout/BorderContainer"
                 data-dojo-props="region: 'top', splitter: true, tabPosition: 'bottom'">
+
             <div
                     data-dojo-type="dijit/layout/ContentPane"
-                    data-dojo-props="title: 'Group 1'">
+                    data-dojo-props="title: 'Group 1', region: 'center'">
                 <div id='rootPlacement'>
                    <button id='root' data-dojo-type="dijit/form/Button">Click Me</button>
                    <button id="rootPlus" class="addButton" data-dojo-type="dijit/form/Button"> + </button>
@@ -30,15 +31,10 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incidid.</p>
                 <button data-dojo-type="rfd/Button"></button>
             </div>
-            <div
+            <div style="min-width: 30%"
                     data-dojo-type="dijit/layout/ContentPane"
-                    data-dojo-props="title: 'Group Two'">
+                    data-dojo-props="title: 'Group Two', region: 'right', splitter: true">
                 <h4>Group 2 Content</h4>
-            </div>
-            <div
-                    data-dojo-type="dijit/layout/ContentPane"
-                    data-dojo-props="title: 'Long Tab Label for this One'">
-                <h4>Group 3 Content</h4>
             </div>
         </div>
 <!-- Bottom section -->
