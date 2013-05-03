@@ -79,6 +79,15 @@ html, body, #mainDiv {
   min-height: 35px;
   background-color: rgb(139, 139, 139);
 }
+
+.templatedResource {
+  min-height: 35px;
+  background-color: rgb(35, 225, 85);
+}
+.templatedResource:hover {
+  min-height: 35px;
+  background-color: rgb(65, 255, 115);
+}
 .collectionResource {
   min-height: 35px;
   background-color: rgb(65, 105, 225);

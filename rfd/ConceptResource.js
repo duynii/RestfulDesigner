@@ -12,7 +12,6 @@ define([
             // Re-defined here, mixin to replace parent's false value
             this.is_concept = true;
         },
-        isConcept: function() { return true; },
         toString: function() 
         {
             return "{" + this.name + "}";

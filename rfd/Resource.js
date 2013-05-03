@@ -10,23 +10,26 @@ METHODS = {
 define([
     "dojo/_base/declare"
 ], function(declare){
-    return declare("rfd/Resource", null, {
-        constructor: function(name, parentId){
+    return declare("rfd/Resource", null, 
+    {
+        constructor: function(name, parentId)
+        {
             this.id = name;
             this.name = name;
             this.parentId = parentId;
             this.methods = new Array();
 
+            this.is_concept = false;
             this.type = [ "resource" ];
         },
 
-        isConcept: function() { return false; },
 
         toString: function()
         {
             return this.name;
         },
-        print: function() {
+        print: function() 
+        {
             var str = " = " +
                 "name: " + this.name + "\n" +
                 "parentId: " + this.parentId + "\n" +

@@ -1,4 +1,5 @@
 define([
+    "dojox/collections/Dictionary",
     "dojo/dom",
     "dojo/dom-construct",
     "dojo/on",
@@ -27,6 +28,7 @@ define([
     "rfd/module"
     ],
 function(
+            Dictionary,
             dom, domConstruct, on, keys, lang, baseArray, baseEvent, 
             parser, Button, registry, query, 
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
@@ -52,9 +54,17 @@ function(
         // summary:
         //      create and setup the UI with layout and widgets
         // create a single Lightbox instnace which will get reused
-        lightbox = new LightboxNano({});
 
         console.log("initUi called");
+
+        var dic = new Dictionary();
+        dic.add("a", "b");
+        dic.add("b", "c");
+        dic.add("c", "d");
+        console.log("a: " + dic.entry("a"));
+        console.log("c: " + dic.entry("c"));
+        console.log("f: " + dic.entry("f"));
+        
  
     },
     doSearch = function() {
@@ -121,12 +131,6 @@ function(
           console.log("leftTree called");
           
           var container = new Source(id, {
-            /*
-            creator: function(item, hint)
-            {
-              
-            },
-            */
             singular: true,
             isSource: false, // Can only be dnd target
             accept: ["resource"], // Accept resource objects only
