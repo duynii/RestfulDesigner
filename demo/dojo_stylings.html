@@ -85,7 +85,7 @@
             <div id="bottom"
                     style="width: 1280px; height: 40%; margin: 0; padding: 0"
                     data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-                <div id="bottomLeft" style="width: 100%"
+                <div id="bottomLeft" style="width: 100%; position: relative"
                     data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left'">
                     Bottom Left
                     <table id="classT" >
@@ -134,6 +134,7 @@
                   "dojo/on",
                   "dojo/dom-construct",
                   "dojo/dom-style",
+                  "dojo/dom-geometry",
                   "dojo/dnd/Selector",
                   "dojo/dnd/Container",
                   "dojo/dnd/Target",
@@ -154,7 +155,7 @@
                   "dijit/layout/BorderContainer", 
                   "dijit/layout/TabContainer", 
                   "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on,
-                                                         domConstruct, domStyle,
+                                                         domConstruct, domStyle, domGeometry,
                                                          Selector, Container, Target, Moveable,
                                                          Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                          Concept_R,
@@ -205,47 +206,6 @@
                     var tempButton = registry.byId("templatedButton");
                     tempButton.set("concept", cRes);
 
-/*
-                    var resource = new StaticResource('root');
-                    console.log("Resource: " + resource.toString() + "\n");
-
-                    var templateR = new TemplatedResource('tempR', { "title" : "Castle", "series" : "4", "episode" : "40" },
-                                                          null);
-                    console.log('static resource: ' + templateR.toString()); 
-
-                    var concept = new ConceptResource('test');
-                    console.log('Concept resource: ' + concept.toString()); 
-                    var rep = new Representation(concept);
-                    rep.addField({ "name" : "Royal Children Hospital", "type": "Single String"});     
-                    rep.addField({ "phone" : "0295556789", "type": "Integer"});     
-
-                    console.log("representation test = " + rep.toString());
-
-                    var cRes = new Concept_R('CResource');
-                    console.log("Concept_R " + cRes.toString());
-                             
-
-                    var wid = registry.byId("rootPlus");
-                    if(wid) {
-                        wid.set("p_data", "root");
-                    }
-
-                    registry.byId("root").set("label", "/").set("disabled", "disabled");
-
-                    query(".addButton").forEach(function(node, index, nodelist){
-                        console.info("Registering add button event..." + node.p_data);
-                        // for each node in the array returned by query,
-                        // execute the following code
-                        on(node, "click", function(evt) 
-                        {
-                            var widget = registry.getEnclosingWidget(evt.target);
-                            if(widget){
-                                console.log("click on widget " + widget.id + " " + widget.p_data);
-                            }
-                        });
-                    });
-*/
-
                     var table = dojo.byId("classTable");
                     domConstruct.create("th", { innerHTML: "Hospital" }, table);
             
@@ -270,6 +230,15 @@
                     var move = new Moveable("classT");
                     var span = new Moveable("classTable");
                     var span2 = new Moveable("classTemp");
+
+                    domStyle.set(table, "position", "absolute");
+                    domStyle.set(table2, "position", "absolute");
+
+                    var box = domGeometry.getMarginBox(table);
+                    var left = box.l + box.w + 5;
+                    console.log("my box: " + box.l);
+
+                    domStyle.set(table2, "left", left + "px");
               });
             });
     </script>
