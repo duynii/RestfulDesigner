@@ -1,6 +1,7 @@
 // Example class
 define([
     "dojo/_base/declare",
+    "rfd/model/Branch",
     "dojox/collections/ArrayList",
     "dojo/store/Memory"
 ], function(declare, ArrayList, Memory){
@@ -8,10 +9,11 @@ define([
     {
         constructor: function()
         {
-            this.resources = new ArrayList();
+            this.branches = new ArrayList();
             this.store = new Memory();
         },
 
+        getBranches: function() { return this.branhces; },
 
         toString: function()
         {
@@ -19,7 +21,8 @@ define([
         },
         print: function() 
         {
-            return "TODO";
+            //"TODO";
+            // Print everything here
         }
     });
 });

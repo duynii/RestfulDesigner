@@ -9,8 +9,9 @@ METHODS = {
 // Example class
 define([
     "dojo/_base/declare",
+    "rfd/Resource",
     "dojox/collections/ArrayList"
-], function(declare, ArrayList){
+], function(declare, Resource, ArrayList){
     return declare("rfd/model/Section", null, 
     {
         constructor: function()
@@ -21,11 +22,18 @@ define([
 
         toString: function()
         {
-            return "TODO";
+            var str = "";
+            this.fields.forEach(function(resource)
+                {
+                    str += resource + '/';
+                }, 
+                null
+            );
+            return str;
         },
         print: function() 
         {
-            return "TODO";
+            console.log("Section: " + toString());
         }
     });
 });

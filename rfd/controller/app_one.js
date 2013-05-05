@@ -22,6 +22,7 @@ define([
           "dijit/form/NumberTextBox", 
           "dojo/dnd/Source", 
           "dojo/store/Memory", 
+    "rfd/controller/controller_one",
     "rfd/module"
     ],
 function(
@@ -33,7 +34,8 @@ function(
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
             Source,
-            Memory) 
+            Memory,
+            Controller) 
 {
     var store = new Memory({}),
     //flickrQuery = dojo.config.flickrRequest || {},
@@ -41,6 +43,7 @@ function(
     catalogueTemplate_R = null,
     catalogueStatic_R = null,
     cssButtonMap = new Dictionary(),
+    controller = new Controller(),
  
     startup = function() 
     {
@@ -56,7 +59,7 @@ function(
     {
       cssButtonMap.add("rfd/StaticResource", "staticResource");
       cssButtonMap.add("rfd/TemplatedResource", "templatedResource");
-      cssButtonMap.add("rfd/CustomResource", "customResource");
+      cssButtonMap.add("rfd/Custom_R", "customResource");
       cssButtonMap.add("rfd/Concept_R", "individualResource");
       cssButtonMap.add("rfd/PartialConcept_R", "partialResource");
       cssButtonMap.add("rfd/Collection_R", "collectionResource");
@@ -72,7 +75,7 @@ function(
       "button", 
         { 
           class: cssStyle,
-          innerHTML:  item.is_concept ? "{" +item.name + "}" : item.name 
+          innerHTML:  item.toString() 
         },
         li,
         null

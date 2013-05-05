@@ -1,9 +1,10 @@
 // Example class
 define([
     "dojo/_base/declare",
+    "rfd/model/Method",
     "dojox/collections/ArrayList"
-], function(declare, ArrayList){
-    return declare("rfd/model/DELETEMethod", null, 
+], function(declare, Method, ArrayList){
+    return declare("rfd/model/DELETEMethod", Method, 
     {
         constructor: function()
         {

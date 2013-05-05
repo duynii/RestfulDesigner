@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Tutorial: Hello Dojo!</title>
+    <title>Stylings Dojo</title>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8/dijit/themes/claro/claro.css" media="screen">
     <link rel="stylesheet" href="stylesheet/style.css" media="screen">
 </head>
@@ -145,6 +145,7 @@
                   "rfd/ConceptResource",
                   "rfd/Representation",
                   "rfd/Concept_R",
+                  "dojox/collections/ArrayList",
                     //Widgets
                   "dijit/form/Button",
                   "dijit/form/DropDownButton",
@@ -159,11 +160,28 @@
                                                          Selector, Container, Target, Moveable,
                                                          Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                          Concept_R,
+                                                         ArrayList,
                                                          Button, DropDownButton, TooltipDialog, popup
                                                         ) {
                 ready(function() 
                 { 
                     parser.parse();
+
+                    var array = new ArrayList();
+                    array.add({field: "field1", ascending: true});
+                    array.add({field: "field2", ascending: false});
+                    array.add({field: "field3", ascending: true});
+
+                    console.log("array length: " + array.toArray().length);
+
+                    var test =  {id: "haha"};
+                    array.forEach(
+                        function(item)
+                        {
+                            console.log("field: " + item.field + " this is " + this.id);
+                        },
+                        test // Just set this to null
+                    );
                     
                     // Buttons and TooltipDialog
                     var tooltip = new TooltipDialog({
