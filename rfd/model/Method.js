@@ -12,11 +12,12 @@ define([
 
         toString: function()
         {
-            return "TODO";
+            console.error("Do not call Method.toString");
+            return "Method";
         },
         print: function() 
         {
-            //return "TODO";
+            console.error("Do not call Method.print");
         }
     });
 });

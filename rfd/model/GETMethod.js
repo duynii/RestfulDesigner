@@ -8,6 +8,7 @@ define([
     {
         constructor: function()
         {
+            this.expiry_duration = 300; // 300s or 5 mins
         },
 
 
