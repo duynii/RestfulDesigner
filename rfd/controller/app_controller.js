@@ -24,7 +24,6 @@ define([
           "dijit/CheckedMenuItem", 
           "dijit/MenuSeparator", 
     "dojox/image/LightboxNano",
-    "dojox/data/FlickrRestStore",
     "rfd/module"
     ],
 function(
@@ -34,17 +33,14 @@ function(
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
             Menu, MenuItem, PopupMenuItem, CheckedMenuItem, MenuSeparator,
-            LightboxNano,
-            FlickrRestStore) 
+            LightboxNano
+            ) 
 {
     var store = null,
-    flickrQuery = dojo.config.flickrRequest || {},
  
     startup = function() 
     {
         console.log("startup called")
-        // create the data store
-        var flickrStore = this.store = new FlickrRestStore();
         initUi();
     },
  
@@ -53,7 +49,6 @@ function(
         // summary:
         //      create and setup the UI with layout and widgets
         // create a single Lightbox instnace which will get reused
-        lightbox = new LightboxNano({});
 
         console.log("initUi called");
  

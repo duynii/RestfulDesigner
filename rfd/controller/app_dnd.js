@@ -67,6 +67,7 @@ function(
         
  
     },
+    resourcesContainer = null,
     doSearch = function() {
         // summary:
         //      inititate a search for the given keywords
@@ -77,6 +78,28 @@ function(
         // summary:
         //      Create HTML string to represent the given item
         console.log("renderItem called");
+    };
+    var resourceCreator = function(item, hint)
+    {
+         console.log("resources creator's item: " + item.declaredClass);
+
+         var cssStyle = "collectionResource";
+         if(item.declaredClass == "rfd/Concept_R") {
+            cssStyle = "individualResource";
+         }
+
+         var li = domConstruct.create("li");
+         domConstruct.create(
+           "button", 
+           { 
+              id: item.name + "_id",
+              class: cssStyle,
+              innerHTML: "{" +item.name + "}" 
+           },
+           li,
+           null
+         );
+          return { node: li, data: item, type: item.type };
     };
     var creatorFunc =  function(item, hint)
      {
@@ -109,12 +132,6 @@ function(
           console.log("rightTree called");
           
           var container = new Source(id, {
-            /*
-            creator: function(item, hint)
-            {
-              
-            },
-            */
             singular: true,
             accept: [], // This is a dnd source only
             creator: creatorFunc,
@@ -130,12 +147,17 @@ function(
         {
           console.log("leftTree called");
           
-          var container = new Source(id, {
+          resourcesContainer = new Source(id, {
             singular: true,
             isSource: false, // Can only be dnd target
             accept: ["resource"], // Accept resource objects only
             type: ["concepts"],
-            creator: creatorFunc,
+            creator: resourceCreator ,
+            checkAcceptance: function(source, nodes)
+            {
+                console.log("source checkAcceptance: " + nodes[0].id);
+                return true;
+            },
             onDropExternal: function(source, nodes, copy)
             {
               console.log("onDropExternal left called");
@@ -143,13 +165,22 @@ function(
               console.log("source:" + typeof(source));
               console.log("node id:" + nodes[0].id);
 
+         var selectedNode = null;
+         resourcesContainer.getSelectedNodes().forEach(function(node)
+         {
+            selectedNode = node;
+         });
+
+         console.log("selected node id: " + (selectedNode != null ? selectedNode.id : "null selectedNode"));
+
+
               var obj = source.map[nodes[0].id];
               console.log("data: " + obj.data);
               console.log("type: " + obj.type);
               console.log("copy:" + copy);
               // performs the drop
-              container.insertNodes(false, [obj.data], false, null);
-              container.sync();
+              resourcesContainer.insertNodes(false, [obj.data], false, null);
+              resourcesContainer.sync();
 
               //source.node.removeChild(nodes[0].id);
               source.getSelectedNodes().orphan();
@@ -161,7 +192,7 @@ function(
 
           var c1 = new StaticResource("public", "/");
           var c2 = new Concept_R("contacts", "public");
-          container.insertNodes(false, [c1, c2], false, null);
+          resourcesContainer.insertNodes(false, [c1, c2], false, null);
         }
     };
 });

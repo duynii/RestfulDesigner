@@ -16,7 +16,10 @@ define([
     {
         constructor: function(field, type)
         {
-            this.type = type;
+            if(type.enumval != 1) {
+                console.error("Wrong type enum given, NumberFilterEnum needed");
+            }
         },
+
     });
 });
