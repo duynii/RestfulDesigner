@@ -1,0 +1,53 @@
+
+{
+	"concepts": {
+		"concept" : {
+			"name": "hospitals",
+			"properties": [
+				{ 
+					"name": "title",
+					"type": "string",
+					"indexed": true
+				},
+				{ 
+					"name": "physical address",
+					"type": "string"
+				},
+				{
+					"name": "postal address",
+					"type": "string"
+				},
+				{
+					"name": "general phone",
+					"type": "phone"
+				},
+				{
+					"name": "fax",
+					"type": "phone",
+					"required": false
+				}
+			],
+			"physical_address": "string",
+			"postal_address": "string",
+			"phone": "phone",
+			"fax": "phone",
+			"belongs_to": []
+		}
+		"concept": {
+			"name": "services",
+			"properties": [
+				{
+					"name": "name",
+					"type": "string",
+					"indexed": true
+				},
+				{
+					"name": "descriptions",
+					"type": "string"
+				}
+			],
+			"belongs_to": [ "hospitals"]
+		}
+
+	}
+}
