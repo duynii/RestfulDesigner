@@ -12,7 +12,10 @@ define([
             this.properties = new Array();
         },
 
-        toString: function() {
+        toString : function() {
+            var str = "name: " + this.name + ", parent: " + this.parentId;
+        },
+        print: function() {
             var str = " = id: " + this.id + " name: " + this.name + " parentID: " + this.parentId;
             str += "\nprops: \n";
             arrayUtil.forEach(properties, function(prop, index) {
@@ -20,6 +23,7 @@ define([
             });
             return str;
         }
+
 
     });
 });

@@ -6,6 +6,7 @@ define([
     "dojo/dom-construct",
     "dojo/dom-style",
     "dojo/dom-geometry",
+    "dojo/query",
     "dojo/on",
     "dojo/json",
     "dojo/keys",
@@ -16,7 +17,9 @@ define([
           "dojo/parser", 
           "dijit/form/Button",
           "dijit/registry",
-          "dojo/query",
+          "dijit/Menu",
+          "dijit/MenuItem",
+          "rfd/Concept",
           "rfd/Resource",
           "rfd/StaticResource",
           "rfd/TemplatedResource",
@@ -32,9 +35,10 @@ define([
     "rfd/module"
     ],
 function(
-            dom, domConstruct, domStyle, domGeometry, on, JSON, keys, lang, baseArray, baseEvent, 
+            dom, domConstruct, domStyle, domGeometry, query, on, JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
-            parser, Button, registry, query, 
+            parser, Button, registry, Menu, MenuItem, 
+            Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
@@ -44,6 +48,7 @@ function(
 {
     var store = null,
     tablesMap = new Dictionary(),
+    temp_id_num = 1,
  
     startup = function() 
     {
@@ -93,7 +98,6 @@ function(
         { 
           maxHeight = box.t+ box.h; 
         }
-
         //Go to next row if past outter box
         if(divBox.l + divBox.w < left) 
         {
@@ -134,7 +138,6 @@ function(
         {
           console.log("\tproperty" + (index+1)  + " is " + prop.name);
         });
-
         container.insertNodes(concept.properties, false, null);
 
         // Set it into a map
@@ -155,12 +158,18 @@ function(
         // For each object do something
         var left = 0; // For arranging the classes left to right
         // Should put all classes in a Dictionary
-        baseArray.forEach(data.concepts, function(concept, index)
+        baseArray.forEach(data.concepts, function(obj_concept, index)
         {
-          console.log("concept " + (index+1)  + " is " + concept.name);
+          console.log("concept " + (index+1)  + " is " + obj_concept.name);
+          // Create Concept class from db file's object
+          var concept = new Concept(obj_concept.id, obj_concept.name, null);
+          lang.mixin(concept, obj_concept);
           // create a Container (table) for this concept
           createConcept(concept);
         });
+
+
+
 
         arrangeClasses();
 
