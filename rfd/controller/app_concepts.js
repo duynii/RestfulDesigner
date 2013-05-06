@@ -1,13 +1,18 @@
+CLASS_SPACING = 40;
+CLASS_Y_SPACING = 10;
+
 define([
     "dojo/dom",
     "dojo/dom-construct",
     "dojo/dom-style",
+    "dojo/dom-geometry",
     "dojo/on",
     "dojo/json",
     "dojo/keys",
     "dojo/_base/lang",
     "dojo/_base/array", 
     "dojo/_base/event", 
+    "dojox/collections/Dictionary",
           "dojo/parser", 
           "dijit/form/Button",
           "dijit/registry",
@@ -27,7 +32,8 @@ define([
     "rfd/module"
     ],
 function(
-            dom, domConstruct, domStyle, on, JSON, keys, lang, baseArray, baseEvent, 
+            dom, domConstruct, domStyle, domGeometry, on, JSON, keys, lang, baseArray, baseEvent, 
+            Dictionary,
             parser, Button, registry, query, 
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
@@ -37,18 +43,77 @@ function(
             ) 
 {
     var store = null,
+    tablesMap = new Dictionary(),
  
     startup = function() 
     {
         console.log("startup called")
         initUi();
     },
+    arrangeClasses = function()
+    {
+      /*
+      tablesMap.forEach(function(pair) {
+          console.log("key:" + pair.key + ", item: " + pair.value.id);
+
+          //var container = registry.byId(pair.key);
+          //console.log("container: " + container.id);
+        }, 
+        null
+      );
+*/
+
+      var bottomLeft = dom.byId("bottomLeft");
+      /*
+      var containers = registry.findWidgets(bottomLeft);
+      var left = 0;
+      baseArray.forEach(containers, function(item) {
+        var box = domGeometry.getMarginBox(item.domNode);
+        domStyle.set(item.domNode, "left", left + "px");
+        left += box.l + CLASS_SPACING;
+      });
+      */
+      var left = 0;
+      var top = 0;
+      var maxHeight = 0;
+      var divBox = domGeometry.getMarginBox(bottomLeft);
+      query("#bottomLeft > .classTable").forEach(function(node)
+      {
+        console.log("table: " + node.id);
+        domStyle.set(node, "position", "absolute");
+
+        var box = domGeometry.getMarginBox(node);
+        domStyle.set(node, "left", left + "px");
+        domStyle.set(node, "top", top + "px");
+        left += box.l + box.w + CLASS_SPACING;
+
+        // Next row is below biggest class of top row.
+        // Simple.
+        if(box.t + box.h > maxHeight) 
+        { 
+          maxHeight = box.t+ box.h; 
+        }
+
+        //Go to next row if past outter box
+        if(divBox.l + divBox.w < left) 
+        {
+          left = 0;
+          top = maxHeight + CLASS_Y_SPACING;
+        }
+      });
+    },
     createConcept = function(concept)
     {
         console.log("createConcept called");
         var outter = dom.byId("bottomLeft");
         // The table
-        var table = domConstruct.create("table", {class: "classTable", position: "absolute"}, outter);
+        var table = domConstruct.create("table", 
+          {
+            id: concept.name + "_table",
+            class: "classTable", 
+            position: "absolute"
+          }, 
+          outter);
         domConstruct.create("th", {innerHTML: concept.name}, table);
         var container = new Container(table, { 
                       creator: function(item, hint) 
@@ -71,6 +136,11 @@ function(
         });
 
         container.insertNodes(concept.properties, false, null);
+
+        // Set it into a map
+        console.log("adding concept");
+        tablesMap.add(concept.name + "_table", table);
+
         // Make it dragable any where inside its container div
         new Moveable(table);
     },
@@ -89,34 +159,10 @@ function(
         {
           console.log("concept " + (index+1)  + " is " + concept.name);
           // create a Container (table) for this concept
-          var table = domConstruct.create("table", {class: "classTable", position: "absolute"}, outter);
-          domConstruct.create("th", {innerHTML: concept.name}, table);
-          //domStyle.set(table, "position", "absolute");
-          //console.log("style before: " + domStyle.get(table, "class"));
-          var container = new Container(table, { 
-                      creator: function(item, hint) 
-                      {
-                        console.log("creator called with " + item);
-                        var tr = domConstruct.create("tr");
-                        var td = domConstruct.create("td", { 
-                          innerHTML: item.name + ": " + item.type 
-                        }, 
-                        tr);
-                        return { node: tr, data: item, type: ["text"] };
-                      },
-                      singular: true,
-                      id: concept.name + "_table",
-                      data: concept 
-          });
-          baseArray.forEach(concept.properties, function(prop, index)
-          {
-            console.log("\tproperty" + (index+1)  + " is " + prop.name);
-          });
-
-          container.insertNodes(concept.properties, false, null);
-
-          new Moveable(table);
+          createConcept(concept);
         });
+
+        arrangeClasses();
 
     },
     doSearch = function() {
