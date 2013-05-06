@@ -1,5 +1,5 @@
 
-// Example class
+// Not in use
 define([
     "dojo/_base/declare"
 ], function(declare){
@@ -7,6 +7,8 @@ define([
         constructor: function(name, type){
             this.name = name;
             this.type = type;
+            this.indexed = false;
+            this.required = true;
         },
 
         toString: function() {

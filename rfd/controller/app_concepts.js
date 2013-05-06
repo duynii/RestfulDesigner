@@ -19,6 +19,7 @@ define([
           "dijit/registry",
           "dijit/Menu",
           "dijit/MenuItem",
+          "dijit/MenuSeparator",
           "rfd/Concept",
           "rfd/Resource",
           "rfd/StaticResource",
@@ -37,7 +38,7 @@ define([
 function(
             dom, domConstruct, domStyle, domGeometry, query, on, JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
-            parser, Button, registry, Menu, MenuItem, 
+            parser, Button, registry, Menu, MenuItem, MenuSeparator,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
@@ -140,6 +141,8 @@ function(
         });
         container.insertNodes(concept.properties, false, null);
 
+
+
         // Set it into a map
         console.log("adding concept");
         tablesMap.add(concept.name + "_table", table);
@@ -147,7 +150,21 @@ function(
         // Make it dragable any where inside its container div
         new Moveable(table);
     },
- 
+    setupAddClass = function(node) {
+      var menu = new Menu({targetNodeIds: [ node.id ] });
+      menu.addChild(new MenuItem({
+        label: "Create new concept",
+        onClick: function() 
+        {
+          // Create a new class
+          var name = "DefaultClass_" + temp_id_num;
+          temp_id_num += 1;
+          var concept = new Concept(name, name, null);
+          createConcept(concept);
+          arrangeClasses();
+        }
+      }));
+    }, 
     initUi = function() 
     {
         console.log("initUi called");
@@ -167,11 +184,9 @@ function(
           // create a Container (table) for this concept
           createConcept(concept);
         });
-
-
-
-
         arrangeClasses();
+        // Right click Menu for bottom Left area
+        setupAddClass(outter);
 
     },
     doSearch = function() {
