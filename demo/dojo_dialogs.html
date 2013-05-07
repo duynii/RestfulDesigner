@@ -216,7 +216,7 @@ require([ "dojo/parser",
           "dijit/popup", 
           "dijit/TooltipDialog", 
           "dijit/Dialog", 
-          "dojo/text!demo/NewProperty.html", 
+          "dojo/text!rfd/widget/templates/NewProperty.html", 
           "dojo/domReady",
           "dijit/layout/BorderContainer", 
           "dijit/layout/TabContainer", 
@@ -239,6 +239,9 @@ require([ "dojo/parser",
         }
 
         parser.parse();
+
+        var conf = confirm("OK?");
+        console.log("confirm: " + conf);
 
 //      This is with HTML markup TooltipDialog
 //        var tooltip = registry.byId("collectionTooltip");
@@ -270,13 +273,13 @@ require([ "dojo/parser",
             console.log("caught onSubmit");
         });
 
-        var d = new Dialog({title: "New Property"}, "<p>blah");
+        var d = new Dialog({title: "New Property", content: formNP});
+        d.show();
         // Dojo event for existing widget
         dia.set("onSubmit", function(e) 
         { 
             e.preventDefault();
             console.log("onSubmit")
-            d.show();
         });
         
         

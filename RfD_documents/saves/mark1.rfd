@@ -2,6 +2,7 @@
 	"concepts": 
 	[
 		{
+			"id" : "hospitals",
 			"name": "hospitals",
 			"properties": 
 			[

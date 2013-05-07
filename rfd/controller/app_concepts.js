@@ -54,6 +54,7 @@ function(
     var store = null,
     tablesMap = new Dictionary(),
     temp_id_num = 1,
+    dialog  = new Dialog({title: "New Property", content: newprop}),
  
     startup = function() 
     {
@@ -127,10 +128,25 @@ function(
         var container = new Container(table, { 
                       creator: function(item, hint) 
                       {
+                        var inner = null;
+                        if(item instanceof Array) 
+                        {
+                          console.log("typeof is an array");
+                          inner = "<b>belongs to: ";
+                          baseArray.forEach(item, function(item)
+                          {
+                            inner += item + " ";
+                          });  
+                          inner += "<b>";
+                        }
+                        else 
+                        {
+                          inner = item.name + ": " + item.type;
+                        }
                         console.log("creator called with " + item);
                         var tr = domConstruct.create("tr");
                         var td = domConstruct.create("td", { 
-                          innerHTML: item.name + ": " + item.type 
+                          innerHTML: inner 
                         }, 
                         tr);
                         return { node: tr, data: item, type: ["text"] };
@@ -144,16 +160,17 @@ function(
           console.log("\tproperty" + (index+1)  + " is " + prop.name);
         });
         container.insertNodes(concept.properties, false, null);
+        if(concept.belongs_to.length > 0) {
+          container.insertNodes([ concept.belongs_to ], false, null);
+        }
 
         on(table, "dblclick", function(evt)
           {
             console.log("clicked table: " + JSON.stringify(evt));
 
-            if(container.current == null) { // If so header clicked, add property, else double click
+            if(container.current == null) 
+            { // If so header clicked, add property, else double click
               console.log("no hover over property");
-              var dialog  = new Dialog({title: "New Property", content: newprop});
-              //concept.addProperty("address", "string");
-
               dialog.on("submit", function(e)
               {
                 e.preventDefault(); // Do not submit the form to server
@@ -171,17 +188,17 @@ function(
                 }
                 dialog.hide();
               });
-              dialog.on("cancel", function(e)
-              {
-                dialog.hide();
-              });
               dialog.show();
             }
             else
             {
               var propertyId = container.current.id;
               var prop = container.getItem(propertyId).data;
-              if(confirm("Delete the property? " + prop.name)) 
+              if(prop instanceof Array) {
+                console.warn("Cannot delete relationship at this time");
+                return;
+              } // Else it must be a property
+              else if(confirm("Delete the property? " + prop.name)) 
               {
                 console.log("deleting the property");
                 console.log("prop delete: " + JSON.stringify(prop));
@@ -216,14 +233,7 @@ function(
 
           console.log("mouse: " + event.layerX + " " + event.layerY);
           console.log("page mouse: " + event.pageX + " " + event.pageY);
-/*
-          var n = dom.byId(concept.name + "_table");
-          var box = domGeometry.getMarginBox("topTab");
-          console.log(JSON.stringify(box));
-          domStyle.set(n,"position", "absolute");
-          domStyle.set(n,"left", event.pageX);
-          domStyle.set(n,"top",  event.pageY -  box.h);
-          */
+
           arrangeClasses();
         }
       });

@@ -11,6 +11,9 @@ define([
             this.id = id;
             this.parentId = parentId;
             this.properties = new Array();
+            // names of class/es this one belongs to
+            //many to one relationship, this is the many side
+            this.belongs_to = new Array();
         },
 
         toString : function() {

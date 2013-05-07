@@ -151,10 +151,16 @@ function(
         //      Create HTML string to represent the given item
         console.log("renderItem called");
     };
+
+    var createConceptFunc = new function(concept)
+    {
+      var outter = dom.byId("bottomLeft");
+    };
     return {
         init: function() {
             // proceed directly with startup
             startup();
-        }
+        },
+        createConcept: createConceptFunc
     };
 });
