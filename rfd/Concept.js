@@ -45,7 +45,8 @@ define([
             });
 
             //Add property here
-            properties.add({name: name, type: type, indexed: indexed});
+            this.properties.add({name: name, type: type, indexed: indexed});
+            console.log("it returns: ");
             return true;
         }
 

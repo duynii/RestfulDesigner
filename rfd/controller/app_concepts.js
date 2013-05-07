@@ -31,6 +31,7 @@ define([
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
           "dojo/dnd/Container", 
+          "dojo/dnd/Selector", 
           "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
     "rfd/module"
@@ -43,13 +44,14 @@ function(
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
-            Container, Moveable,
+            Container, Selector, Moveable,
             text
             ) 
 {
     var store = null,
     tablesMap = new Dictionary(),
     temp_id_num = 1,
+    table_row_id = null,
  
     startup = function() 
     {
@@ -133,7 +135,7 @@ function(
                       },
                       singular: true,
                       id: concept.name + "_table",
-                      data: concept 
+                      data: concept
         });
         baseArray.forEach(concept.properties, function(prop, index)
         {
@@ -141,7 +143,49 @@ function(
         });
         container.insertNodes(concept.properties, false, null);
 
+        on(table, "click", function(evt)
+          {
+            console.log("clicked table: " + JSON.stringify(evt));
 
+            if(container.current == null) { // If so header clicked, add property, else double click
+              console.log("no hover over property");
+            }
+
+            var item = container.getItem(container.current.id);
+            if(container.current != null) {
+              table_row_id = container.current.id;
+              console.log("current table row id is: " + table_row_id);
+            }
+            else {
+              console.log("no table_row_id");
+              table_row_id = null;
+            }
+
+
+          });
+
+        var menu = new Menu({targetNodeIds:  [concept.name + "_table"]});
+        menu.addChild(new MenuItem(
+          {
+            label: "Add Property",
+            onClick: function()
+            {
+              console.log("Adding new property");
+              concept.addProperty("address", "string");
+            }
+          }));
+        menu.addChild(new MenuSeparator());
+        var deleteItem = new MenuItem({
+          label: "Delete attribute",
+          onClick: function(evt) 
+          {
+            if(container.current == null) {
+              console.log("Shouldnt happen, current is null");
+            }
+            console.log("delete: current table row id is: " + table_row_id);
+          }
+        });
+        menu.addChild(deleteItem);
 
         // Set it into a map
         console.log("adding concept");
@@ -152,18 +196,30 @@ function(
     },
     setupAddClass = function(node) {
       var menu = new Menu({targetNodeIds: [ node.id ] });
-      menu.addChild(new MenuItem({
+      var menuItem = new MenuItem({
         label: "Create new concept",
-        onClick: function() 
+        onClick: function(event) 
         {
           // Create a new class
           var name = "DefaultClass_" + temp_id_num;
           temp_id_num += 1;
           var concept = new Concept(name, name, null);
           createConcept(concept);
+
+          console.log("mouse: " + event.layerX + " " + event.layerY);
+          console.log("page mouse: " + event.pageX + " " + event.pageY);
+/*
+          var n = dom.byId(concept.name + "_table");
+          var box = domGeometry.getMarginBox("topTab");
+          console.log(JSON.stringify(box));
+          domStyle.set(n,"position", "absolute");
+          domStyle.set(n,"left", event.pageX);
+          domStyle.set(n,"top",  event.pageY -  box.h);
+          */
           arrangeClasses();
         }
-      }));
+      });
+      menu.addChild(menuItem);
     }, 
     initUi = function() 
     {
