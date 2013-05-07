@@ -51,7 +51,6 @@ function(
     var store = null,
     tablesMap = new Dictionary(),
     temp_id_num = 1,
-    table_row_id = null,
  
     startup = function() 
     {
@@ -143,49 +142,31 @@ function(
         });
         container.insertNodes(concept.properties, false, null);
 
-        on(table, "click", function(evt)
+        on(table, "dblclick", function(evt)
           {
             console.log("clicked table: " + JSON.stringify(evt));
 
             if(container.current == null) { // If so header clicked, add property, else double click
               console.log("no hover over property");
-            }
-
-            var item = container.getItem(container.current.id);
-            if(container.current != null) {
-              table_row_id = container.current.id;
-              console.log("current table row id is: " + table_row_id);
-            }
-            else {
-              console.log("no table_row_id");
-              table_row_id = null;
-            }
-
-
-          });
-
-        var menu = new Menu({targetNodeIds:  [concept.name + "_table"]});
-        menu.addChild(new MenuItem(
-          {
-            label: "Add Property",
-            onClick: function()
-            {
-              console.log("Adding new property");
               concept.addProperty("address", "string");
             }
-          }));
-        menu.addChild(new MenuSeparator());
-        var deleteItem = new MenuItem({
-          label: "Delete attribute",
-          onClick: function(evt) 
-          {
-            if(container.current == null) {
-              console.log("Shouldnt happen, current is null");
+            else
+            {
+              var propertyId = container.current.id;
+              var prop = container.getItem(propertyId).data;
+              if(confirm("Delete the property? " + prop.name)) 
+              {
+                console.log("deleting the property");
+                console.log("prop delete: " + JSON.stringify(prop));
+                concept.deleteProperty(prop);
+                //Now remove from UI
+                domConstruct.destroy(propertyId);
+                container.delItem(propertyId);
+                container.sync();
+              }
             }
-            console.log("delete: current table row id is: " + table_row_id);
-          }
-        });
-        menu.addChild(deleteItem);
+
+          });
 
         // Set it into a map
         console.log("adding concept");

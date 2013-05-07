@@ -1,5 +1,6 @@
 define([
     "dojox/collections/Dictionary",
+    "dojox/collections/ArrayList",
     "dojo/dom",
     "dojo/dom-construct",
     "dojo/on",
@@ -28,7 +29,7 @@ define([
     "rfd/module"
     ],
 function(
-            Dictionary,
+            Dictionary, ArrayList,
             dom, domConstruct, on, keys, lang, baseArray, baseEvent, 
             parser, Button, registry, query, 
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
@@ -64,6 +65,14 @@ function(
         console.log("a: " + dic.entry("a"));
         console.log("c: " + dic.entry("c"));
         console.log("f: " + dic.entry("f"));
+
+        var t = dic.containsKey("a");
+        console.log("conatins: " + t);
+
+        var arr = new ArrayList(["s", "d"]);
+        console.log("conatins arr: " + arr.contains("s"));
+        console.log("conatins arr: " + arr.contains("t"));
+
         
  
     },
