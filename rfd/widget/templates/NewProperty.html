@@ -1,0 +1,37 @@
+<div data-dojo-type="dijit/form/Form" id="myForm"
+    encType="multipart/form-data" action="" method="">
+    <table style="border: 1px solid #9f9f9f;" cellspacing="10">
+        <tr>
+            <td>
+                <label for="name">Name:</label>
+            </td>
+            <td>
+                <input type="text" id="name" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="type">Type:</label>
+            </td>
+            <td>
+                <select data-dojo-type="dijit/form/ComboBox" id="type_select" name="type">
+                    <option selected>String</option>
+                    <option >Integer</option>
+                    <option>Phone</option>
+                    <option>Decimal</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="dob">Has Indexing:</label>
+            </td>
+            <td>
+                <input type="check" id="dob" name="dob" value="indexed" data-dojo-type="dijit/form/CheckBox"/>
+            </td>
+        </tr>
+    </table>
+
+    <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+    <button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+</div>

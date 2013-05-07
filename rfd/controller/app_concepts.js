@@ -30,10 +30,12 @@ define([
           "rfd/Collection_R", 
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
+          "dijit/Dialog", 
           "dojo/dnd/Container", 
           "dojo/dnd/Selector", 
           "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
+          "dojo/text!rfd/widget/templates/NewProperty.html",
     "rfd/module"
     ],
 function(
@@ -44,8 +46,9 @@ function(
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
             CheckBox, NumberTextBox,
+            Dialog,
             Container, Selector, Moveable,
-            text
+            text, newprop
             ) 
 {
     var store = null,
@@ -148,7 +151,31 @@ function(
 
             if(container.current == null) { // If so header clicked, add property, else double click
               console.log("no hover over property");
-              concept.addProperty("address", "string");
+              var dialog  = new Dialog({title: "New Property", content: newprop});
+              //concept.addProperty("address", "string");
+
+              dialog.on("submit", function(e)
+              {
+                e.preventDefault(); // Do not submit the form to server
+                var form = registry.byId("myForm");
+                if(form.validate()) 
+                {
+                  var prop = form.getValues();
+                  console.log(JSON.stringify(prop));
+                  concept.addProperty(prop);
+                  container.insertNodes([prop], false, null);
+                  container.sync();
+                }
+                else {
+                  alert("form has invalid data, please correct");
+                }
+                dialog.hide();
+              });
+              dialog.on("cancel", function(e)
+              {
+                dialog.hide();
+              });
+              dialog.show();
             }
             else
             {
@@ -225,6 +252,7 @@ function(
         // Right click Menu for bottom Left area
         setupAddClass(outter);
 
+        
     },
     doSearch = function() {
         // summary:

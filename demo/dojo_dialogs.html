@@ -23,6 +23,7 @@
                         data-dojo-props="title: 'Group Two'">
                     <h4>Group 2 Content</h4>
                     <button id="id_hospitals">{hospitals}</button>
+                    <button id="id_button">click here</button>
                 </div>
                 <div
                         data-dojo-type="dijit/layout/ContentPane"
@@ -59,6 +60,59 @@
                         <tr><td>row 1</td></tr>
                     </table>
 
+                    <div data-dojo-type="dijit/form/Form" id="myForm"
+                         action="" method="">
+    <script type="dojo/on" data-dojo-event="reset">
+        return confirm('Press OK to reset widget values');
+    </script>
+
+    <script type="dojo/on" data-dojo-event="submit">
+        if(this.validate()){
+            return confirm('Form is valid, press OK to submit');
+        }else{
+            alert('Form contains invalid data.  Please correct first');
+            return false;
+        }
+        return true;
+    </script>
+
+    <table style="border: 1px solid #9f9f9f;" cellspacing="10">
+        <tr>
+            <td>
+                <label for="name">Name:</label>
+            </td>
+            <td>
+                <input type="text" id="name" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="type">Type:</label>
+            </td>
+            <td>
+                <select data-dojo-type="dijit/form/ComboBox" id="type_select" name="type">
+                    <option selected>String</option>
+                    <option >Integer</option>
+                    <option>Phone</option>
+                    <option>Decimal</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="dob">Has Indexing:</label>
+            </td>
+            <td>
+                <input type="check" id="dob" name="dob" value="indexed" data-dojo-type="dijit/form/CheckBox"/>
+            </td>
+        </tr>
+    </table>
+
+    <button data-dojo-type="dijit/form/Button" type="button" onClick="console.log(myForm.getValues())">Get Values from form!</button>
+    <button data-dojo-type="dijit/form/Button" type="submit">OK</button>
+</div>
+
+
                 </div>
                 <div id="bottomRight"
                     data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
@@ -67,6 +121,9 @@
                     <div style="max-width: 600px;"
                        id="collectionTooltip"
                     >
+                    <!--
+                        <button data-dojo-type="dijit/form/Button" id="formSubmit" type="button">Submit</button>
+                    -->
                         <h4>Paging</h4>
                         <div class="form_margin_left">
                             <input id="checkPaging" name="checkPaging" 
@@ -158,6 +215,8 @@ require([ "dojo/parser",
           "dijit/form/NumberTextBox", 
           "dijit/popup", 
           "dijit/TooltipDialog", 
+          "dijit/Dialog", 
+          "dojo/text!demo/NewProperty.html", 
           "dojo/domReady",
           "dijit/layout/BorderContainer", 
           "dijit/layout/TabContainer", 
@@ -165,7 +224,7 @@ require([ "dojo/parser",
                                                  Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                  Concept_R,
                                                  CheckBox, NumberTextBox,
-                                                 popup, TooltipDialog
+                                                 popup, TooltipDialog, Dialog, formNP
                                                 ) {
     ready(function() 
     { 
@@ -188,11 +247,11 @@ require([ "dojo/parser",
 
 //      This is creating TooltipDialog with inner content
         var toolDom = dojo.byId("collectionTooltip");
+        var formDom = dom.byId("myForm");
         domStyle.set(toolDom, "visibility", "visible");
         var tooltip = new TooltipDialog({
-            content: toolDom
+            content: formDom
         });
-        // Dojo event for existing widget
         tooltip.on("mouseleave", function() { popup.close(tooltip); });
         // DOM event
         on(dom.byId('id_hospitals'), 'mouseover', function(){
@@ -201,8 +260,33 @@ require([ "dojo/parser",
                 around: dom.byId('id_hospitals')
             });
         });
-            
+
+
+        // Dojo event for existing widget
+        var dia = registry.byId("myForm");
+        dia.on("submit", function(e)
+        {
+            e.preventDefault();
+            console.log("caught onSubmit");
+        });
+
+        var d = new Dialog({title: "New Property"}, "<p>blah");
+        // Dojo event for existing widget
+        dia.set("onSubmit", function(e) 
+        { 
+            e.preventDefault();
+            console.log("onSubmit")
+            d.show();
+        });
         
+        
+        var domB = dom.byId("id_button");
+        on(domB,"click", function()
+        {
+            console.log("clicked id_button");
+            d.show();
+        });
+
 /*
         var checkPaging = new CheckBox( 
             {
