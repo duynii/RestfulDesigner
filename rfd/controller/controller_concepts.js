@@ -12,14 +12,17 @@ define([
 ], function(declare, baseArray, lang, Concept, Tree, Branch, Section, Memory, mark1){
     return declare("rfd/controller/controller_concepts", null, 
     {
-        store: new Memory(),
+        store: null,
+        _tree: new Tree(),
+        // Array of concepts
+        concepts:  null,
         constructor: function()
         {
+            concepts = this.loadFromFile();
+            store = new Memory({data: concepts});
         },
-        // Get existing concepts
-        getConcepts: function() 
+        loadFromFile: function()
         {
-
             var data = JSON.parse(mark1);
 
             // Should put all classes in a Dictionary
@@ -34,6 +37,15 @@ define([
             });
 
             return data.concepts;
+        },
+        // Get existing concepts
+        getConcepts: function() 
+        {
+            if(this.concepts == null) {
+                return this.loadFromFile();
+            }
+
+            return this.concepts;
         },
 
         deleteConcept: function(concept)
