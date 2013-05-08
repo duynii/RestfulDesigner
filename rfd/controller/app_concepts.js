@@ -28,6 +28,7 @@ define([
           "rfd/Representation",
           "rfd/Concept_R",
           "rfd/Collection_R", 
+          "rfd/widget/ListItem", 
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
           "dijit/Dialog", 
@@ -46,6 +47,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
+            ListItem,
             CheckBox, NumberTextBox,
             Dialog,
             Container, Selector, Moveable,
@@ -242,25 +244,22 @@ function(
       });
       menu.addChild(menuItem);
     }, 
+    setupResourceDesigner = function() 
+    {
+      var outter = dom.byId("resourcesList");
+
+      var li = domConstruct.create("ListItem", {id:"my"}, "resourcesList");
+      console.log("ListItem: " + li.declaredClass);
+      //li = registry.byId("my");
+      li.setBranch("branch", controller.getDummyBranch());
+      domConstruct.place(li, outter);
+
+    },
     initUi = function() 
     {
         console.log("initUi called");
-/*
-        var data = JSON.parse(text);
 
-        // For each object do something
-        var left = 0; // For arranging the classes left to right
-        // Should put all classes in a Dictionary
-        baseArray.forEach(data.concepts, function(obj_concept, index)
-        {
-          console.log("concept " + (index+1)  + " is " + obj_concept.name);
-          // Create Concept class from db file's object
-          var concept = new Concept(obj_concept.id, obj_concept.name, null);
-          lang.mixin(concept, obj_concept);
-          // create a Container (table) for this concept
-          createConcept(concept);
-        });
-*/
+        // Get all existing concepts
         var concepts = controller.getConcepts();
         baseArray.forEach(concepts, function(concept, index)
         {
@@ -272,7 +271,7 @@ function(
         var outter = dom.byId("bottomLeft");
         setupAddClass(outter);
 
-        
+        setupResourceDesigner();
     },
     doSearch = function() {
         // summary:

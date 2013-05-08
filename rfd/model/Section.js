@@ -9,21 +9,24 @@ METHODS = {
 // Example class
 define([
     "dojo/_base/declare",
-    "rfd/Resource",
-    "dojox/collections/ArrayList"
-], function(declare, Resource, ArrayList){
+    "dojo/_base/array",
+    "rfd/Resource"
+], function(declare, baseArray, Resource){
     return declare("rfd/model/Section", null, 
     {
         constructor: function()
         {
-            this.resources = new ArrayList();
+            this.resources = new Array();
         },
-
+        addResource: function(resource)
+        {
+            this.resources.push(resource);
+        },
 
         toString: function()
         {
             var str = "";
-            this.fields.forEach(function(resource)
+            baseArray.forEach(this.resources, function(resource, index)
                 {
                     str += resource + '/';
                 }, 

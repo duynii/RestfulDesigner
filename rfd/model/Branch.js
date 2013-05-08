@@ -1,17 +1,24 @@
 // Example class
 define([
     "dojo/_base/declare",
-    "rfd/model/Section",
-    "dojox/collections/ArrayList"
-], function(declare, Section, ArrayList){
+    "dojo/_base/array",
+    "rfd/model/Section"
+], function(declare, baseArray, Section){
     return declare("rfd/model/Branch", null, 
     {
-        constructor: function()
+        constructor: function(active, inactive)
         {
+            // default param value if no param is specified
+            active = typeof active !== 'undefined' ? active : new Section();
+            inactive = typeof inactive !== 'undefined' ? inactive : new Section();
             // The active section
-            this.active = new Section();
-            this.inactive = new Section();
+            this.active = active;
+            this.inactive = inactive;
         },
+        //getActive: function() { return this.active; },
+        //getInactive: function() { return this.inactive; },
+        addActiveResource: function(resource) { this.active.addResource(resource); },
+        addInactiveResource: function(resource) { this.inactive.addResource(resource); },
         // Create a new branch by branching midway from this resource
         branchOut: function(fromRes, newRes)
         {

@@ -54,7 +54,7 @@
                         <li>
                             <label id="authorWidget" data-dojo-type="rfd/widget/AuthorWidget">blah</label>
                         </li>
-                        <li data-dojo-type="rfd/widget/ListItem" />
+                        <li data-dojo-type="rfd/widget/ListItem" > ListItem</li>
                     </ol>
                 </div>
                 <div
@@ -145,6 +145,7 @@
                   "rfd/ConceptResource",
                   "rfd/Representation",
                   "rfd/Concept_R",
+                  "rfd/widget/ListItem",
                   "dojox/collections/ArrayList",
                     //Widgets
                   "dijit/form/Button",
@@ -160,12 +161,18 @@
                                                          Selector, Container, Target, Moveable,
                                                          Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                          Concept_R,
+                                                         ListItem,
                                                          ArrayList,
                                                          Button, DropDownButton, TooltipDialog, popup
                                                         ) {
                 ready(function() 
                 { 
                     parser.parse();
+
+                    domConstruct.create("ListItem", {innerHTML: "blahhhhhh"}, "bottomLeft");
+
+                    var li = new ListItem();
+                    domConstruct.create(li, {innerHTML: "hhhaaaaha"}, "bottomLeft");
 
                     var array = new ArrayList();
                     array.add({field: "field1", ascending: true});

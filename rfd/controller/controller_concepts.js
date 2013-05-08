@@ -7,9 +7,15 @@ define([
     "rfd/model/Tree",
     "rfd/model/Branch",
     "rfd/model/Section",
+    "rfd/StaticResource",
+    "rfd/TemplatedResource",
+    "rfd/Collection_R",
     "dojo/store/Memory",
     "dojo/text!RfD_documents/saves/mark1.rfd" 
-], function(declare, baseArray, lang, Concept, Tree, Branch, Section, Memory, mark1){
+], function(declare, baseArray, lang, Concept, 
+            Tree, Branch, Section, 
+            StaticResource, TemplatedResource, Collection_R,
+            Memory, mark1){
     return declare("rfd/controller/controller_concepts", null, 
     {
         store: null,
@@ -46,6 +52,13 @@ define([
             }
 
             return this.concepts;
+        },
+        getDummyBranch: function()
+        {
+            var branch = new Branch();
+            branch.addActiveResource(new StaticResource("public", "/"));
+            branch.addActiveResource(new Collection_R("hospitals", "public"));
+            return branch;
         },
 
         deleteConcept: function(concept)
