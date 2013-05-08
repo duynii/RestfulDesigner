@@ -36,6 +36,7 @@ define([
           "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
+    "rfd/controller/controller_concepts",
     "rfd/module"
     ],
 function(
@@ -48,13 +49,15 @@ function(
             CheckBox, NumberTextBox,
             Dialog,
             Container, Selector, Moveable,
-            text, newprop
+            text, newprop,
+            Controller
             ) 
 {
     var store = null,
     tablesMap = new Dictionary(),
     temp_id_num = 1,
     dialog  = new Dialog({title: "New Property", content: newprop}),
+    controller = new Controller(),
  
     startup = function() 
     {
@@ -242,10 +245,9 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
-
+/*
         var data = JSON.parse(text);
 
-        var outter = dom.byId("bottomLeft");
         // For each object do something
         var left = 0; // For arranging the classes left to right
         // Should put all classes in a Dictionary
@@ -258,8 +260,16 @@ function(
           // create a Container (table) for this concept
           createConcept(concept);
         });
+*/
+        var concepts = controller.getConcepts();
+        baseArray.forEach(concepts, function(concept, index)
+        {
+          createConcept(concept);
+        });
+
         arrangeClasses();
         // Right click Menu for bottom Left area
+        var outter = dom.byId("bottomLeft");
         setupAddClass(outter);
 
         
