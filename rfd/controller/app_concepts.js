@@ -254,8 +254,8 @@ function(
       li.showResources();
       //li = registry.byId("my");
       li.setBranch(controller.getDummyBranch());
-      //li.showResources(controller.getDummyBranch());
-      //li.startup();
+
+      li.startup();
 
       //var t = domConstruct.create("ListItem", {innerHTML: "test label"}, null);
       //t.showResources(controller.getDummyBranch());

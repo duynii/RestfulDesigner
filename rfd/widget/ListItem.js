@@ -86,8 +86,8 @@ define(["dojo/_base/declare",
                         class: "templatedResource"
                     }, 
                     this.domNode);
-                domStyle.set(this.res1, "class", "templatedResource"); 
-                domStyle.set(this.res2, "class", "partialResource"); 
+                domStyle.set(this.res1, "visibility", "visible"); 
+                this.className = "partialResource"; 
             },
             setBranch: function(branch)
             {
@@ -97,6 +97,8 @@ define(["dojo/_base/declare",
 
                 var cssMap = this.cssButtonMap;
                 var myId = this.id;
+
+                var domNode = this.domNode;
 
                 baseArray.forEach(inactive_section.resources, function(resource, index)
                 {
@@ -108,26 +110,27 @@ define(["dojo/_base/declare",
                             class: cssMap.entry(resource.declaredClass) + " hidden",
                             innerHTML: resource.name
                         }, 
-                        this.domNode
+                        domNode
                     );
-                    domConstruct.create(button,
+                    domConstruct.create("button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
                         class: "hidden",
                         innerHTML: "  /  "
-                    }, this.domNode);
+                    }, domNode);
                 });
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
                     console.log("css: " + cssMap.entry(resource.declaredClass));
                     // create a dom under self
+                    console.log("adding this resource: " + resource.name);
                     domConstruct.create("button", 
                     {
                         id: resource.id + '_' + myId,
                         class: cssMap.entry(resource.declaredClass),
                         innerHTML: resource.name
                     }, 
-                    this.domNode
+                    domNode
                     );
                     domConstruct.create(
                         "button",
@@ -135,7 +138,7 @@ define(["dojo/_base/declare",
                             id: resource.id + '_' + myId + '_' + "slash",
                             innerHTML: "  /  "
                         }, 
-                        this.domNode
+                        domNode
                     );
                 });
             }
