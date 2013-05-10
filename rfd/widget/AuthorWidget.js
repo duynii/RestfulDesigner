@@ -2,9 +2,10 @@
 // myApp/widget/AuthorWidget.js
 define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin",
         "dojo/text!./templates/AuthorWidget.html", 
-        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", "dojo/on", "dojo/mouse"],
+        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", "dojo/on", "dojo/mouse",
+        "dojo/dom-construct"],
 
-    function(declare, _WidgetBase, _TemplatedMixin, template, domStyle, baseFx, lang, on, mouse)
+    function(declare, _WidgetBase, _TemplatedMixin, template, domStyle, baseFx, lang, on, mouse, domConstruct)
     {
         return declare([_WidgetBase, _TemplatedMixin], 
         {
@@ -49,6 +50,13 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin",
                     on(domNode, mouse.enter, lang.hitch(this, "_changeBackground", this.mouseBackgroundColor)),
                     on(domNode, mouse.leave, lang.hitch(this, "_changeBackground", this.baseBackgroundColor))
                 );
+            },
+            setButton: function()
+            {
+                domConstruct.create("button", {innerHTML: "hhhhhhhaaaaa"}, this.domNode);
+            },
+            changeColour: function(colour) {
+                this._changeBackground(colour);
             },
 
             _changeBackground: function(newColor) 

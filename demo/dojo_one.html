@@ -46,11 +46,20 @@
             <div id="bottomLeft" class="window_bottom_width"
                 data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'left', splitter: true">
                 Bottom Left
-
+<span data-dojo-type="rfd/widget/HidePane" data-dojo-props="open:false" data-dojo-id="pane">This pane is initially hidden</span>
+<button onclick="pane.set('open', true);">show</button>
+<button onclick="pane.set('open', false);">hide</button>
+<span id="spanTwo">This is span two</span>
+<button id="showTwo">show two</button>
+<button id="hideTwo">hide two</button>
             </div>
             <div id="bottomRight"
                 data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
                 Bottom Right
+                <!--
+                <button data-dojo-type="rfd/widget/PushMe"/>
+                -->
+                <button id="ttt" />
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ define([
     "dojo/dom-construct",
     "dojo/dom-style",
     "dojo/on",
+    "dojo/json",
     "dojo/keys",
     "dojo/_base/lang",
     "dojo/_base/array", 
@@ -28,11 +29,16 @@ define([
     "rfd/model/Branch",
     "rfd/model/Section",
     "rfd/controller/controller_one",
+    "rfd/widget/HidePane",
+    "rfd/widget/PushMe",
+    "rfd/widget/AuthorWidget",
+    "rfd/widget/ListItem",
+    "dojo/text!../../demo/authors.json",
     "rfd/module"
     ],
 function(
             Dictionary,
-            dom, domConstruct, domStyle, on, keys, lang, baseArray, baseEvent, 
+            dom, domConstruct, domStyle, on, JSON, keys, lang, baseArray, baseEvent, 
             parser, Button, registry, query, 
             Resource, StaticResource, 
             TemplatedResource, ConceptResource, Representation,
@@ -41,7 +47,8 @@ function(
             Source, Container,
             Memory,
             Tree, Branch, Section,
-            Controller) 
+            Controller,
+            HidePane, PushMe, AuthorWidget, ListItem, authors_json) 
 {
     var store = null,
     //flickrQuery = dojo.config.flickrRequest || {},
@@ -126,6 +133,40 @@ function(
       var concepts = getConcepts();
       container.insertNodes(false, [catalogueStatic_R, catalogueTemplate_R], false, null);
     },
+    initTestSpan = function()
+    {
+      /*
+      var pane = new HidePane({}, "spanTwo");
+
+      var bShow = dom.byId("showTwo");
+      var bHide = dom.byId("hideTwo");
+
+      on(bShow, "click", function(e)
+      {
+        alert("setting to false");
+        pane.open = false;
+      });
+*/
+      //var push = new PushMe({}, dom.byId("ttt"));
+      //domConstruct.place(push, "bottomRight");
+
+      var arr = JSON.parse(authors_json);
+      var outter = dom.byId("bottomRight");
+      baseArray.forEach(arr, function(author)
+      {
+        var widget = new AuthorWidget(author);
+        widget.placeAt(outter);
+        //domConstruct.place(widget.domNode, outter);
+        widget.changeColour("#ff00");
+        widget.setButton();
+      });
+
+      var widget = new ListItem();
+      widget.placeAt(outter);
+      widget.showResources();
+      
+
+    },
     initUi = function() 
     {
         // summary:
@@ -139,6 +180,7 @@ function(
         stackContainer = registry.byId("stackContainer");
         createResourcesCatalogue();
  
+        initTestSpan();
     },
     doSearch = function() {
         // summary:

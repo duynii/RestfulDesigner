@@ -247,12 +247,20 @@ function(
     setupResourceDesigner = function() 
     {
       var outter = dom.byId("resourcesList");
-
-      var li = domConstruct.create("ListItem", {id:"my"}, "resourcesList");
+      //var li = domConstruct.create("ListItem", {id:"my"}, "resourcesList");
+      var li = new ListItem();
+      li.placeAt(outter);
       console.log("ListItem: " + li.declaredClass);
+      li.showResources();
       //li = registry.byId("my");
-      li.setBranch("branch", controller.getDummyBranch());
-      domConstruct.place(li, outter);
+      li.setBranch(controller.getDummyBranch());
+      //li.showResources(controller.getDummyBranch());
+      //li.startup();
+
+      //var t = domConstruct.create("ListItem", {innerHTML: "test label"}, null);
+      //t.showResources(controller.getDummyBranch());
+      //domConstruct.place(t, outter);
+      //t.startup();
 
     },
     initUi = function() 

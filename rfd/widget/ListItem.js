@@ -21,17 +21,14 @@ define(["dojo/_base/declare",
         Branch, Section,
         baseFx, baseArray, lang)
     {
-        return declare([_WidgetBase, _TemplatedMixin], 
+        return declare("rfd/widget/ListItem",[_WidgetBase, _TemplatedMixin], 
         {
             // Some default values for our author
             // These typically map to whatever you're passing to the constructor
             name: "No item",
             url: "/ custom ListItem", // The model item
-            branch: null,  
-            parentDom: null,
             // Our template - important!
             templateString: template,
-            cssButtonMap: new Dictionary(),
  
             // A class to be applied to the root node in our template
             baseClass: "listItem",
@@ -47,9 +44,6 @@ define(["dojo/_base/declare",
                 this.cssButtonMap.add("rfd/Concept_R", "individualResource");
                 this.cssButtonMap.add("rfd/PartialConcept_R", "partialResource");
                 this.cssButtonMap.add("rfd/Collection_R", "collectionResource");
-            },
-            constructor: function()
-            {
             },
             _setBranchAttr: function(branch)
             {
@@ -69,7 +63,7 @@ define(["dojo/_base/declare",
                     this._set("url", urlString);
              
                     // Using our avatarNode attach point, set its src value
-                    //this.urlLabel.innerHTML = this.url;
+                    this.urlLabel.innerHTML = this.url;
                     console.log("set Url is called");
                 }
             },
@@ -78,40 +72,59 @@ define(["dojo/_base/declare",
             postCreate: function()
             {
                 console.log("ListItem postcreate called");
+                this.cssButtonMap = new Dictionary(),
                 this.initCssButtonMap();
+                this.branch = null;
             },
 
+            showResources: function(branch)
+            {
+                this.branch = branch;
+                domConstruct.create("button", 
+                    {
+                        innerHTML: "templatedResource", 
+                        class: "templatedResource"
+                    }, 
+                    this.domNode);
+                domStyle.set(this.res1, "class", "templatedResource"); 
+                domStyle.set(this.res2, "class", "partialResource"); 
+            },
             setBranch: function(branch)
             {
+                domConstruct.create("li", {innerHTML: "blaha"}, this.domNode);
                 var active_section = branch.active;
                 var inactive_section = branch.inactive;
 
-                baseArray.forEach(inactive_section, function(resource, index)
+                var cssMap = this.cssButtonMap;
+                var myId = this.id;
+
+                baseArray.forEach(inactive_section.resources, function(resource, index)
                 {
                     // create a dom under self
                     domConstruct.create(
                         "button", 
                         {
-                            id: resource.id + '_' + this.id,
-                            class: this.cssButtonMap.entry(resource.declaredClass) + " hidden",
+                            id: resource.id + '_' + myId,
+                            class: cssMap.entry(resource.declaredClass) + " hidden",
                             innerHTML: resource.name
                         }, 
                         this.domNode
                     );
                     domConstruct.create(button,
                     {
-                        id: resource.id + '_' + this.id + '_' + "slash",
+                        id: resource.id + '_' + myId + '_' + "slash",
                         class: "hidden",
                         innerHTML: "  /  "
                     }, this.domNode);
                 });
-                baseArray.forEach(active_section, function(resource, index)
+                baseArray.forEach(active_section.resources, function(resource, index)
                 {
+                    console.log("css: " + cssMap.entry(resource.declaredClass));
                     // create a dom under self
                     domConstruct.create("button", 
                     {
-                        id: resource.id + '_' + this.id,
-                        class: this.cssButtonMap.entry(resource.declaredClass), 
+                        id: resource.id + '_' + myId,
+                        class: cssMap.entry(resource.declaredClass),
                         innerHTML: resource.name
                     }, 
                     this.domNode
@@ -119,7 +132,7 @@ define(["dojo/_base/declare",
                     domConstruct.create(
                         "button",
                         {
-                            id: resource.id + '_' + this.id + '_' + "slash",
+                            id: resource.id + '_' + myId + '_' + "slash",
                             innerHTML: "  /  "
                         }, 
                         this.domNode
