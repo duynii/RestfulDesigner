@@ -248,20 +248,20 @@ function(
     {
       var outter = dom.byId("resourcesList");
       //var li = domConstruct.create("ListItem", {id:"my"}, "resourcesList");
-      var li = new ListItem();
+      var li = new ListItem({id: "my"});
       li.placeAt(outter);
       console.log("ListItem: " + li.declaredClass);
-      li.showResources();
-      //li = registry.byId("my");
-      li.setBranch(controller.getDummyBranch());
+      //li.showResources();
+      var branch = controller.getDummyBranch();
+      //li.setBranch(controller.getDummyBranch());
+
+      var reg = registry.byId("my");
+      li.set("branch", branch);
+
+      var res = new StaticResource("added", "hospitals");
+      li.addResource(res);
 
       li.startup();
-
-      //var t = domConstruct.create("ListItem", {innerHTML: "test label"}, null);
-      //t.showResources(controller.getDummyBranch());
-      //domConstruct.place(t, outter);
-      //t.startup();
-
     },
     initUi = function() 
     {

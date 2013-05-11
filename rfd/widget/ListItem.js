@@ -26,7 +26,7 @@ define(["dojo/_base/declare",
             // Some default values for our author
             // These typically map to whatever you're passing to the constructor
             name: "No item",
-            url: "/ custom ListItem", // The model item
+            url: "No URL", // The model item
             // Our template - important!
             templateString: template,
  
@@ -79,7 +79,6 @@ define(["dojo/_base/declare",
 
             showResources: function(branch)
             {
-                this.branch = branch;
                 domConstruct.create("button", 
                     {
                         innerHTML: "templatedResource", 
@@ -88,6 +87,37 @@ define(["dojo/_base/declare",
                     this.domNode);
                 domStyle.set(this.res1, "visibility", "visible"); 
                 this.className = "partialResource"; 
+            },
+            //Private func: add a resource to the branch
+            _addResource: function(resource)
+            {
+                var cssMap = this.cssButtonMap;
+                var myId = this.id;
+                console.log("css: " + cssMap.entry(resource.declaredClass));
+                // create a dom under self
+                console.log("adding this resource: " + resource.name);
+                var button = domConstruct.create("button", 
+                {
+                    id: resource.id + '_' + myId,
+                    class: cssMap.entry(resource.declaredClass),
+                    innerHTML: resource.name
+                }, 
+                this.domNode
+                );
+                domConstruct.create(
+                    "button",
+                    {
+                        id: resource.id + '_' + myId + '_' + "slash",
+                        innerHTML: "  /  "
+                    }, 
+                    this.domNode
+                );
+                return button;
+            },
+            // Basic dnd functionality to add resource to the tree/branch's end
+            addResource: function(resource)
+            {
+                this._addResource(resource);
             },
             setBranch: function(branch)
             {
@@ -118,7 +148,8 @@ define(["dojo/_base/declare",
                         class: "hidden",
                         innerHTML: "  /  "
                     }, domNode);
-                });
+                },
+                this); // this context
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
                     console.log("css: " + cssMap.entry(resource.declaredClass));
@@ -140,7 +171,8 @@ define(["dojo/_base/declare",
                         }, 
                         domNode
                     );
-                });
+                },
+                this); // this context
             }
     
         });
