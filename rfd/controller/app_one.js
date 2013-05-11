@@ -51,21 +51,20 @@ function(
             HidePane, PushMe, AuthorWidget, ListItem, authors_json) 
 {
     var store = null,
-    //flickrQuery = dojo.config.flickrRequest || {},
+    resDesigner = null,
+    resCatalogue = null,
     stackContainer = null,
-    catalogueTemplate_R = null,
-    catalogueStatic_R = null,
     cssButtonMap = new Dictionary(),
     controller = new Controller(),
  
     startup = function() 
     {
         console.log("startup called")
-        // create the data store
-        //var flickrStore = this.store = new FlickrRestStore();
         initUi();
     },
-    resourcesListCreator = function(item, hint) {
+    resourcesListCreator = function(item, hint) 
+    {
+      console.log("Designer creator: hint - " + hint + ", item - " + item);
 
     },
     initCssButtonMap = function()
@@ -79,6 +78,7 @@ function(
     },
     catalogueListCreator = function(item, hint)
     {
+      console.log("Catalogue creator: hint - " + hint + ", item - " + item);
       console.log("catalogue creator's item: " + item.declaredClass);
 
       var cssStyle = cssButtonMap.entry(item.declaredClass);
@@ -97,14 +97,61 @@ function(
       return { node: li, data: item, type: item.type };
     },
     // When a dnd catalogue item is droped into selected resource branch
-    onResourcesListDrop = function(source, node, copy) 
+    onResourcesListDrop = function(source, nodes, copy) 
     {
+      console.log("onResourcesListDrop left called");
+      console.log("source:" + typeof(source));
+      console.log("node id:" + nodes[0].id);
 
+      var nodeId = nodes[0].id;
+
+      //Check if there s no resource
+      var itemNo = resDesigner.size();
+      console.log("Drop found " + itemNo + " item/s");
+
+      //Data item
+      var resource = source.getItem(nodeId).data;
+      console.log("Drop resource: " + resource);
+
+      var selected = resDesigner.getSelected();
+      console.log("widget: " + selected);
+
+      if(itemNo == 0) // Add the first ListItem for first branch
+      {
+        var branch = new Branch();
+        branch.addActiveResource(resource);
+
+        var li = new ListItem({});
+        li.placeAt("resourcesList");
+        li.setBranch(branch);
+
+        resDesigner.map[li.id] = { data: branch, type: ["branch"] };
+        resDesigner.sync();
+
+        source.getSelectedNodes().orphan();
+        source.delItem(nodeId);
+        //source.sync():
+      }
+      else 
+      {
+        //There must be a selected node
+        var selected = resDesigner.getSelected();
+        var widget = registry.getEnclosingWidget(selected);
+
+        console.log("widget: " + selected);
+      }
+
+      var no = resDesigner.size();
+      var selected = resDesigner.getSelected();
+
+      console.log("no: " + no);
+      console.log("sel: "  + selected);
     },
     createResourceDesigner = function()
     {
 
-      var source = new Source("resourcesList", {
+      resDesigner = new Source("resourcesList", {
+        id: "resourcesContainer",
         singular: true,  // Single item selection
         isSource: false, // Only acts as dnd target
         accept: ["resource"], // Accept resource objects only
@@ -112,6 +159,27 @@ function(
         creator: resourcesListCreator,
         onDropExternal: onResourcesListDrop
       });
+
+      resDesigner.size = function() 
+      {
+        var itemNo = 0;
+        resDesigner.forInItems(function(obj, id, map)
+        {
+          itemNo++;
+        }, 
+        resDesigner);
+        return itemNo;
+      };
+      // return the selected node, it can only be one in this app
+      resDesigner.getSelected = function()
+      {
+         resDesigner.getSelectedNodes().forEach(function(node)
+         {
+            return node;
+         });
+
+         return null;
+      }
     },
     getConcepts = function()
     {
@@ -121,7 +189,7 @@ function(
     {
       console.log("rightTree called");
       //create the first catalogue for first branch    
-      var container = new Source("catalogueList_" + 1, {
+      resCatalogue = new Source("catalogueList_" + 1, {
           singular: true,
           accept: [], // This is a dnd source only
           creator: catalogueListCreator,
@@ -131,7 +199,7 @@ function(
       var catalogueTemplate_R = new TemplatedResource("JSON Template", "/");
       var catalogueStatic_R = new StaticResource("static", "/");
       var concepts = getConcepts();
-      container.insertNodes(false, [catalogueStatic_R, catalogueTemplate_R], false, null);
+      resCatalogue.insertNodes(false, [catalogueStatic_R, catalogueTemplate_R], false, null);
     },
     initTestSpan = function()
     {
@@ -158,13 +226,12 @@ function(
         widget.placeAt(outter);
         //domConstruct.place(widget.domNode, outter);
         widget.changeColour("#ff00");
-        widget.setButton();
       });
 
       var widget = new ListItem();
       widget.placeAt(outter);
       widget.showResources();
-      
+
 
     },
     initUi = function() 
@@ -180,7 +247,7 @@ function(
         stackContainer = registry.byId("stackContainer");
         createResourcesCatalogue();
  
-        initTestSpan();
+        //initTestSpan();
     },
     doSearch = function() {
         // summary:
