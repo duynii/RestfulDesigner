@@ -29,11 +29,11 @@ define([
 
         toString: function()
         {
-            return "/" + inactive + " -> " + active;
+            return "/" + this.inactive + " -> " + this.active;
         },
         print: function() 
         {
-            console.log("Branch: (" + inactive + ")[" + active + "]");
+            console.log("Branch: (" + this.inactive + ")[" + this.active + "]");
         }
     });
 });

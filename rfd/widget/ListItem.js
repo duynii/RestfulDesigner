@@ -75,6 +75,7 @@ define(["dojo/_base/declare",
                 this.cssButtonMap = new Dictionary(),
                 this.initCssButtonMap();
                 this.branch = null;
+                this.wid2Res = new Dictionary();               
             },
 
             showResources: function(branch)
@@ -89,9 +90,17 @@ define(["dojo/_base/declare",
                 this.className = "partialResource"; 
             },
             //Private func: add a resource to the branch
-            _addResource: function(resource)
+            // Resources in an inactive section must be added as hidden
+            // Add to the end of <li>'s childs'
+            _addResource: function(resource, isHidden)
             {
+                //default to not hidden
+                isHidden = typeof isHidden !== 'undefined' ? isHidden : false;
+
                 var cssMap = this.cssButtonMap;
+                var cssStyle = cssMap.entry(resource.declaredClass); 
+                cssStyle += (isHidden ? " hidden" : "");
+
                 var myId = this.id;
                 console.log("css: " + cssMap.entry(resource.declaredClass));
                 // create a dom under self
@@ -99,12 +108,12 @@ define(["dojo/_base/declare",
                 var button = domConstruct.create("button", 
                 {
                     id: resource.id + '_' + myId,
-                    class: cssMap.entry(resource.declaredClass),
+                    class: cssStyle,
                     innerHTML: resource.name
                 }, 
                 this.domNode
                 );
-                domConstruct.create(
+                var slash = domConstruct.create(
                     "button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
@@ -112,16 +121,24 @@ define(["dojo/_base/declare",
                     }, 
                     this.domNode
                 );
+                if(isHidden) {
+                    slash.className += " hidden";
+                }
+                // add to the map
+                this.wid2Res.add(button, resource);
                 return button;
             },
             // Basic dnd functionality to add resource to the tree/branch's end
             addResource: function(resource)
             {
                 this._addResource(resource);
+                //TODO this should be in the controller
+                //this._setUrlAttr(this.branch.toString());
             },
             setBranch: function(branch)
             {
-                domConstruct.create("li", {innerHTML: "blaha"}, this.domNode);
+                this.branch = branch;
+                
                 var active_section = branch.active;
                 var inactive_section = branch.inactive;
 
@@ -132,47 +149,16 @@ define(["dojo/_base/declare",
 
                 baseArray.forEach(inactive_section.resources, function(resource, index)
                 {
-                    // create a dom under self
-                    domConstruct.create(
-                        "button", 
-                        {
-                            id: resource.id + '_' + myId,
-                            class: cssMap.entry(resource.declaredClass) + " hidden",
-                            innerHTML: resource.name
-                        }, 
-                        domNode
-                    );
-                    domConstruct.create("button",
-                    {
-                        id: resource.id + '_' + myId + '_' + "slash",
-                        class: "hidden",
-                        innerHTML: "  /  "
-                    }, domNode);
+                    this._addResource(resource, true);
                 },
                 this); // this context
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
-                    console.log("css: " + cssMap.entry(resource.declaredClass));
-                    // create a dom under self
-                    console.log("adding this resource: " + resource.name);
-                    domConstruct.create("button", 
-                    {
-                        id: resource.id + '_' + myId,
-                        class: cssMap.entry(resource.declaredClass),
-                        innerHTML: resource.name
-                    }, 
-                    domNode
-                    );
-                    domConstruct.create(
-                        "button",
-                        {
-                            id: resource.id + '_' + myId + '_' + "slash",
-                            innerHTML: "  /  "
-                        }, 
-                        domNode
-                    );
+                    this._addResource(resource);
                 },
                 this); // this context
+                console.log("Branch set: " + branch.toString());
+                this._setUrlAttr(this.branch.toString());
             }
     
         });

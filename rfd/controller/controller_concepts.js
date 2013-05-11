@@ -56,8 +56,10 @@ define([
         getDummyBranch: function()
         {
             var branch = new Branch();
-            branch.addActiveResource(new StaticResource("public", "/"));
+            branch.addInactiveResource(new StaticResource("private", "/"));
+            branch.addActiveResource(new StaticResource("public", "private"));
             branch.addActiveResource(new Collection_R("hospitals", "public"));
+
             return branch;
         },
 
