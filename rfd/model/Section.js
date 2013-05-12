@@ -22,7 +22,19 @@ define([
         {
             this.resources.push(resource);
         },
-
+        branchOut: function(fromRes, branch)
+        {
+            baseArray.forEach(this.resources, function(res, index)
+                {
+                    branch.addInactiveResource(res);
+                    if(res.id == fromRes.id) {
+                        return true;
+                    }
+                }, 
+                this
+            );
+        },
+        size: function() { return this.resources.length; },
         toString: function()
         {
             var str = "";

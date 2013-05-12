@@ -70,10 +70,25 @@ function(
       var branch = new Branch();
       branch.addActiveResource(item);
 
-      var li = new ListItem({});
+      var li = new ListItem(
+      {
+        onBranchOut: function(branch)
+        {
+          console.log("event branch out: " + branch);
+        }
+      });
       li.placeAt("resourcesList");
+      /*
+      li.setBranchOut = function(branch)
+      {
+        console.log("event branch out: " + branch);
+      };
+      */
 
       li.setBranch(branch);
+
+
+      //li.setBranchMenu();
 
       return {node: li.domNode, data: branch, type: ["branch"]};
 
@@ -129,16 +144,7 @@ function(
 
       if(itemNo == 0) // Add the first ListItem for first branch
       {
-        /*
-        var branch = new Branch();
-        branch.addActiveResource(resource);
 
-        var li = new ListItem({});
-        li.placeAt("resourcesList");
-        li.setBranch(branch);
-        */
-
-        //resDesigner.map[li.id] = { data: branch, type: ["branch"] };
         resDesigner.insertNodes(false, [resource], false, null);
         resDesigner.sync();
 

@@ -10,6 +10,9 @@ define(["dojo/_base/declare",
         "dojo/dom-construct", 
         "rfd/model/Branch", 
         "rfd/model/Section", 
+        "dijit/Menu", 
+        "dijit/MenuItem", 
+        "dojo/on", 
         "dojo/_base/fx", 
         "dojo/_base/array",
         "dojo/_base/lang"
@@ -19,7 +22,8 @@ define(["dojo/_base/declare",
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
-        baseFx, baseArray, lang)
+        Menu, MenuItem,
+        on, baseFx, baseArray, lang)
     {
         return declare("rfd/widget/ListItem",[_WidgetBase, _TemplatedMixin], 
         {
@@ -29,6 +33,7 @@ define(["dojo/_base/declare",
             url: "No URL", // The model item
             // Our template - important!
             templateString: template,
+            onBranchOut: null,
  
             // A class to be applied to the root node in our template
             baseClass: "listItem",
@@ -64,11 +69,9 @@ define(["dojo/_base/declare",
              
                     // Using our avatarNode attach point, set its src value
                     this.urlLabel.innerHTML = this.url;
-                    console.log("set Url is called");
+                    //console.log("set Url is called");
                 }
             },
-
-
             postCreate: function()
             {
                 console.log("ListItem postcreate called");
@@ -76,33 +79,27 @@ define(["dojo/_base/declare",
                 this.initCssButtonMap();
                 this.branch = null;
                 this.wid2Res = new Dictionary();               
-            },
+                this.dom2branch = new Dictionary();               
 
-            showResources: function(branch)
-            {
-                domConstruct.create("button", 
-                    {
-                        innerHTML: "templatedResource", 
-                        class: "templatedResource"
-                    }, 
-                    this.domNode);
-                domStyle.set(this.res1, "visibility", "visible"); 
-                this.className = "partialResource"; 
+                //Events
+                //this.onBranchOut = function(branch){};
             },
             //Private func: add a resource to the branch
             // Resources in an inactive section must be added as hidden
             // Add to the end of <li>'s childs'
-            _addResource: function(resource, isHidden)
+            // branch: pass in if allow creation of new ListItem, context of this resource
+            _addResource: function(resource, isHidden, branch)
             {
                 //default to not hidden
                 isHidden = typeof isHidden !== 'undefined' ? isHidden : false;
+                branch = typeof branch !== 'undefined' ? branch : null;
 
                 var cssMap = this.cssButtonMap;
                 var cssStyle = cssMap.entry(resource.declaredClass); 
                 cssStyle += (isHidden ? " hidden" : "");
 
                 var myId = this.id;
-                console.log("css: " + cssMap.entry(resource.declaredClass));
+                //console.log("css: " + cssMap.entry(resource.declaredClass));
                 // create a dom under self
                 console.log("adding this resource: " + resource.name);
                 var button = domConstruct.create("button", 
@@ -117,12 +114,40 @@ define(["dojo/_base/declare",
                     "button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
+                        class: "slash",
                         innerHTML: "  /  "
                     }, 
                     this.domNode
                 );
                 if(isHidden) {
                     slash.className += " hidden";
+                }
+                else {
+                    // add option to branchOut
+                    this.dom2branch.add(slash.id, branch);
+                    on(slash, "click", function()
+                    {
+                        console.log("branching simple click:" + branch.toString());
+                    });
+                    var func = this.onBranchOut;
+                    var menu = new Menu({});
+                    menu.addChild(
+                        new MenuItem(
+                        {
+                            label: "New Branch",
+                            onClick: function(e)
+                            {
+                                console.log("branching from target: " + e.target + " - " + e.originalTarget.id);
+                                //var br = this.dom2branch.entry(e.target.id)
+                                console.log("the branch: " + branch);
+                                if(func != null) {
+                                    func(branch);
+                                }
+                            }
+                        })
+                    );
+                    menu.bindDomNode(slash);
+                    menu.startup();
                 }
                 // add to the map
                 this.wid2Res.add(button, resource);
@@ -134,6 +159,31 @@ define(["dojo/_base/declare",
                 this._addResource(resource);
                 //TODO this should be in the controller
                 this._setUrlAttr(this.branch.toString());
+            },
+            setBranchMenu: function()
+            {
+                /*
+                var selector = {targetNodeIds: [ this.domNode.id ] };
+                selector.selector = "button.slash";
+                selector.onClick = function(evt)
+                {
+                    console.log("Menu click: " + evt.target);
+                };
+                var menu = new Menu(selector);
+                menu.addChild(
+                    new MenuItem(
+                    {
+                        label: "New Branch",
+                        onClick: function(e)
+                        {
+                            console.log("branching from target: " + e.target + " - " + e.originalTarget.id);
+                            //var br = this.dom2branch.entry(e.target.id)
+                            console.log("the branch: ");
+                        }
+                    })
+                );
+                menu.startup();
+                */
             },
             setBranch: function(branch)
             {
@@ -154,7 +204,7 @@ define(["dojo/_base/declare",
                 this); // this context
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
-                    this._addResource(resource);
+                    this._addResource(resource, false);
                 },
                 this); // this context
                 console.log("Branch set: " + branch.toString());

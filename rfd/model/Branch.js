@@ -23,13 +23,26 @@ define([
         branchOut: function(fromRes, newRes)
         {
             // Branch from active section
+            var branch = new Branch()
+            //TODO: Make sure new branch is unique?
 
-            // Make sure new branch is unique
+            var isBranched = this.inactive.branchOut(fromRes, branch);
+            if(isBranched) {
+                console.log("branched from inactive");
+                return branch;
+            }
+
+            isBranched = this.active.branchOut(fromRes, branch);
+            console.log("Branched from active: " + isBranched + " at " + fromRes.name);
+            return branch;
         },
 
         toString: function()
         {
             return this.inactive + " -> " + this.active;
+        },
+        toUrl: function() {
+            return this.inactive + this.active;
         },
         print: function() 
         {
