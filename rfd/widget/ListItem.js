@@ -133,7 +133,7 @@ define(["dojo/_base/declare",
             {
                 this._addResource(resource);
                 //TODO this should be in the controller
-                //this._setUrlAttr(this.branch.toString());
+                this._setUrlAttr(this.branch.toString());
             },
             setBranch: function(branch)
             {

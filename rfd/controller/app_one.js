@@ -66,6 +66,17 @@ function(
     {
       console.log("Designer creator: hint - " + hint + ", item - " + item);
 
+      //item is a resource
+      var branch = new Branch();
+      branch.addActiveResource(item);
+
+      var li = new ListItem({});
+      li.placeAt("resourcesList");
+
+      li.setBranch(branch);
+
+      return {node: li.domNode, data: branch, type: ["branch"]};
+
     },
     initCssButtonMap = function()
     {
@@ -118,16 +129,20 @@ function(
 
       if(itemNo == 0) // Add the first ListItem for first branch
       {
+        /*
         var branch = new Branch();
         branch.addActiveResource(resource);
 
         var li = new ListItem({});
         li.placeAt("resourcesList");
         li.setBranch(branch);
+        */
 
-        resDesigner.map[li.id] = { data: branch, type: ["branch"] };
+        //resDesigner.map[li.id] = { data: branch, type: ["branch"] };
+        resDesigner.insertNodes(false, [resource], false, null);
         resDesigner.sync();
 
+        //TODO, may not want to do this
         source.getSelectedNodes().orphan();
         source.delItem(nodeId);
         //source.sync():
@@ -138,14 +153,18 @@ function(
         var selected = resDesigner.getSelected();
         var widget = registry.getEnclosingWidget(selected);
 
-        console.log("widget: " + selected);
+        console.log("current: " + resDesigner.current);
+        console.log("no: " + resDesigner.size());
+
+        var li = registry.getEnclosingWidget(resDesigner.current);
+        console.log("li type: " + li.declaredClass);
+        li.branch.addActiveResource(resource);
+        li.addResource(resource);
+
+        //TODO, may not want to do this
+        source.getSelectedNodes().orphan();
+        source.delItem(nodeId);
       }
-
-      var no = resDesigner.size();
-      var selected = resDesigner.getSelected();
-
-      console.log("no: " + no);
-      console.log("sel: "  + selected);
     },
     createResourceDesigner = function()
     {
@@ -156,8 +175,8 @@ function(
         isSource: false, // Only acts as dnd target
         accept: ["resource"], // Accept resource objects only
         type: ["concepts"],
-        creator: resourcesListCreator,
-        onDropExternal: onResourcesListDrop
+        onDropExternal: onResourcesListDrop,
+        creator: resourcesListCreator
       });
 
       resDesigner.size = function() 
@@ -170,6 +189,7 @@ function(
         resDesigner);
         return itemNo;
       };
+
       // return the selected node, it can only be one in this app
       resDesigner.getSelected = function()
       {

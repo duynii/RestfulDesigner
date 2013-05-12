@@ -29,7 +29,7 @@ define([
 
         toString: function()
         {
-            return "/" + this.inactive + " -> " + this.active;
+            return this.inactive + " -> " + this.active;
         },
         print: function() 
         {
