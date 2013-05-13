@@ -32,9 +32,7 @@ define([
     "rfd/controller/Controller_One",
     "rfd/widget/HidePane",
     "rfd/widget/PushMe",
-    "rfd/widget/AuthorWidget",
     "rfd/widget/ListItem",
-    "dojo/text!../../demo/authors.json",
     "rfd/module"
     ],
 function(
@@ -49,7 +47,7 @@ function(
             Memory,
             Tree, Branch, Section,
             Controller,
-            HidePane, PushMe, AuthorWidget, ListItem, authors_json) 
+            HidePane, PushMe, ListItem) 
 {
     var store = null,
     resDesigner = null,
