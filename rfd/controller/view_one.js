@@ -261,15 +261,10 @@ function(
         console.log("renderItem called");
     };
 
-    var createConceptFunc = new function(concept)
-    {
-      var outter = dom.byId("bottomLeft");
-    };
     return {
         init: function() {
             // proceed directly with startup
             startup();
         },
-        createConcept: createConceptFunc
     };
 });
