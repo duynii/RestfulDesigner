@@ -30,8 +30,6 @@ define([
     "rfd/model/Branch",
     "rfd/model/Section",
     "rfd/controller/Controller_One",
-    "rfd/widget/HidePane",
-    "rfd/widget/PushMe",
     "rfd/widget/ListItem",
     "rfd/module"
     ],
@@ -47,7 +45,7 @@ function(
             Memory,
             Tree, Branch, Section,
             Controller,
-            HidePane, PushMe, ListItem) 
+            ListItem) 
 {
     var store = null,
     resDesigner = null,
