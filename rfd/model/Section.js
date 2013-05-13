@@ -12,7 +12,7 @@ define([
     "dojo/_base/array",
     "rfd/Resource"
 ], function(declare, baseArray, Resource){
-    return declare("rfd/model/Section", null, 
+    return declare("Section", null, 
     {
         constructor: function()
         {

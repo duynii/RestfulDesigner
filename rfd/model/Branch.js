@@ -4,7 +4,7 @@ define([
     "dojo/_base/array",
     "rfd/model/Section"
 ], function(declare, baseArray, Section){
-    return declare("rfd/model/Branch", null, 
+    return declare("Branch", null, 
     {
         constructor: function(active, inactive)
         {
@@ -22,9 +22,9 @@ define([
         // Create a new branch by branching midway from this resource
         branchOut: function(fromRes, newRes)
         {
-            // Branch from active section
-            var branch = new Branch()
-            //TODO: Make sure new branch is unique?
+            newRes = typeof newRes !== 'undefined' ? newRes : null;
+
+            var branch = new Branch();
 
             var isBranched = this.inactive.branchOut(fromRes, branch);
             if(isBranched) {
@@ -33,7 +33,16 @@ define([
             }
 
             isBranched = this.active.branchOut(fromRes, branch);
+
+            // add the new res into active section
+            if(newRes != null) 
+            {
+                //TODO: Make sure new branch is unique?
+                branch.addActiveResource(newRes);
+            }
             console.log("Branched from active: " + isBranched + " at " + fromRes.name);
+            console.log("[branchOut] branched: " + branch);
+
             return branch;
         },
 

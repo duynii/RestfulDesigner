@@ -99,12 +99,12 @@ html, body, #mainDiv {
 }
 .individualResource {
   min-height: 35px;
-  background-color: rgb(65, 105, 225);
+  background-color: rgb(95, 135, 225);
   font-weight: bold;
 }
 .individualResource:hover {
   cursor: pointer; /* cursor: hand; for IE5 */
-  background-color: rgb(95, 135, 255);
+  background-color: rgb(125, 165, 255);
 }
 .customResource {
 /*

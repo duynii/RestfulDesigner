@@ -32,6 +32,7 @@
 			"belongs_to": []
 		},
 		{
+			"id": "services",
 			"name": "services",
 			"properties": 
 			[

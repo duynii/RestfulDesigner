@@ -125,14 +125,13 @@ define(["dojo/_base/declare",
                 else {
                     // add option to branchOut
                     this.dom2branch.add(slash.id, branch);
-                    on(slash, "click", function()
+                    /* on(slash, "click", function()
                     {
                         console.log("branching simple click:" + branch.toString());
-                    });
+                    }); */
                     var func = this.onBranchOut;
-                    var menu = new Menu({});
-                    menu.addChild(
-                        new MenuItem(
+
+                    var itemBranchOut = new MenuItem(
                         {
                             label: "New Branch",
                             onClick: function(e)
@@ -144,8 +143,15 @@ define(["dojo/_base/declare",
                                     func(branch);
                                 }
                             }
-                        })
+                        }
                     );
+
+                    var menu = new Menu({
+                        onFocus: function() {
+                            console.log("This menu got focused: " + this.id);
+                        }
+                    });
+                    menu.addChild(itemBranchOut);
                     menu.bindDomNode(slash);
                     menu.startup();
                 }
@@ -154,36 +160,11 @@ define(["dojo/_base/declare",
                 return button;
             },
             // Basic dnd functionality to add resource to the tree/branch's end
-            addResource: function(resource)
+            addResource: function(resource, branch)
             {
-                this._addResource(resource);
+                this._addResource(resource, false, branch);
                 //TODO this should be in the controller
                 this._setUrlAttr(this.branch.toString());
-            },
-            setBranchMenu: function()
-            {
-                /*
-                var selector = {targetNodeIds: [ this.domNode.id ] };
-                selector.selector = "button.slash";
-                selector.onClick = function(evt)
-                {
-                    console.log("Menu click: " + evt.target);
-                };
-                var menu = new Menu(selector);
-                menu.addChild(
-                    new MenuItem(
-                    {
-                        label: "New Branch",
-                        onClick: function(e)
-                        {
-                            console.log("branching from target: " + e.target + " - " + e.originalTarget.id);
-                            //var br = this.dom2branch.entry(e.target.id)
-                            console.log("the branch: ");
-                        }
-                    })
-                );
-                menu.startup();
-                */
             },
             setBranch: function(branch)
             {
@@ -204,10 +185,11 @@ define(["dojo/_base/declare",
                 this); // this context
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
-                    this._addResource(resource, false);
+                    this._addResource(resource, false, 
+                                        this.branch.branchOut(resource, null));
                 },
                 this); // this context
-                console.log("Branch set: " + branch.toString());
+                //console.log("Branch set: " + branch.toString());
                 this._setUrlAttr(this.branch.toString());
             }
     

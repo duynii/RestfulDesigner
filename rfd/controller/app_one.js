@@ -16,9 +16,10 @@ define([
           "rfd/Resource",
           "rfd/StaticResource",
           "rfd/TemplatedResource",
-          "rfd/ConceptResource",
+          "rfd/Custom_R",
           "rfd/Representation",
           "rfd/Concept_R",
+          "rfd/PartialConcept_R",
           "rfd/Collection_R", 
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
@@ -28,7 +29,7 @@ define([
     "rfd/model/Tree",
     "rfd/model/Branch",
     "rfd/model/Section",
-    "rfd/controller/controller_one",
+    "rfd/controller/Controller_One",
     "rfd/widget/HidePane",
     "rfd/widget/PushMe",
     "rfd/widget/AuthorWidget",
@@ -41,8 +42,8 @@ function(
             dom, domConstruct, domStyle, on, JSON, keys, lang, baseArray, baseEvent, 
             parser, Button, registry, query, 
             Resource, StaticResource, 
-            TemplatedResource, ConceptResource, Representation,
-            Concept_R, Collection_R,
+            TemplatedResource, Custom_R, Representation,
+            Concept_R, PartialConcept_R, Collection_R,
             CheckBox, NumberTextBox,
             Source, Container,
             Memory,
@@ -78,12 +79,6 @@ function(
         }
       });
       li.placeAt("resourcesList");
-      /*
-      li.setBranchOut = function(branch)
-      {
-        console.log("event branch out: " + branch);
-      };
-      */
 
       li.setBranch(branch);
 
@@ -165,7 +160,7 @@ function(
         var li = registry.getEnclosingWidget(resDesigner.current);
         console.log("li type: " + li.declaredClass);
         li.branch.addActiveResource(resource);
-        li.addResource(resource);
+        li.addResource(resource, li.branch);
 
         //TODO, may not want to do this
         source.getSelectedNodes().orphan();
@@ -207,10 +202,6 @@ function(
          return null;
       }
     },
-    getConcepts = function()
-    {
-      return null;
-    },
     createResourcesCatalogue = function()
     {
       console.log("rightTree called");
@@ -222,43 +213,27 @@ function(
           type: ["concepts"]
       });
       // Testing purpose only
-      var catalogueTemplate_R = new TemplatedResource("JSON Template", "/");
-      var catalogueStatic_R = new StaticResource("static", "/");
-      var concepts = getConcepts();
-      resCatalogue.insertNodes(false, [catalogueStatic_R, catalogueTemplate_R], false, null);
-    },
-    initTestSpan = function()
-    {
-      /*
-      var pane = new HidePane({}, "spanTwo");
-
-      var bShow = dom.byId("showTwo");
-      var bHide = dom.byId("hideTwo");
-
-      on(bShow, "click", function(e)
-      {
-        alert("setting to false");
-        pane.open = false;
-      });
-*/
-      //var push = new PushMe({}, dom.byId("ttt"));
-      //domConstruct.place(push, "bottomRight");
-
-      var arr = JSON.parse(authors_json);
-      var outter = dom.byId("bottomRight");
-      baseArray.forEach(arr, function(author)
-      {
-        var widget = new AuthorWidget(author);
-        widget.placeAt(outter);
-        //domConstruct.place(widget.domNode, outter);
-        widget.changeColour("#ff00");
-      });
-
-      var widget = new ListItem();
-      widget.placeAt(outter);
-      widget.showResources();
-
-
+      var template_R = new TemplatedResource("JSON Template", "/", {title: "Test JSON data"
+        , data: "some text"}, null );
+      var static_R = new StaticResource("static", "/");
+      var custom_R = new Custom_R("Custom", "/");
+      var available = [ template_R, static_R, custom_R ];
+      //var coll_R = new Collection_R("Collection of concepts", "/");
+      //var concept_R = new Concept_R("Concept", "/");
+      //var partial_R = new PartialConcept_R("Partial Concept", "/");
+      var concepts = controller.getConcepts();
+      baseArray.forEach(concepts, 
+        function(concept, index)
+        {
+          console.log("Looping through: " + concept.id);
+          var coll_R = new Collection_R(concept.id, "/");
+          //var concept_R = new Concept_R(concept.id, "/");
+          available.push(coll_R);
+          //available.push(concept_R);
+        }, 
+        this
+      );
+      resCatalogue.insertNodes(false, available, false, null);
     },
     initUi = function() 
     {
@@ -273,7 +248,6 @@ function(
         stackContainer = registry.byId("stackContainer");
         createResourcesCatalogue();
  
-        //initTestSpan();
     },
     doSearch = function() {
         // summary:
