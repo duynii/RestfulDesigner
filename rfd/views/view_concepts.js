@@ -263,6 +263,17 @@ function(
 
       li.startup();
     },
+    createDialog = function()
+    {
+      var dialog = new Dialog(
+      {
+        title: "New Resource",
+        style: "min-width: 300px; min-height: 400px"
+      });
+
+      dialog.set("content", "<h2>Head2</h2>");
+      //dialog.show();
+    },
     initUi = function() 
     {
         console.log("initUi called");
@@ -280,6 +291,8 @@ function(
         setupAddClass(outter);
 
         setupResourceDesigner();
+
+        createDialog();
     },
     doSearch = function() {
         // summary:
