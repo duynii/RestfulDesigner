@@ -29,6 +29,7 @@ define([
           "rfd/Concept_R",
           "rfd/Collection_R", 
           "rfd/widget/ListItem", 
+          "rfd/widget/NewResourceDialog", 
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
           "dijit/Dialog", 
@@ -47,7 +48,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R,
-            ListItem,
+            ListItem, NewResourceDialog,
             CheckBox, NumberTextBox,
             Dialog,
             Container, Selector, Moveable,
@@ -68,31 +69,13 @@ function(
     },
     arrangeClasses = function()
     {
-      /*
-      tablesMap.forEach(function(pair) {
-          console.log("key:" + pair.key + ", item: " + pair.value.id);
-
-          //var container = registry.byId(pair.key);
-          //console.log("container: " + container.id);
-        }, 
-        null
-      );
-*/
-
       var bottomLeft = dom.byId("bottomLeft");
-      /*
-      var containers = registry.findWidgets(bottomLeft);
-      var left = 0;
-      baseArray.forEach(containers, function(item) {
-        var box = domGeometry.getMarginBox(item.domNode);
-        domStyle.set(item.domNode, "left", left + "px");
-        left += box.l + CLASS_SPACING;
-      });
-      */
       var left = 0;
       var top = 0;
       var maxHeight = 0;
       var divBox = domGeometry.getMarginBox(bottomLeft);
+      // TODO, bug when adding new class, re-arrange oddly
+      // use container.forEachNodeItem
       query("#bottomLeft > .classTable").forEach(function(node)
       {
         console.log("table: " + node.id);
@@ -263,6 +246,15 @@ function(
 
       li.startup();
     },
+    createDialog = function()
+    {
+      var d = new NewResourceDialog({
+        title:"Custom Dialog",
+        style: "min-width: 800px; min-height: 400px"
+      });
+
+      d.show();
+    },
     initUi = function() 
     {
         console.log("initUi called");
@@ -280,6 +272,8 @@ function(
         setupAddClass(outter);
 
         setupResourceDesigner();
+
+        createDialog();
     },
     doSearch = function() {
         // summary:

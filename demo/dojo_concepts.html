@@ -45,6 +45,33 @@
             <div id="bottomRight"
                 data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
                 Bottom Right
+<br/>
+
+<select name="type" data-dojo-type="dijit/form/Select">
+    <option value="static">Static Resource</option>
+    <option value="template">Template Resource</option>
+    <option value="custom">Custom Resource</option>
+</select>
+<div data-dojo-type="dijit/layout/StackContainer">
+    <div data-dojo-type="dijit/layout/ContentPane" title="static">
+        <h4>Static Resource</h4>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="template">
+        <h4>Templated Resource</h4>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="custom">
+        <h4>Custom Resource</h4>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="collection">
+        <h4>Collection Resource</h4>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="concept">
+        <h4>Concept Resource</h4>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="partial">
+        <h4>Partial Concept Resource</h4>
+    </div>
+</div>
             </div>
         </div>
     </div>
@@ -80,7 +107,7 @@
     <script>
 require([ 
         "dojo/ready", "dojo/parser",
-        "rfd/controller/view_concepts", 
+        "rfd/views/view_concepts", 
           "dojo/domReady",
           ], function(ready, parser, view) 
 {

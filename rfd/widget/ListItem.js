@@ -25,7 +25,7 @@ define(["dojo/_base/declare",
         Menu, MenuItem,
         on, baseFx, baseArray, lang)
     {
-        return declare("rfd/widget/ListItem",[_WidgetBase, _TemplatedMixin], 
+        return declare("ListItem",[_WidgetBase, _TemplatedMixin], 
         {
             // Some default values for our author
             // These typically map to whatever you're passing to the constructor
