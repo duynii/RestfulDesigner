@@ -140,9 +140,9 @@ function(
         resDesigner.sync();
 
         //TODO, may not want to do this
-        source.getSelectedNodes().orphan();
-        source.delItem(nodeId);
-        //source.sync():
+        //source.getSelectedNodes().orphan();
+        //source.delItem(nodeId);
+        ////Dont uncomment, compile error: source.sync():
       }
       else 
       {
@@ -159,8 +159,8 @@ function(
         li.addResource(resource, li.branch);
 
         //TODO, may not want to do this
-        source.getSelectedNodes().orphan();
-        source.delItem(nodeId);
+        //source.getSelectedNodes().orphan();
+        //source.delItem(nodeId);
       }
     },
     createResourceDesigner = function()
