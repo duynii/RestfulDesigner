@@ -1,13 +1,63 @@
-<select name="type" data-dojo-type="dijit/form/Select">
+<div>
+<select id="NRSelect" name="type">
     <option value="static">Static Resource</option>
-    <option value="template">Template Resource</option>
+    <option value="templated">Template Resource</option>
     <option value="custom">Custom Resource</option>
 </select>
-<div data-dojo-type="dijit/layout/StackContainer">
-    <div data-dojo-type="dijit/layout/ContentPane" title="Questions">
-        Please answer following questions
+<div id="NRStack" data-dojo-type="dijit/layout/StackContainer">
+    <div id="NRstatic" data-dojo-type="dijit/layout/ContentPane" title="New Static resource">
+		<div data-dojo-type="dijit/form/Form" id="staticForm" action="" method="">
+        	<label>Identifier:</label>
+        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+        	<br/>
+        	<div style="float: right">
+				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+				<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+			</div>
+        </div>
     </div>
-    <div data-dojo-type="dijit/layout/ContentPane" title="Answers">
-        Here is what you should have answered :P
+    <div id="NRtemplated" data-dojo-type="dijit/layout/ContentPane" title="New Templated resource">
+		<div data-dojo-type="dijit/form/Form" id="templatedForm" action="" method="">
+        	<label>Identifier:</label>
+        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+        	<br/>
+        	<div style="float: right">
+				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+				<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+			</div>
+        </div>
     </div>
+    <div id="NRcustom" data-dojo-type="dijit/layout/ContentPane" title="New Custom resource">
+		<div data-dojo-type="dijit/form/Form" id="customForm" action="" method="">
+        	<label>Identifier:</label>
+        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+        	<br/>
+			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+			<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+        </div>
+    </div>
+    <div id="NRpartial" data-dojo-type="dijit/layout/ContentPane" title="New Partial resource">
+		<div data-dojo-type="dijit/form/Form" id="partialForm" action="" method="">
+        	<label>Identifier:</label>
+        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+        	<br/>
+			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+			<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+        </div>
+    </div>
+    <div id="NRcollection" data-dojo-type="dijit/layout/ContentPane" title="New Collection resource">
+		<div data-dojo-type="dijit/form/Form" id="collectionForm" action="" method="">
+        	<br/>
+			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+			<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+        </div>
+    </div>
+    <div id="NRconcept" data-dojo-type="dijit/layout/ContentPane" title="New Concept resource">
+		<div data-dojo-type="dijit/form/Form" id="conceptForm" action="" method="">
+        	<br/>
+			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+			<button data-dojo-type="dijit/form/Button" type="cancel" >Cancel</button>
+        </div>
+    </div>
+</div>    
 </div>

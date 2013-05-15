@@ -274,13 +274,13 @@ require([ "dojo/parser",
         });
 
         var d = new Dialog({title: "New Property", content: formNP});
-        d.show();
         // Dojo event for existing widget
         dia.set("onSubmit", function(e) 
         { 
             e.preventDefault();
             console.log("onSubmit")
         });
+        d.show();
         
         
         var domB = dom.byId("id_button");

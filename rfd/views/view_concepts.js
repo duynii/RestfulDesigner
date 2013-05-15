@@ -250,10 +250,12 @@ function(
     {
       var d = new NewResourceDialog({
         title:"Custom Dialog",
-        style: "min-width: 800px; min-height: 400px"
+        style: "min-width: 200px; min-height: 100px"
       });
-
       d.show();
+      d.init();
+
+
     },
     initUi = function() 
     {
