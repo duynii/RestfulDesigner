@@ -15,6 +15,20 @@ define([
             this.active = active;
             this.inactive = inactive;
         },
+        clone: function()
+        {
+            var br = new Branch();
+            baseArray.forEach(this.inactive.resources, function(res)
+            {
+                br.addInactiveResource(res);
+            });
+            baseArray.forEach(this.active.resources, function(res)
+            {
+                br.addActiveResource(res);
+            });
+
+            return br;
+        },
         //getActive: function() { return this.active; },
         //getInactive: function() { return this.inactive; },
         addActiveResource: function(resource) { this.active.addResource(resource); },

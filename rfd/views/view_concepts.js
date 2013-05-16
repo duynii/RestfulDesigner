@@ -231,27 +231,6 @@ function(
     onBranching = function(branch)
     {
       console.log("Branching out of: " + branch);
-      /*
-      var dialog = popup;
-      if(dialog == null)
-      {
-        popup = new NewResourceDialog({
-          //id: "NRDialog",
-          title:"Custom Dialog",
-          style: "min-width: 200px; min-height: 100px",
-          onFinish: function(newRes)
-          {
-            dialog.branch.addActiveResource(newRes);
-            console.log("finished with new branch: " + dialog.branch);
-            addListItem(branch);
-            //dialog.destroyRecursive(false);
-            //dialog.destroy();
-          }
-        });
-
-        dialog = popup;
-      }          
-      */
 
       var dialog = new NewResourceDialog({
           //id: "NRDialog",
@@ -259,9 +238,11 @@ function(
           style: "min-width: 200px; min-height: 100px",
           onFinish: function(newRes)
           {
-            dialog.branch.addActiveResource(newRes);
-            console.log("finished with new branch: " + dialog.branch);
-            addListItem(branch);
+            var br = dialog.branch.clone();
+            br.addActiveResource(newRes);
+            console.log("finished with new branch: " + br);
+            addListItem(br);
+            //Add the new branch to Controller
             dialog.destroyRecursive(false);
             //dialog.destroy();
           }
