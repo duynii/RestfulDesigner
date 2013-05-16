@@ -25,26 +25,26 @@ define([
         {
             newRes = typeof newRes !== 'undefined' ? newRes : null;
 
-            var branch = new Branch();
+            var br = new Branch();
 
-            var isBranched = this.inactive.branchOut(fromRes, branch);
+            var isBranched = this.inactive.branchOut(fromRes, br);
             if(isBranched) {
                 console.log("branched from inactive");
-                return branch;
+                return br;
             }
 
-            isBranched = this.active.branchOut(fromRes, branch);
+            isBranched = this.active.branchOut(fromRes, br);
 
             // add the new res into active section
             if(newRes != null) 
             {
-                //TODO: Make sure new branch is unique?
-                branch.addActiveResource(newRes);
+                //TODO: Make sure new br is unique?
+                br.addActiveResource(newRes);
             }
             console.log("Branched from active: " + isBranched + " at " + fromRes.name);
-            console.log("[branchOut] branched: " + branch);
+            console.log("[branchOut] branched: " + br);
 
-            return branch;
+            return br;
         },
         getPrevResource: function()
         {

@@ -83,8 +83,8 @@ define(["dojo/_base/declare", "dijit/Dialog",
                 }
                 this.isAdded = true;
                 this.newResource = new Static_R(data.name, "/");
-                this.hide();
                 this.onFinish(this.newResource);
+                this.hide();
             },
             onTemplatedSubmit: function(form)
             {

@@ -227,28 +227,45 @@ function(
       });
       menu.addChild(menuItem);
     }, 
+    popup = null,
     onBranching = function(branch)
     {
-      console.log("Branching");
+      console.log("Branching out of: " + branch);
+      /*
+      var dialog = popup;
+      if(dialog == null)
+      {
+        popup = new NewResourceDialog({
+          //id: "NRDialog",
+          title:"Custom Dialog",
+          style: "min-width: 200px; min-height: 100px",
+          onFinish: function(newRes)
+          {
+            dialog.branch.addActiveResource(newRes);
+            console.log("finished with new branch: " + dialog.branch);
+            addListItem(branch);
+            //dialog.destroyRecursive(false);
+            //dialog.destroy();
+          }
+        });
+
+        dialog = popup;
+      }          
+      */
+
       var dialog = new NewResourceDialog({
-        //id: "NRDialog",
-        title:"Custom Dialog",
-        style: "min-width: 200px; min-height: 100px",
-        onFinish: function(newRes)
-        {
-          branch.addActiveResource(newRes);
-          console.log("finished with new branch: " + branch);
-
-          addListItem(branch);
-
-          dialog.destroyRecursive(false);
-          dialog.destroy();
-        }
-      });          
-                dialog.execute = function(form)
-                {
-                    console.log("iview dialog onexecute " + form);
-                };
+          //id: "NRDialog",
+          title:"Custom Dialog",
+          style: "min-width: 200px; min-height: 100px",
+          onFinish: function(newRes)
+          {
+            dialog.branch.addActiveResource(newRes);
+            console.log("finished with new branch: " + dialog.branch);
+            addListItem(branch);
+            dialog.destroyRecursive(false);
+            //dialog.destroy();
+          }
+        });
       dialog.init(branch);
       dialog.show();
     },
@@ -268,10 +285,18 @@ function(
     setupResourceDesigner = function() 
     {
       var branch = controller.getDummyBranch();
+      console.log("TESTING");
+      var br = branch.branchOut( new Concept_R("public", "/"));
+      console.log("TEST from public: " + br);
+      var br = branch.branchOut( new Concept_R("hospitals", "/"));
+      console.log("TEST from hospitals: " + br);
 
       var li = addListItem(branch);
       var res = new StaticResource("added", "hospitals");
-      li.addResource(res);
+      branch.addActiveResource(res);
+      li.addResource(res, branch);
+
+
 
     },
     initUi = function() 

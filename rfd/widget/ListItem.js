@@ -94,6 +94,9 @@ define(["dojo/_base/declare",
                 isHidden = typeof isHidden !== 'undefined' ? isHidden : false;
                 branch = typeof branch !== 'undefined' ? branch : null;
 
+                console.log("this.branch: " + this.branch);
+                console.log("adding res: " + resource.id + " branch: " + branch);
+
                 var cssMap = this.cssButtonMap;
                 var cssStyle = cssMap.entry(resource.declaredClass); 
                 cssStyle += (isHidden ? " hidden" : "");
@@ -101,7 +104,6 @@ define(["dojo/_base/declare",
                 var myId = this.id;
                 //console.log("css: " + cssMap.entry(resource.declaredClass));
                 // create a dom under self
-                console.log("adding this resource: " + resource.name);
                 var button = domConstruct.create("button", 
                 {
                     id: resource.id + '_' + myId,
@@ -136,8 +138,6 @@ define(["dojo/_base/declare",
                             label: "New Branch",
                             onClick: function(e)
                             {
-                                console.log("branching from target: " + e.target + " - " + e.originalTarget.id);
-                                //var br = this.dom2branch.entry(e.target.id)
                                 console.log("the branch: " + branch);
                                 if(func != null) {
                                     func(branch);

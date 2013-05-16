@@ -24,28 +24,32 @@ define([
         },
         hasResourceId: function(id)
         {
+            var ind = -1;
             baseArray.forEach(this.resources, function(res, index)
                 {
                     if(res.id == id) {
-                        return true;
+                        ind = index;
                     }
                 }, 
                 this
             );
-            return false;
+            return (ind != -1);
         },
         branchOut: function(fromRes, branch)
         {
+            var ind = -1;
             baseArray.forEach(this.resources, function(res, index)
                 {
-                    branch.addInactiveResource(res);
+                    if(ind == -1) {
+                        branch.addInactiveResource(res);
+                    }
                     if(res.id == fromRes.id) {
-                        return true;
+                        ind = index;     
                     }
                 }, 
                 this
             );
-            return false;
+            return (ind != -1);
         },
         size: function() { return this.resources.length; },
         toString: function()
