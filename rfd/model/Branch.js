@@ -20,6 +20,7 @@ define([
         addActiveResource: function(resource) { this.active.addResource(resource); },
         addInactiveResource: function(resource) { this.inactive.addResource(resource); },
         // Create a new branch by branching midway from this resource
+        // All existing resources will be in inactive, new resource will in in active
         branchOut: function(fromRes, newRes)
         {
             newRes = typeof newRes !== 'undefined' ? newRes : null;
@@ -45,7 +46,26 @@ define([
 
             return branch;
         },
-
+        getPrevResource: function()
+        {
+            if(this.active.resources.length > 0) {
+                return this.active.resources.pop();
+            }
+            else if(this.inactive.resources.length > 0) {
+                return this.inactive.resources.pop();
+            }
+            else {
+                return null;
+            }
+        },
+        getPrevResourceId: function()
+        {
+            var res = this.getPrevResource();
+            return res != null ? res.id : "/";
+        },
+        hasResourceId: function(id) {
+            return (this.active.hasResourceId(id)) || (this.inactive.hasResourceId(id));
+        },
         toString: function()
         {
             return this.inactive + " -> " + this.active;

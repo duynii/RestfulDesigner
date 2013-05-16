@@ -22,6 +22,18 @@ define([
         {
             this.resources.push(resource);
         },
+        hasResourceId: function(id)
+        {
+            baseArray.forEach(this.resources, function(res, index)
+                {
+                    if(res.id == id) {
+                        return true;
+                    }
+                }, 
+                this
+            );
+            return false;
+        },
         branchOut: function(fromRes, branch)
         {
             baseArray.forEach(this.resources, function(res, index)
@@ -33,6 +45,7 @@ define([
                 }, 
                 this
             );
+            return false;
         },
         size: function() { return this.resources.length; },
         toString: function()

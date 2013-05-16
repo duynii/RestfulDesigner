@@ -227,6 +227,10 @@ table.classTable td {
     border-color: rgb(200,200,200);
 }
 
+#NRDialog_underlay {
+  background-color: green;
+}
+
 .erSize {
   width: 400px;
   height: 400px;
@@ -240,3 +244,4 @@ table.classTable td {
   top: 0px;
   left: 0px;
 }
+

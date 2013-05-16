@@ -227,34 +227,51 @@ function(
       });
       menu.addChild(menuItem);
     }, 
-    setupResourceDesigner = function() 
+    onBranching = function(branch)
+    {
+      console.log("Branching");
+      var dialog = new NewResourceDialog({
+        //id: "NRDialog",
+        title:"Custom Dialog",
+        style: "min-width: 200px; min-height: 100px",
+        onFinish: function(newRes)
+        {
+          branch.addActiveResource(newRes);
+          console.log("finished with new branch: " + branch);
+
+          addListItem(branch);
+
+          dialog.destroyRecursive(false);
+          dialog.destroy();
+        }
+      });          
+                dialog.execute = function(form)
+                {
+                    console.log("iview dialog onexecute " + form);
+                };
+      dialog.init(branch);
+      dialog.show();
+    },
+    addListItem = function(branch)
     {
       var outter = dom.byId("resourcesList");
-      //var li = domConstruct.create("ListItem", {id:"my"}, "resourcesList");
-      var li = new ListItem({id: "my"});
+      var li = new ListItem(
+      {
+        onBranchOut: onBranching
+      });
       li.placeAt(outter);
-      console.log("ListItem: " + li.declaredClass);
-      //li.showResources();
-      var branch = controller.getDummyBranch();
-      //li.setBranch(controller.getDummyBranch());
-
-      var reg = registry.byId("my");
       li.set("branch", branch);
+      li.startup();
 
+      return li;
+    },
+    setupResourceDesigner = function() 
+    {
+      var branch = controller.getDummyBranch();
+
+      var li = addListItem(branch);
       var res = new StaticResource("added", "hospitals");
       li.addResource(res);
-
-      li.startup();
-    },
-    createDialog = function()
-    {
-      var d = new NewResourceDialog({
-        title:"Custom Dialog",
-        style: "min-width: 200px; min-height: 100px"
-      });
-      d.show();
-      d.init();
-
 
     },
     initUi = function() 
@@ -275,7 +292,7 @@ function(
 
         setupResourceDesigner();
 
-        createDialog();
+        //createDialog();
     },
     doSearch = function() {
         // summary:
