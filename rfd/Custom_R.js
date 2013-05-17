@@ -3,6 +3,6 @@ define([
     "dojo/_base/declare",
     "rfd/ConceptResource"
 ], function(declare, ConceptResource){
-    return declare("rfd/Custom_R", ConceptResource, {
+    return declare("Custom_R", ConceptResource, {
     });
 });

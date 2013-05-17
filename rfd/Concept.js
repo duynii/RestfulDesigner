@@ -5,7 +5,7 @@ define([
     "dojo/json",
     "dojo/_base/array"
 ], function(declare, JSON, arrayUtil){
-    return declare("rfd/Concept", null, {
+    return declare("Concept", null, {
         constructor: function(name, id, parentId){
             this.name = name;
             this.id = id;

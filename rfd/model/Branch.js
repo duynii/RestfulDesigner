@@ -35,6 +35,26 @@ define([
             this.inactive.resources =  this.inactive.resources.concat(this.active.resources);
             this.active.resources = new Array();
         },
+        //Returns last active resource, or null if no active
+        lastActiveResource: function()
+        {
+            return this.active.last();
+        },
+        //Returns last inactive resource, or null if no inactive
+        lastInactiveResource: function()
+        {
+            return this.inactive.last();
+        },
+        lastResource: function()
+        {
+            var res = this.active.last();
+            if(res != null ) {
+                return res;
+            }
+            else {
+                return this.inactive.last();
+            }
+        },
         //getActive: function() { return this.active; },
         //getInactive: function() { return this.inactive; },
         addActiveResource: function(resource) { this.active.addResource(resource); },

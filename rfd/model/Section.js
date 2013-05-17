@@ -52,6 +52,14 @@ define([
             return (ind != -1);
         },
         size: function() { return this.resources.length; },
+        last: function() 
+        { 
+            if(this.resources.length <= 0 ){
+                return null;
+            } 
+
+            return this.resources[this.size() - 1];
+        },
         toString: function()
         {
             var str = "";

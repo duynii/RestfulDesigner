@@ -43,12 +43,12 @@ define(["dojo/_base/declare",
             mouseBackgroundColor: "#def",
             initCssButtonMap: function()
             {
-                this.cssButtonMap.add("rfd/StaticResource", "staticResource");
-                this.cssButtonMap.add("rfd/TemplatedResource", "templatedResource");
-                this.cssButtonMap.add("rfd/Custom_R", "customResource");
-                this.cssButtonMap.add("rfd/Concept_R", "individualResource");
-                this.cssButtonMap.add("rfd/PartialConcept_R", "partialResource");
-                this.cssButtonMap.add("rfd/Collection_R", "collectionResource");
+                this.cssButtonMap.add("StaticResource", "staticResource");
+                this.cssButtonMap.add("TemplatedResource", "templatedResource");
+                this.cssButtonMap.add("Custom_R", "customResource");
+                this.cssButtonMap.add("Concept_R", "individualResource");
+                this.cssButtonMap.add("PartialConcept_R", "partialResource");
+                this.cssButtonMap.add("Collection_R", "collectionResource");
             },
             _setBranchAttr: function(branch)
             {

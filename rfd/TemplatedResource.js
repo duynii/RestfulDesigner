@@ -4,7 +4,7 @@ define([
     "dojo/_base/declare",
     "rfd/Resource"
 ], function(declare, Resource){
-    return declare("rfd/TemplatedResource", Resource, {
+    return declare("TemplatedResource", Resource, {
         constructor: function(name, parentId, json_data, template){
             // 'name' and 'parentId' are auto init'ed in parent
 

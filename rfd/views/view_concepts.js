@@ -247,7 +247,7 @@ function(
             //dialog.destroy();
           }
         });
-      dialog.init(branch);
+      dialog.init(branch, controller.getConcepts());
       dialog.show();
     },
     addListItem = function(branch)

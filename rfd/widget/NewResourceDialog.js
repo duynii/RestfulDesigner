@@ -22,6 +22,7 @@ define(["dojo/_base/declare", "dijit/Dialog",
             avatar: null,
             select: null,
             branch: null,
+            concepts: null,
             isAdded: false,
             //On success, the dialog will hide and set this attribute 
             // with new resource
@@ -47,6 +48,10 @@ define(["dojo/_base/declare", "dijit/Dialog",
                     }
                 }, "NRSelect");
 
+                var json_doc = registry.byId("json_doc");
+                json_doc.set("value", '{ "title": "my document",' + "\n" +
+                                        '   "data1": "my data"}');
+
 
                 var staticForm = registry.byId("staticForm");
                 staticForm.runSubmit = lang.hitch(this, this.onStaticSubmit);
@@ -67,16 +72,29 @@ define(["dojo/_base/declare", "dijit/Dialog",
                     form.runSubmit(form);
                 });
             },
-            init: function(branch)
+            init: function(branch, concepts)
             {
                 this.branch = branch;
+                concepts = typeof concepts !== 'undefined' ? concepts : null;
+                this.concepts = concepts;
                 // To do
-                this.select.options.push({value: "collection", label: "Collection resource"});
-                this.select.options.push({value: "concept", label: "Concept resource"});
+                var last = this.branch.lastResource();
+                if(concepts != null && last != null) 
+                {
+                    if(last.declaredClass == 'Collection_R') {
+                        this.select.options.push({value: "concept", label: "Concept resource"});
+                    }
+                    else if(last.declaredClass == 'Concept_R') {
+                        this.select.options.push({value: "partial", label: "Partial resource"});
+                    }
+                    else {
+                        this.select.options.push({value: "collection", label: "Collection resource"});
+                    }
+                }
             },
             onStaticSubmit: function(form)
             {
-                var data = form.getValues();
+                var data = form.get('value');
                 console.log("Static submit: " + JSON.stringify(data));
                 if( this.branch.hasResourceId(data.name) ) {
                     alert("Branch already has resource with identifier: " + data.name);
@@ -90,8 +108,27 @@ define(["dojo/_base/declare", "dijit/Dialog",
             },
             onTemplatedSubmit: function(form)
             {
-                var data = form.getValues();
+                var data = form.get('value');
                 console.log("Templated submit: " + JSON.stringify(data));
+
+                if( this.branch.hasResourceId(data.name) ) {
+                    alert("Branch already has resource with identifier: " + data.name);
+                    return;
+                }
+                // Checks that only valid JSON are accepted
+                var doc = JSON.parse(data.json_doc, true);
+                if( typeof doc !== 'undefined' && doc != null)
+                {
+                    console.log("Parsed json: " + JSON.stringify(doc));
+                    var res = new Templated_R(data.name, "/", data.json_doc, null);
+                    this.onFinish(res);
+                    this.hide();
+                }
+                
+                if(typeof doc === 'undefined')
+                {
+                    alert("JSON is invalid, check it again");
+                }
 
                 // test to see if example data is correct
 

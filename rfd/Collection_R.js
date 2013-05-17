@@ -5,7 +5,7 @@ define([
     "dojox/collections/ArrayList",
     "rfd/ConceptResource"
 ], function(declare, ArrayList, ConceptResource){
-    return declare("rfd/Collection_R", ConceptResource, {
+    return declare("Collection_R", ConceptResource, {
     	constructor: function(name, parentId) 
     	{
     		// Array of associated OrderBy objects
