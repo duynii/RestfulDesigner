@@ -26,6 +26,7 @@ define([
           "dojo/dnd/Source", 
           "dojo/dnd/Container", 
           "dojo/store/Memory",
+    "rfd/module/ClassStyle",
     "rfd/model/Tree",
     "rfd/model/Branch",
     "rfd/model/Section",
@@ -43,6 +44,7 @@ function(
             CheckBox, NumberTextBox,
             Source, Container,
             Memory,
+            classStyle,
             Tree, Branch, Section,
             Controller,
             ListItem) 
@@ -51,7 +53,6 @@ function(
     resDesigner = null,
     resCatalogue = null,
     stackContainer = null,
-    cssButtonMap = new Dictionary(),
     controller = new Controller(),
  
     startup = function() 
@@ -84,21 +85,12 @@ function(
       return {node: li.domNode, data: branch, type: ["branch"]};
 
     },
-    initCssButtonMap = function()
-    {
-      cssButtonMap.add("rfd/StaticResource", "staticResource");
-      cssButtonMap.add("rfd/TemplatedResource", "templatedResource");
-      cssButtonMap.add("rfd/Custom_R", "customResource");
-      cssButtonMap.add("rfd/Concept_R", "individualResource");
-      cssButtonMap.add("rfd/PartialConcept_R", "partialResource");
-      cssButtonMap.add("rfd/Collection_R", "collectionResource");
-    },
     catalogueListCreator = function(item, hint)
     {
       console.log("Catalogue creator: hint - " + hint + ", item - " + item);
       console.log("catalogue creator's item: " + item.declaredClass);
 
-      var cssStyle = cssButtonMap.entry(item.declaredClass);
+      var cssStyle = classStyle.entry(item.declaredClass);
       console.log("css: " + item.declaredClass + " to " + cssStyle);
       var li = domConstruct.create("li");
       domConstruct.create(
@@ -238,7 +230,6 @@ function(
 
         console.log("initUi called");
 
-        initCssButtonMap();
         // Init the Resource Designer
         createResourceDesigner();
         stackContainer = registry.byId("stackContainer");

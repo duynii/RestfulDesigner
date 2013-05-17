@@ -10,6 +10,7 @@ define(["dojo/_base/declare",
         "dojo/dom-construct", 
         "rfd/model/Branch", 
         "rfd/model/Section", 
+        "rfd/module/ClassStyle", 
         "dijit/Menu", 
         "dijit/MenuItem", 
         "dojo/on", 
@@ -22,6 +23,7 @@ define(["dojo/_base/declare",
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
+        classStyle,
         Menu, MenuItem,
         on, baseFx, baseArray, lang)
     {
@@ -38,18 +40,6 @@ define(["dojo/_base/declare",
             // A class to be applied to the root node in our template
             baseClass: "listItem",
  
-            // Colors for our background animation
-            baseBackgroundColor: "#fff",
-            mouseBackgroundColor: "#def",
-            initCssButtonMap: function()
-            {
-                this.cssButtonMap.add("StaticResource", "staticResource");
-                this.cssButtonMap.add("TemplatedResource", "templatedResource");
-                this.cssButtonMap.add("Custom_R", "customResource");
-                this.cssButtonMap.add("Concept_R", "individualResource");
-                this.cssButtonMap.add("PartialConcept_R", "partialResource");
-                this.cssButtonMap.add("Collection_R", "collectionResource");
-            },
             _setBranchAttr: function(branch)
             {
                 if(branch != null) 
@@ -75,8 +65,6 @@ define(["dojo/_base/declare",
             postCreate: function()
             {
                 console.log("ListItem postcreate called");
-                this.cssButtonMap = new Dictionary(),
-                this.initCssButtonMap();
                 this.branch = null;
                 this.wid2Res = new Dictionary();               
                 this.dom2branch = new Dictionary();               
@@ -97,12 +85,10 @@ define(["dojo/_base/declare",
                 console.log("this.branch: " + this.branch);
                 console.log("adding res: " + resource.id + " branch: " + branch);
 
-                var cssMap = this.cssButtonMap;
-                var cssStyle = cssMap.entry(resource.declaredClass); 
+                var cssStyle = classStyle.entry(resource.declaredClass); 
                 cssStyle += (isHidden ? " hidden" : "");
 
                 var myId = this.id;
-                //console.log("css: " + cssMap.entry(resource.declaredClass));
                 // create a dom under self
                 var button = domConstruct.create("button", 
                 {
@@ -184,10 +170,7 @@ define(["dojo/_base/declare",
                 var active_section = branch.active;
                 var inactive_section = branch.inactive;
 
-                var cssMap = this.cssButtonMap;
-                var myId = this.id;
-
-                var domNode = this.domNode;
+                //var domNode = this.domNode;
 
                 baseArray.forEach(inactive_section.resources, function(resource, index)
                 {
