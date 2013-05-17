@@ -27,13 +27,6 @@
                 <div id="json_doc" name="json_doc" 
                     style="min-width:100%; min-height: 100%"
                     data-dojo-type="dijit/form/Textarea">
-{
-    &ldquo;title&ldquo;&#58; &ldquo;my doc&ldquo;&#44;
-    &ldquo;data&ldquo;&#58; &ldquo;my data&ldquo;
-}
-
-
-
                 </div>
             </div>
         	<hr/>
@@ -44,8 +37,18 @@
     </div>
     <div id="NRcustom" data-dojo-type="dijit/layout/ContentPane" title="New Custom resource">
 		<div data-dojo-type="dijit/form/Form" id="customForm" action="" method="">
-        	<label>Identifier:</label>
-        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            <div>
+               <label>Identifier:</label>
+               <input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            </div>
+            <div>
+                <select name="type" data-dojo-type="dijit/form/Select">
+                    <option value="POST" selected>POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="GET">GET</option>
+                </select>
+            </div>
         	<br/>
         	<div style="float: right">
 				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
@@ -54,22 +57,73 @@
     </div>
     <div id="NRpartial" data-dojo-type="dijit/layout/ContentPane" title="New Partial resource">
 		<div data-dojo-type="dijit/form/Form" id="partialForm" action="" method="">
-        	<label>Identifier:</label>
-        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            <div>
+               <label>Identifier:</label>
+               <label class="id_label" type="text" name="name"/>
+            </div>
+            <div>
+                <label>Concept: </label>
+                <select name="partial_entity_id"></select>
+            </div>
+            <div>
+                <select id="property_select" name="property_select"></select>
+                <button id="custom_prop_add" data-dojo-type="dijit/form/Button">Add</button>
+            </div>
+            <hr/>
         	<br/>
-			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            <div style="float: right">
+                <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            </div>
         </div>
     </div>
     <div id="NRcollection" data-dojo-type="dijit/layout/ContentPane" title="New Collection resource">
 		<div data-dojo-type="dijit/form/Form" id="collectionForm" action="" method="">
+            <div>
+               <label>Identifier:</label>
+               <label class="id_label" type="text" name="name"/>
+            </div>
+            <div>
+                <label>Concept: </label>
+                <select name="coll_entity_id"></select>
+            </div>
         	<br/>
-			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            <div style="float: right">
+                <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            </div>
         </div>
     </div>
+    <div id="NRentity" data-dojo-type="dijit/layout/ContentPane" title="New Concept resource">
+        <div data-dojo-type="dijit/form/Form" id="entityForm" action="" method="">
+            <div>
+               <label>Identifier:</label>
+               <label class="id_label" type="text" name="name"/>
+            </div>
+            <div>
+                <label>Concept: </label>
+                <select name="entity_id"></select>
+            </div>
+            <hr/>
+            <br/>
+            <div style="float: right">
+                <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            </div>
+        </div>
+    </div>
+    <!--Purely in here because of odd error on parsing the template -->
     <div id="NRconcept" data-dojo-type="dijit/layout/ContentPane" title="New Concept resource">
 		<div data-dojo-type="dijit/form/Form" id="conceptForm" action="" method="">
-        	<br/>
-			<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            <div>
+               <label>Identifier:</label>
+               <label class="id_label" type="text" name="name"/>
+            </div>
+            <div>
+                <label>Concept: </label>
+                <select name="concept_entity_id"></select>
+            </div>
+            <br/>
+            <div style="float: right">
+                <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
+            </div>
         </div>
     </div>
 </div>    

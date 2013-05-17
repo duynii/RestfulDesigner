@@ -2,7 +2,7 @@
 // myApp/widget/AuthorWidget.js
 define(["dojo/_base/declare", "dijit/Dialog",
         "dojo/text!./templates/NewResource.html", 
-        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", "dojo/on", "dojo/mouse", "dojo/json",
+        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", "dojo/on", "dojo/parser",  "dojo/mouse", "dojo/json",
         "dojo/dom-construct",
         "dijit/registry",
         "dijit/form/Select",
@@ -11,7 +11,7 @@ define(["dojo/_base/declare", "dijit/Dialog",
         "rfd/StaticResource", "rfd/Custom_R", "rfd/TemplatedResource"],
 
     function(declare, Dialog, template, domStyle, 
-                baseFx, lang, on, mouse, JSON,
+                baseFx, lang, on, parser, mouse, JSON,
                 domConstruct,
                 registry,
                 SelectWidget, TextareaWidget,
@@ -30,7 +30,7 @@ define(["dojo/_base/declare", "dijit/Dialog",
             buildRendering: function()
             {
                 this.inherited(arguments);
-                this.set("content", domConstruct.toDom(template));
+                this.set("content", template);
             },
             onFinish: function(res) {},
             postCreate: function()
@@ -48,18 +48,14 @@ define(["dojo/_base/declare", "dijit/Dialog",
                     }
                 }, "NRSelect");
 
-                var json_doc = registry.byId("json_doc");
-                json_doc.set("value", '{ "title": "my document",' + "\n" +
-                                        '   "data1": "my data"}');
-
 
                 var staticForm = registry.byId("staticForm");
                 staticForm.runSubmit = lang.hitch(this, this.onStaticSubmit);
                 registry.byId("templatedForm").runSubmit = lang.hitch(this, this.onTemplatedSubmit);
                 registry.byId("customForm").runSubmit = lang.hitch(this, this.onCustomSubmit);
                 registry.byId("collectionForm").runSubmit = lang.hitch(this, this.onCollectionSubmit);
-                registry.byId("conceptForm").runSubmit = lang.hitch(this, this.onConceptSubmit);
                 registry.byId("partialForm").runSubmit = lang.hitch(this, this.onPartialSubmit);
+                registry.byId("entityForm").runSubmit = lang.hitch(this, this.onConceptSubmit);
                 this.execute = function(form)
                 {
                     console.log("onexecute " + form);
@@ -71,6 +67,11 @@ define(["dojo/_base/declare", "dijit/Dialog",
                     var form = registry.getEnclosingWidget(e.target);
                     form.runSubmit(form);
                 });
+
+                var json_doc = registry.byId("json_doc");
+                json_doc.set("value", '{ "title": "my document",' + "\n" +
+                                        '   "data1": "my data"}');
+
             },
             init: function(branch, concepts)
             {
@@ -82,13 +83,19 @@ define(["dojo/_base/declare", "dijit/Dialog",
                 if(concepts != null && last != null) 
                 {
                     if(last.declaredClass == 'Collection_R') {
-                        this.select.options.push({value: "concept", label: "Concept resource"});
+                        this.select.options.push({value: "entity", label: "Concept resource"});
                     }
                     else if(last.declaredClass == 'Concept_R') {
+                        // This resource rely on the parent's Concept_R only
                         this.select.options.push({value: "partial", label: "Partial resource"});
                     }
                     else {
+                        // No need to setup collection resource, it can be for any entity
                         this.select.options.push({value: "collection", label: "Collection resource"});
+                        // No need to set up concept resource, it can be for any entity too
+                        //  But it should by default select the same entity as the parent's if that
+                        //   parent is a collection resource
+                        this.select.options.push({value: "entity", label: "Concept resource"});
                     }
                 }
             },

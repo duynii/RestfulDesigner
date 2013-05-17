@@ -245,6 +245,10 @@ function(
             //Add the new branch to Controller
             dialog.destroyRecursive(false);
             //dialog.destroy();
+          },
+          onHide: function()
+          {
+            dialog.destroyRecursive(false);
           }
         });
       dialog.init(branch, controller.getConcepts());
@@ -267,9 +271,10 @@ function(
     {
       var branch = controller.getDummyBranch();
       console.log("TESTING");
-      var br = branch.branchOut( new Concept_R("public", "/"));
+      var br = branch.branchOut( new StaticResource("public", "/"));
       console.log("TEST from public: " + br);
-      var br = branch.branchOut( new Concept_R("hospitals", "/"));
+      var concept = controller.queryById("hospitals");
+      var br = branch.branchOut( new Concept_R("hospitals", "/", concept));
       console.log("TEST from hospitals: " + br);
 
       var li = addListItem(branch);

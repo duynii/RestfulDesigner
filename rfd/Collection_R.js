@@ -6,7 +6,7 @@ define([
     "rfd/ConceptResource"
 ], function(declare, ArrayList, ConceptResource){
     return declare("Collection_R", ConceptResource, {
-    	constructor: function(name, parentId) 
+    	constructor: function(name, parentId, concept) 
     	{
     		// Array of associated OrderBy objects
     		this.orderbys = new ArrayList();

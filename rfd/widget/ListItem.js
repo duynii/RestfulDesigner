@@ -127,11 +127,18 @@ define(["dojo/_base/declare",
                 else {
                     // add option to branchOut
                     this.dom2branch.add(slash.id, branch);
-                    /* on(slash, "click", function()
-                    {
-                        console.log("branching simple click:" + branch.toString());
-                    }); */
                     var func = this.onBranchOut;
+
+                    this.own(
+                        on(slash, "click", function()
+                        {
+                            console.log("branching simple click:" + branch.toString());
+                            console.log("the branch: " + branch);
+                            if(func != null) {
+                                func(branch);
+                            }
+                        }) 
+                    );
 
                     var itemBranchOut = new MenuItem(
                         {

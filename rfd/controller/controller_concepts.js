@@ -24,24 +24,35 @@ define([
         concepts:  null,
         constructor: function()
         {
-            concepts = this.loadFromFile();
-            store = new Memory({data: concepts});
+            this.concepts = this.loadFromFile();
+            this.store = new Memory({data: this.concepts});
+        },
+        queryById: function(id)
+        {
+            var concept =  this.store.get(id);
+            console.log("query by Id: " + id + " -> " + concept);
+
+            return concept;
+        },
+        query: function(obj) {
+            return this.store.query(obj);
         },
         loadFromFile: function()
         {
             var data = JSON.parse(mark1);
 
             // Should put all classes in a Dictionary
-            baseArray.forEach(data.concepts, function(obj_concept, index)
+            var arr = baseArray.map(data.concepts, function(obj_concept, index)
             {
               console.log("concept " + (index+1)  + " is " + obj_concept.name);
               // Create Concept class from db file's object
               var concept = new Concept(obj_concept.id, obj_concept.name, null);
               lang.mixin(concept, obj_concept);
 
-              obj_concept = concept;
+              return concept;
             });
 
+            data.concepts = arr;
             return data.concepts;
         },
         // Get existing concepts
@@ -56,9 +67,13 @@ define([
         getDummyBranch: function()
         {
             var branch = new Branch();
-            branch.addInactiveResource(new StaticResource("private", "/"));
-            branch.addActiveResource(new StaticResource("public", "private"));
-            branch.addActiveResource(new Collection_R("hospitals", "public"));
+            branch.addActiveResource(new StaticResource("v1", "/"));
+            branch.addActiveResource(new TemplatedResource("public", "v1"));
+
+            var hos = this.queryById("hospitals");
+            if(hos != null) {
+                branch.addActiveResource(new Collection_R("hospitals", "public", hos));
+            }
 
             return branch;
         },
