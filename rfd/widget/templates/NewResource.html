@@ -4,7 +4,7 @@
     <option value="templated">Template Resource</option>
     <option value="custom">Custom Resource</option>
 </select>
-<div id="NRStack" data-dojo-type="dijit/layout/StackContainer">
+<div id="NRStack" data-dojo-type="dijit/layout/StackContainer" style="min-width: 500px; min-height:400px">
     <div id="NRstatic" data-dojo-type="dijit/layout/ContentPane" title="New Static resource">
 		<div data-dojo-type="dijit/form/Form" id="staticForm" action="" method="">
         	<label>Identifier:</label>
@@ -17,9 +17,26 @@
     </div>
     <div id="NRtemplated" data-dojo-type="dijit/layout/ContentPane" title="New Templated resource">
 		<div data-dojo-type="dijit/form/Form" id="templatedForm" action="" method="">
-        	<label>Identifier:</label>
-        	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
-        	<br/>
+            <div>
+        	   <label>Identifier:</label>
+        	   <input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            </div>
+            <div>
+                <label>JSON Document</label>
+                </br>
+                <div id="json_doc" name="json_doc" 
+                    style="min-width:100%; min-height: 100%"
+                    data-dojo-type="dijit/form/Textarea">
+{
+    &ldquo;title&ldquo;&#58; &ldquo;my doc&ldquo;&#44;
+    &ldquo;data&ldquo;&#58; &ldquo;my data&ldquo;
+}
+
+
+
+                </div>
+            </div>
+        	<hr/>
         	<div style="float: right">
 				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
 			</div>

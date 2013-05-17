@@ -6,6 +6,7 @@ define(["dojo/_base/declare", "dijit/Dialog",
         "dojo/dom-construct",
         "dijit/registry",
         "dijit/form/Select",
+        "dijit/form/Textarea",
         "rfd/PartialConcept_R", "rfd/Concept_R", "rfd/Collection_R",
         "rfd/StaticResource", "rfd/Custom_R", "rfd/TemplatedResource"],
 
@@ -13,7 +14,7 @@ define(["dojo/_base/declare", "dijit/Dialog",
                 baseFx, lang, on, mouse, JSON,
                 domConstruct,
                 registry,
-                SelectWidget,
+                SelectWidget, TextareaWidget,
                 Partial_R, Concept_R, Collection_R, Static_R, Custom_R, Templated_R)
     {
         return declare( "NewResourceDialog",[ Dialog], 
@@ -81,15 +82,16 @@ define(["dojo/_base/declare", "dijit/Dialog",
                     alert("Branch already has resource with identifier: " + data.name);
                     return;
                 }
-                this.isAdded = true;
-                this.newResource = new Static_R(data.name, "/");
-                this.onFinish(this.newResource);
+                //this.isAdded = true;
+                //this.newResource = new Static_R(data.name, "/");
+                var res = new Static_R(data.name, "/");
+                this.onFinish(res);
                 this.hide();
             },
             onTemplatedSubmit: function(form)
             {
                 var data = form.getValues();
-                console.log("Templated submit: ");
+                console.log("Templated submit: " + JSON.stringify(data));
 
                 // test to see if example data is correct
 

@@ -235,7 +235,7 @@ function(
       var dialog = new NewResourceDialog({
           //id: "NRDialog",
           title:"Custom Dialog",
-          style: "min-width: 200px; min-height: 100px",
+          style: "min-width: 500px; min-height: 400px",
           onFinish: function(newRes)
           {
             var br = dialog.branch.clone();
