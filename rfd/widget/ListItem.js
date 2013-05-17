@@ -160,9 +160,13 @@ define(["dojo/_base/declare",
                 return button;
             },
             // Basic dnd functionality to add resource to the tree/branch's end
+            // The new branch must be the same as old branch with 'resource' added
             addResource: function(resource, branch)
             {
-                this._addResource(resource, false, branch);
+                this.branch = branch;
+                var br = this.branch.clone();
+                br.allToInactive();
+                this._addResource(resource, false, br);
                 //TODO this should be in the controller
                 this._setUrlAttr(this.branch.toString());
             },

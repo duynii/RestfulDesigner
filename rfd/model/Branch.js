@@ -29,6 +29,12 @@ define([
 
             return br;
         },
+        // Transfer all resources to inactive
+        allToInactive: function()
+        {
+            this.inactive.resources =  this.inactive.resources.concat(this.active.resources);
+            this.active.resources = new Array();
+        },
         //getActive: function() { return this.active; },
         //getInactive: function() { return this.inactive; },
         addActiveResource: function(resource) { this.active.addResource(resource); },
