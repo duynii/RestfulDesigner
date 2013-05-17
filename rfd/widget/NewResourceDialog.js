@@ -1,8 +1,9 @@
 //http://dojotoolkit.org/documentation/tutorials/1.8/recipes/custom_widget/
 // myApp/widget/AuthorWidget.js
-define(["dojo/_base/declare", "dijit/Dialog",
+define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
         "dojo/text!./templates/NewResource.html", 
-        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", "dojo/on", "dojo/parser",  "dojo/mouse", "dojo/json",
+        "dojo/dom-style", "dojo/_base/fx", "dojo/_base/lang", 
+        "dojo/on", "dojo/parser",  "dojo/mouse", "dojo/json", "dojo/query", "dojo/dom-attr",
         "dojo/dom-construct",
         "dijit/registry",
         "dijit/form/Select",
@@ -10,8 +11,8 @@ define(["dojo/_base/declare", "dijit/Dialog",
         "rfd/PartialConcept_R", "rfd/Concept_R", "rfd/Collection_R",
         "rfd/StaticResource", "rfd/Custom_R", "rfd/TemplatedResource"],
 
-    function(declare, Dialog, template, domStyle, 
-                baseFx, lang, on, parser, mouse, JSON,
+    function(declare, Dialog, baseArray, template, domStyle, 
+                baseFx, lang, on, parser, mouse, JSON, query, domAttr,
                 domConstruct,
                 registry,
                 SelectWidget, TextareaWidget,
@@ -23,10 +24,6 @@ define(["dojo/_base/declare", "dijit/Dialog",
             select: null,
             branch: null,
             concepts: null,
-            isAdded: false,
-            //On success, the dialog will hide and set this attribute 
-            // with new resource
-            newResource: null,
             buildRendering: function()
             {
                 this.inherited(arguments);
@@ -98,6 +95,36 @@ define(["dojo/_base/declare", "dijit/Dialog",
                         this.select.options.push({value: "entity", label: "Concept resource"});
                     }
                 }
+
+                this.initWidgets(this.branch, this.concepts);
+            },
+            initWidgets: function(branch, concepts)
+            {
+
+                //There are three labels and three enity selects
+                var labelsList = query("label.id_label", this.domNode);
+                query("[name='entity_id']", this.domNode).forEach(function(node, index)
+                {
+                    var label = labelsList[index];
+                    var sel = new SelectWidget(
+                        {
+                            onChange: function(newValue) {
+                                label.innerHTML = newValue;
+                                //domAttr.set(label, "value", newValue);
+                            }
+                        }, 
+                        node
+                    );
+                    baseArray.forEach(this.concepts, function(item, index)
+                    {
+                        if(index == 0) {
+                            label.innerHTML = item.id;
+                        }
+                        sel.options.push({value: item.id, label: item.id});
+                    }, 
+                    this);
+                },
+                this);
             },
             onStaticSubmit: function(form)
             {

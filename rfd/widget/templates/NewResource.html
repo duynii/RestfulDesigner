@@ -4,12 +4,14 @@
     <option value="templated">Template Resource</option>
     <option value="custom">Custom Resource</option>
 </select>
+<hr/>
 <div id="NRStack" data-dojo-type="dijit/layout/StackContainer" style="min-width: 500px; min-height:400px">
     <div id="NRstatic" data-dojo-type="dijit/layout/ContentPane" title="New Static resource">
 		<div data-dojo-type="dijit/form/Form" id="staticForm" action="" method="">
         	<label>Identifier:</label>
         	<input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
         	<br/>
+            <hr/>
         	<div style="float: right">
 				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
 			</div>
@@ -40,8 +42,6 @@
             <div>
                <label>Identifier:</label>
                <input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
-            </div>
-            <div>
                 <select name="type" data-dojo-type="dijit/form/Select">
                     <option value="POST" selected>POST</option>
                     <option value="PUT">PUT</option>
@@ -50,6 +50,7 @@
                 </select>
             </div>
         	<br/>
+            <hr/>
         	<div style="float: right">
 				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
 			</div>
@@ -63,7 +64,7 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="partial_entity_id"></select>
+                <select name="entity_id"></select>
             </div>
             <div>
                 <select id="property_select" name="property_select"></select>
@@ -84,9 +85,10 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="coll_entity_id"></select>
+                <select name="entity_id"></select>
             </div>
         	<br/>
+            <hr/>
             <div style="float: right">
                 <button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
             </div>
@@ -118,7 +120,7 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="concept_entity_id"></select>
+                <select name="entity_id"></select>
             </div>
             <br/>
             <div style="float: right">
