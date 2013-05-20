@@ -3,48 +3,27 @@ CLASS_Y_SPACING = 10;
 
 define([
     "dojo/dom",
-    "dojo/dom-construct",
-    "dojo/dom-style",
-    "dojo/dom-geometry",
-    "dojo/query",
-    "dojo/on",
-    "dojo/json",
-    "dojo/keys",
-    "dojo/_base/lang",
-    "dojo/_base/array", 
-    "dojo/_base/event", 
+    "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
+    "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
+    "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", 
     "dojox/collections/Dictionary",
-          "dojo/parser", 
-          "dijit/form/Button",
-          "dijit/registry",
-          "dijit/Menu",
-          "dijit/MenuItem",
-          "dijit/MenuSeparator",
-          "rfd/Concept",
-          "rfd/Resource",
-          "rfd/StaticResource",
-          "rfd/TemplatedResource",
-          "rfd/ConceptResource",
-          "rfd/Representation",
-          "rfd/Concept_R",
-          "rfd/Collection_R", 
-          "rfd/module/ClassStyle",
-          "rfd/widget/ListItem", 
-          "rfd/widget/NewResourceDialog", 
-          "dijit/form/CheckBox", 
-          "dijit/form/NumberTextBox", 
-          "dijit/Dialog", 
-          "dojo/dnd/Container", 
-          "dojo/dnd/Selector", 
-          "dojo/dnd/Source", 
-          "dojo/dnd/Moveable", 
+    "dojo/parser", 
+    "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
+    "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
+    "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", 
+    "rfd/module/ClassStyle",
+    "rfd/widget/ListItem", 
+    "rfd/widget/NewResourceDialog", 
+    "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
+    "dojo/dnd/Container", "dojo/dnd/Selector", "dojo/dnd/Source", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
     "rfd/controller/controller_concepts",
     "rfd/module"
     ],
 function(
-            dom, domConstruct, domStyle, domGeometry, query, on, JSON, keys, lang, baseArray, baseEvent, 
+            dom, domConstruct, domStyle, domGeometry, query, on, aspect, 
+            JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
             parser, Button, registry, Menu, MenuItem, MenuSeparator,
             Concept,
@@ -64,6 +43,7 @@ function(
     controller = new Controller(),
     resCatalogue = null, //Widget of the catalogue, to be changed to many?
     resDesigner = null, // The one container for Resource Designer
+    newBranchDom = null,
  
     startup = function() 
     {
@@ -231,7 +211,7 @@ function(
       menu.addChild(menuItem);
     }, 
     popup = null,
-    onBranching = function(branch)
+    onBranching = function(branch, domNode)
     {
       console.log("Branching out of: " + branch);
 
@@ -244,7 +224,7 @@ function(
             var br = dialog.branch.clone();
             br.addActiveResource(newRes);
             console.log("finished with new branch: " + br);
-            addListItem(br, resDesigner);
+            addListItem(br, resDesigner, domNode);
             //Add the new branch to Controller
             dialog.destroyRecursive(false);
             //dialog.destroy();
@@ -257,24 +237,19 @@ function(
       dialog.init(branch, controller.getConcepts());
       dialog.show();
     },
-    addListItem = function(branch, res_designer)
+    addListItem = function(branch, res_designer, refBranchNode)
     {
+      // If a ref node is specified, create the new branch under it
+      //  for branching out - onBranchOut
+
+      // Defaults to 'before' the newBranchDom
+      is_before = typeof refBranchNode !== 'undefined' ? false : true;
+      refBranchNode = typeof refBranchNode !== 'undefined' ? refBranchNode : newBranchDom;
+
       res_designer.insertNodes(true, //new selected node 
-        [ branch ], false, null);
+        [ branch ], is_before, refBranchNode);
 
       return  registry.getEnclosingWidget(res_designer.getSelected());
-/*
-      var outter = dom.byId("resourcesList");
-      var li = new ListItem(
-      {
-        onBranchOut: onBranching
-      });
-      li.placeAt(outter);
-      li.set("branch", branch);
-      li.startup();
-
-      return li;
-*/
     },
     setupResourceDesigner = function() 
     {
@@ -297,7 +272,7 @@ function(
     resourcesListCreator = function(branch, hint) 
     {
       //console.log("Designer creator: hint - " + hint + ", branch - " + branch);
-
+      resDesigner.selectNone();
       var li = new ListItem(
       {
         onBranchOut: onBranching
@@ -305,6 +280,13 @@ function(
       li.placeAt("resourcesList");
       li.set("branch", branch);
       li.startup();
+
+      li.watch("className", function(attr, oldVal, newVal){
+        console.log("class old: " + oldVal + "; new: " + newVal);
+      });
+      li.watch("class", function(attr, oldVal, newVal){
+        console.log("class old: " + oldVal + "; new: " + newVal);
+      });
 
       return {node: li.domNode, data: branch, type: ["branch"]};
     },
@@ -325,13 +307,12 @@ function(
       var resource = source.getItem(nodeId).data;
       console.log("Drop resource: " + resource);
 
-      var selected = resDesigner.getSelected();
-      console.log("widget: " + selected);
-
-      if(itemNo == 0) // Add the first ListItem for first branch
+      if(resDesigner.current == null) // Add the first ListItem for first branch
       {
 
-        resDesigner.insertNodes(false, [resource], false, null);
+        var br = new Branch();
+        br.addActiveResource(resource);
+        addListItem(br, resDesigner);
         resDesigner.sync();
 
         //TODO, may not want to do this
@@ -341,10 +322,6 @@ function(
       }
       else 
       {
-        //There must be a selected node
-        var selected = resDesigner.getSelected();
-        var widget = registry.getEnclosingWidget(selected);
-
         console.log("current: " + resDesigner.current);
         console.log("no: " + resDesigner.size());
 
@@ -367,9 +344,28 @@ function(
         isSource: false, // Only acts as dnd target
         accept: ["resource"], // Accept resource objects only
         type: ["concepts"],
+        /*
+        onSelectStart: lang.hitch(this, function(e)
+        {
+          console.log("On Selected item: " + e.target);
+          console.log("On Selected item: " + e.target.id);
+        }),
+        */
         onDropExternal: onResourcesListDrop,
         creator: resourcesListCreator
       });
+
+      /*
+      aspect.after(resDesigner, "onSelectStart", function(e){
+          console.log("On Selected item: " + e.target);
+      }, true);
+
+      resDesigner.on("onselectstart", function(e)
+      {
+          console.log("On Selected item: " + e.target);
+          console.log("On Selected item: " + e.target.id);
+      });
+      */
 
       resDesigner.size = function() {
         return resDesigner.getAllNodes().length;
@@ -456,6 +452,8 @@ function(
     {
         console.log("initUi called");
 
+        newBranchDom = dom.byId("dropNewBranch");
+
         // Get all existing concepts
         var concepts = controller.getConcepts();
         baseArray.forEach(concepts, function(concept, index)
@@ -469,7 +467,7 @@ function(
         setupAddClass(outter);
 
         createResourceDesigner();
-        setupResourceDesigner();
+        //setupResourceDesigner();
         createResourcesCatalogue();
 
         //createDialog();

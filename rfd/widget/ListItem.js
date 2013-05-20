@@ -58,7 +58,7 @@ define(["dojo/_base/declare",
                     this._set("url", urlString);
              
                     // Using our avatarNode attach point, set its src value
-                    this.urlLabel.innerHTML = this.url;
+                    //this.urlLabel.innerHTML = this.url;
                     //console.log("set Url is called");
                 }
             },
@@ -102,11 +102,13 @@ define(["dojo/_base/declare",
                     "button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
-                        class: "slash",
-                        innerHTML: "  /  "
+                        class: "addButton",
+                        innerHTML: "/"
                     }, 
                     this.domNode
                 );
+
+                var myDom = this.domNode;
                 if(isHidden) {
                     slash.className += " hidden";
                 }
@@ -121,7 +123,7 @@ define(["dojo/_base/declare",
                             console.log("branching simple click:" + branch.toString());
                             console.log("the branch: " + branch);
                             if(func != null) {
-                                func(branch);
+                                func(branch, myDom);
                             }
                         }) 
                     );
@@ -133,7 +135,7 @@ define(["dojo/_base/declare",
                             {
                                 console.log("the branch: " + branch);
                                 if(func != null) {
-                                    func(branch);
+                                    func(branch, myDom);
                                 }
                             }
                         }

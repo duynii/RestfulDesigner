@@ -137,7 +137,13 @@ html, body, #mainDiv {
   min-height: 30px;
   color: rgb(139, 0, 0);
   font-weight: bold;
-  font-size: 100%;
+  /*font-size: 100%;*/
+}
+
+.newBranch {
+  min-height: 40px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(200,200,200);
 }
 .rootButton {
     background-color: White;
