@@ -170,24 +170,15 @@ function(
 
       resDesigner.size = function() 
       {
-        var itemNo = 0;
-        resDesigner.forInItems(function(obj, id, map)
-        {
-          itemNo++;
-        }, 
-        resDesigner);
-        return itemNo;
+        return resDesigner.getAllNodes().length;
       };
 
-      // return the selected node, it can only be one in this app
+      // returns the node selected node, it can only be one in this app
+      // returns null if none selected
       resDesigner.getSelected = function()
       {
-         resDesigner.getSelectedNodes().forEach(function(node)
-         {
-            return node;
-         });
-
-         return null;
+        var selecteds = resDesigner.getSelectedNodes();
+        return selecteds.length > 0 ? selecteds[0] : null;
       }
     },
     createResourcesCatalogue = function()

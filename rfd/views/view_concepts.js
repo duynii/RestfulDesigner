@@ -28,6 +28,7 @@ define([
           "rfd/Representation",
           "rfd/Concept_R",
           "rfd/Collection_R", 
+          "rfd/module/ClassStyle",
           "rfd/widget/ListItem", 
           "rfd/widget/NewResourceDialog", 
           "dijit/form/CheckBox", 
@@ -35,6 +36,7 @@ define([
           "dijit/Dialog", 
           "dojo/dnd/Container", 
           "dojo/dnd/Selector", 
+          "dojo/dnd/Source", 
           "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
@@ -47,11 +49,10 @@ function(
             parser, Button, registry, Menu, MenuItem, MenuSeparator,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
-            Concept_R, Collection_R,
+            Concept_R, Collection_R, classStyle,
             ListItem, NewResourceDialog,
-            CheckBox, NumberTextBox,
-            Dialog,
-            Container, Selector, Moveable,
+            CheckBox, NumberTextBox, Dialog,
+            Container, Selector, Source, Moveable,
             text, newprop,
             Controller
             ) 
@@ -61,6 +62,8 @@ function(
     temp_id_num = 1,
     dialog  = new Dialog({title: "New Property", content: newprop}),
     controller = new Controller(),
+    resCatalogue = null, //Widget of the catalogue, to be changed to many?
+    resDesigner = null, // The one container for Resource Designer
  
     startup = function() 
     {
@@ -241,7 +244,7 @@ function(
             var br = dialog.branch.clone();
             br.addActiveResource(newRes);
             console.log("finished with new branch: " + br);
-            addListItem(br);
+            addListItem(br, resDesigner);
             //Add the new branch to Controller
             dialog.destroyRecursive(false);
             //dialog.destroy();
@@ -254,8 +257,13 @@ function(
       dialog.init(branch, controller.getConcepts());
       dialog.show();
     },
-    addListItem = function(branch)
+    addListItem = function(branch, res_designer)
     {
+      res_designer.insertNodes(true, //new selected node 
+        [ branch ], false, null);
+
+      return  registry.getEnclosingWidget(res_designer.getSelected());
+/*
       var outter = dom.byId("resourcesList");
       var li = new ListItem(
       {
@@ -266,6 +274,7 @@ function(
       li.startup();
 
       return li;
+*/
     },
     setupResourceDesigner = function() 
     {
@@ -277,13 +286,171 @@ function(
       var br = branch.branchOut( new Concept_R("hospitals", "/", concept));
       console.log("TEST from hospitals: " + br);
 
-      var li = addListItem(branch);
+      var li = addListItem(branch, resDesigner);
       var res = new StaticResource("added", "hospitals");
       branch.addActiveResource(res);
       li.addResource(res, branch);
+    },
+    // This will only be called upon if the Designer is initially
+    // TODO, is this correct?
+    // Give a new branch to be added to Designer
+    resourcesListCreator = function(branch, hint) 
+    {
+      //console.log("Designer creator: hint - " + hint + ", branch - " + branch);
 
+      var li = new ListItem(
+      {
+        onBranchOut: onBranching
+      });
+      li.placeAt("resourcesList");
+      li.set("branch", branch);
+      li.startup();
 
+      return {node: li.domNode, data: branch, type: ["branch"]};
+    },
+    // When a dnd catalogue item is droped into selected resource branch
+    onResourcesListDrop = function(source, nodes, copy) 
+    {
+      console.log("onResourcesListDrop left called");
+      console.log("source:" + typeof(source));
+      console.log("node id:" + nodes[0].id);
 
+      var nodeId = nodes[0].id;
+
+      //Check if there s no resource
+      var itemNo = resDesigner.size();
+      console.log("Drop found " + itemNo + " item/s");
+
+      //Data item
+      var resource = source.getItem(nodeId).data;
+      console.log("Drop resource: " + resource);
+
+      var selected = resDesigner.getSelected();
+      console.log("widget: " + selected);
+
+      if(itemNo == 0) // Add the first ListItem for first branch
+      {
+
+        resDesigner.insertNodes(false, [resource], false, null);
+        resDesigner.sync();
+
+        //TODO, may not want to do this
+        //source.getSelectedNodes().orphan();
+        //source.delItem(nodeId);
+        ////Dont uncomment, compile error: source.sync():
+      }
+      else 
+      {
+        //There must be a selected node
+        var selected = resDesigner.getSelected();
+        var widget = registry.getEnclosingWidget(selected);
+
+        console.log("current: " + resDesigner.current);
+        console.log("no: " + resDesigner.size());
+
+        var li = registry.getEnclosingWidget(resDesigner.current);
+        console.log("li type: " + li.declaredClass);
+        li.branch.addActiveResource(resource);
+        li.addResource(resource, li.branch);
+
+        //TODO, may not want to do this
+        //source.getSelectedNodes().orphan();
+        //source.delItem(nodeId);
+      }
+    },
+    createResourceDesigner = function()
+    {
+
+      resDesigner = new Source("resourcesList", {
+        id: "resourcesContainer",
+        singular: true,  // Single item selection
+        isSource: false, // Only acts as dnd target
+        accept: ["resource"], // Accept resource objects only
+        type: ["concepts"],
+        onDropExternal: onResourcesListDrop,
+        creator: resourcesListCreator
+      });
+
+      resDesigner.size = function() {
+        return resDesigner.getAllNodes().length;
+      };
+
+      // return the selected node, it can only be one in this app
+      resDesigner.getSelected = function()
+      {
+        
+         var nodes = resDesigner.getSelectedNodes();
+
+         if(nodes.length == 0) {
+          console.error("Cannot get selected ListItem node");
+         }
+
+         return nodes[0];
+      };
+      resDesigner.selectedWidget = function()
+      {
+        var sel = this.getSelected();
+        if(sel == null ) {
+          return null;
+        }
+
+        return registry.getEnclosingWidget(sel);
+      };
+    },
+    catalogueListCreator = function(item, hint)
+    {
+      //console.log("Catalogue creator: hint - " + hint + ", item - " + item);
+      //console.log("catalogue creator's item: " + item.declaredClass);
+
+      var cssStyle = classStyle.entry(item.declaredClass);
+      //console.log("css: " + item.declaredClass + " to " + cssStyle);
+      var li = domConstruct.create("li");
+      domConstruct.create(
+      "button", 
+        { 
+          class: cssStyle,
+          innerHTML:  item.toString() 
+        },
+        li,
+        null
+      );
+
+      return { node: li, data: item, type: item.type };
+    },
+    //Populate based on context of selected branch on the Designer
+    populateCatalogue = function(widget)
+    {
+      //TODO      
+    },
+    createResourcesCatalogue = function()
+    {
+      console.log("rightTree called");
+      //create the first catalogue for first branch    
+      resCatalogue = new Source("catalogueList_" + 1, {
+          singular: true,
+          accept: [], // This is a dnd source only
+          creator: catalogueListCreator,
+          type: ["concepts"]
+      });
+      // Testing purpose only
+      var template_R = new TemplatedResource("JSON Template", "/", {title: "Test JSON data"
+        , data: "some text"}, null );
+      var static_R = new StaticResource("static", "/");
+      var custom_R = new Custom_R("Custom", "/");
+      var available = [ template_R, static_R, custom_R ];
+      var concepts = controller.getConcepts();
+      baseArray.forEach(concepts, 
+        function(concept, index)
+        {
+          console.log("Looping through: " + concept.id);
+          var coll_R = new Collection_R(concept.id, "/", concept);
+          var concept_R = new Concept_R(concept.id, "/", concept);
+          available.push(coll_R);
+          available.push(concept_R);
+        }, 
+        this
+      );
+      resCatalogue.insertNodes(false, available, false, null);
     },
     initUi = function() 
     {
@@ -301,7 +468,9 @@ function(
         var outter = dom.byId("bottomLeft");
         setupAddClass(outter);
 
+        createResourceDesigner();
         setupResourceDesigner();
+        createResourcesCatalogue();
 
         //createDialog();
     },
