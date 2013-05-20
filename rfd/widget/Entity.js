@@ -4,6 +4,10 @@ define(["dojo/_base/declare",
         "dijit/_WidgetBase", 
         "dijit/_TemplatedMixin",
         "dojo/text!./templates/Entity.html", 
+        "dijit/form/Button",
+        "dijit/form/TextBox",
+        "dijit/form/DropDownButton",
+        "dijit/TooltipDialog",
         "dojox/collections/Dictionary",
         "dojo/dom-style", 
         "dojo/dom-geometry", 
@@ -23,6 +27,7 @@ define(["dojo/_base/declare",
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
+        Button, TextBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
@@ -50,7 +55,7 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments);
 
-                this.container = new Container(this.domNode,
+                this.container = new Container(this.containerNode,
                 {
                     creator: function(item, hint)
                     {
@@ -58,7 +63,26 @@ define(["dojo/_base/declare",
                     }
                 });
 
-                this.moveable = new Moveable(this.domNode);
+                this.header.innerHTML = "Blah header";
+
+                this.moveable = new Moveable(this.domNode, {handle: this.header});
+            },
+            _onPropertyButtonClick: function( /*Event*/ e)
+            {
+              // Trust me, _onClick calls this._onClick
+              console.log("Property add clicked")
+              return this.onPropertyClick(e);
+            },
+            _onBelongsButtonClick: function( /*Event*/ e)
+            {
+              console.log("Belongs add clicked")
+              return this.onBelongsClick(e);
+            },
+            onPropertyClick: function(e) { // nothing here: the extension point!
+
+            },
+            onBelongsClick: function(e) { // nothing here: the extension point!
+
             }
         });
     }

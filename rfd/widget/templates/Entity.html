@@ -1,13 +1,28 @@
-<table class="${baseClass}" data-dojo-attach-point="containerNode">
-	<th data-dojo-attach-point="header">
-		<div>
-			Class Name
-			<!-- TODO replace with img or img/icon background -->
-			<button>+ P</button>
-			<button>+ R</button>
+<div>
+	<!-- TODO replace with img or img/icon background -->
+	<button data-dojo-attach-point="propertyButton" data-dojo-type="dijit/Form/Button"
+		data-dojo-attach-event="onclick:_onPropertyButtonClick">+ P</button>
+	<button data-dojo-attach-point="belongsButton"
+		data-dojo-attach-event="onclick:_onBelongsButtonClick">+ R</button>
+	<!-- TODO hide the buttons here -->
+	<table class="${baseClass}" 
+			data-dojo-attach-point="containerNode">
+		<th data-dojo-attach-point="header">Class Name
+		</th>
+		<tr class="dojoDndItem">
+			<td>name: String</td>
+		</tr>
+	</table>
+	<!-- TODO dijit in template does not work, init it in post create 
+	<div data-dojo-type="dijit/form/DropDownButton">
+		<span>Register</span>
+		<div data-dojo-type="dijit/TooltipDialog">
+			        <label for="name2">Name:</label> <input data-dojo-type="dijit/form/TextBox" id="name2" name="name2" /><br />
+			        <label for="hobby2">Hobby:</label> <input data-dojo-type="dijit/form/TextBox" id="hobby2" name="hobby2" /><br />
+			        <button data-dojo-type="dijit/form/Button" type="submit"
+			        	>Add new Property</button>
+			        <button data-dojo-type="dijit/form/Button" type="submit">Save</button>
 		</div>
-	</td>
-	<tr>
-		<td>name: String</td>
-	</tr>
-</table>
+	</div>
+	-->
+</div>
