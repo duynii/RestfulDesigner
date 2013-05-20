@@ -205,6 +205,7 @@ table.classTable {
     border-width: 1px;
     border-color: #999999;
     border-collapse: collapse;
+    position: absolute;
 }
 table.classTable th {
     background:#b5cfd2 url('../data/images/cell-blue.jpg');

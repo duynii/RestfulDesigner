@@ -14,6 +14,7 @@ define([
     "rfd/module/ClassStyle",
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
+    "rfd/widget/Entity", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "dojo/dnd/Source", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
@@ -29,7 +30,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, classStyle,
-            ListItem, NewResourceDialog,
+            ListItem, NewResourceDialog, Entity,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, Source, Moveable,
             text, newprop,
@@ -337,6 +338,7 @@ function(
     },
     createResourceDesigner = function()
     {
+        newBranchDom = dom.byId("dropNewBranch");
 
       resDesigner = new Source("resourcesList", {
         id: "resourcesContainer",
@@ -448,12 +450,8 @@ function(
       );
       resCatalogue.insertNodes(false, available, false, null);
     },
-    initUi = function() 
+    setupEntityDesigner = function()
     {
-        console.log("initUi called");
-
-        newBranchDom = dom.byId("dropNewBranch");
-
         // Get all existing concepts
         var concepts = controller.getConcepts();
         baseArray.forEach(concepts, function(concept, index)
@@ -461,7 +459,17 @@ function(
           createConcept(concept);
         });
 
+        var ent = new Entity({});
+        ent.placeAt("bottomLeft");
+
         arrangeClasses();
+    },
+    initUi = function() 
+    {
+        console.log("initUi called");
+
+        setupEntityDesigner();
+
         // Right click Menu for bottom Left area
         var outter = dom.byId("bottomLeft");
         setupAddClass(outter);
