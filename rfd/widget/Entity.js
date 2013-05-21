@@ -8,6 +8,7 @@ define(["dojo/_base/declare",
         "dijit/form/MultiSelect",
         "dijit/form/Button",
         "dijit/form/TextBox",
+        "dijit/InlineEditBox",
         "dijit/form/DropDownButton",
         "dijit/TooltipDialog",
         "dojox/collections/Dictionary",
@@ -25,7 +26,7 @@ define(["dojo/_base/declare",
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
-        Select, MultiSelect, Button, TextBox, DropDownButton, TooltipDialog,
+        Select, MultiSelect, Button, TextBox, InlineEditBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
@@ -70,6 +71,8 @@ define(["dojo/_base/declare",
                 var typeSel = new Select({}, this.typeSelect);
                 var belongs = new MultiSelect({}, this.belongsSelect); 
 
+                var classname = new InlineEditBox({editor: TextBox, autoSave: true}, this.classnameNode);
+
 
                 //Instantiate the dijit widgets
                 this.tooltip = new TooltipDialog({}, this.tooltipNode);
@@ -78,15 +81,26 @@ define(["dojo/_base/declare",
                     this.tooltip, this.dropdown
                 );
 
+                this._setupContainer();
+
+                this.moveable = new Moveable(this.domNode, {handle: this.header});
+            },
+            _setupContainer: function()
+            {
                 this.container = new Container(this.containerNode,
                 {
                     creator: function(item, hint)
                     {
-
+                        var inner = item.name + ": " + item.type;
+                        console.log("creator called with " + item);
+                        var tr = domConstruct.create("tr");
+                        var td = domConstruct.create("td", { 
+                          innerHTML: inner 
+                        }, 
+                        tr);
+                        return { node: tr, data: item, type: ["text"] };
                     }
                 });
-
-                this.moveable = new Moveable(this.domNode, {handle: this.header});
             },
             _onPropertyButtonClick: function( /*Event*/ e)
             {

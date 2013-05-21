@@ -1,9 +1,10 @@
 <div>
-	<!-- TODO replace with img or img/icon background -->
+	<!-- TODO replace with img or img/icon background
 	<button data-dojo-attach-point="propertyButton" data-dojo-type="dijit/Form/Button"
 		data-dojo-attach-event="onclick:_onPropertyButtonClick">+ P</button>
 	<button data-dojo-attach-point="belongsButton"
 		data-dojo-attach-event="onclick:_onBelongsButtonClick">+ R</button>
+	-->
 	<!-- TODO hide the buttons here -->
 	<table class="${baseClass}" 
 			data-dojo-attach-point="containerNode">
@@ -12,7 +13,8 @@
 				<span>edit</span>
 				<div data-dojo-attach-point="tooltipNode" >
 					<h4>Class</h4>
-			        	<label for="classname">Name:</label> <input style="width: 100px" class="inputbox" type="text" 
+			        	<label for="classname">Name:</label> <span style="width: 100px"
+			        	data-dojo-attach-point="classnameNode">Class Name</span>
 					<hr/>
 					<h4>Add new Property</h4>
 			        <label for="name">Name:</label> <input style="width: 100px" class="inputbox" type="text" 
