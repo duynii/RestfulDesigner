@@ -8,7 +8,8 @@
 	<!-- TODO hide the buttons here -->
 	<table class="${baseClass}" 
 			data-dojo-attach-point="containerNode">
-		<th data-dojo-attach-point="header">Class Name
+		<th data-dojo-attach-point="header">
+			<label data-dojo-attach-point="titleNode" class="boldFont" >class_name</label>
 			<div data-dojo-attach-point="dropdownNode">
 				<span>edit</span>
 				<div data-dojo-attach-point="tooltipNode" >
@@ -34,7 +35,7 @@
 			        <hr/>
 					<h4>Relationships</h4>
 			        <!-- Add multi select here -->
-			        <label for="relations">Belongs to:</label> 
+			        <label for="relations">belongs to: </label> 
 					<select name="relations" style="min-wdith: 70px" data-dojo-attach-point="belongsSelect">
     					<option value="custom">dummy</option>
     					<option value="custom1">dummy1</option>
@@ -45,11 +46,10 @@
 			</div>
 		</th>
 		<tr class="collapse" data-dojo-attach-point="belongsRowNode">
-			<td data-dojo-attach-point="belongsNode"></td>
+			<td>
+				<b><span>belongs to:</span><span data-dojo-attach-point="belongsNode"></span></b>
+			</td>
 		<tr/>
-		<tr class="dojoDndItem">
-			<td>name: String</td>
-		</tr>
 	</table>
 	<!-- TODO dijit in template does not work, init it in post create 
 	<div data-dojo-type="dijit/form/DropDownButton">

@@ -167,6 +167,10 @@ html, body, #mainDiv {
     visibility: hidden;
 }
 
+.boldFont {
+  font-weight: bold;
+}
+
 .floatLeft {
   float: left;
 }

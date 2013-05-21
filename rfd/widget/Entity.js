@@ -42,12 +42,15 @@ define(["dojo/_base/declare",
         return declare("Entity",[_WidgetBase, _TemplatedMixin], 
         {
             concept: null,
+            concepts: null,
             baseClass: "classTable",
             templateString: template,
             container: null,
             moveable: null,
             dropdown: null,
             tooltip: null,
+            classname: null,
+
             buildRendering: function()
             {
                 this.inherited(arguments);
@@ -71,7 +74,7 @@ define(["dojo/_base/declare",
                 var typeSel = new Select({}, this.typeSelect);
                 var belongs = new MultiSelect({}, this.belongsSelect); 
 
-                var classname = new InlineEditBox({editor: TextBox, autoSave: true}, this.classnameNode);
+                this.classname = new InlineEditBox({editor: TextBox, autoSave: true}, this.classnameNode);
 
 
                 //Instantiate the dijit widgets
@@ -101,6 +104,47 @@ define(["dojo/_base/declare",
                         return { node: tr, data: item, type: ["text"] };
                     }
                 });
+            },
+            // Clear everything and repopulate
+            _resetConcept: function()
+            {
+
+                console.log("Set name for: " + this.concept.id);
+                this.titleNode.innerHTML = this.concept.id;
+                this.classname.set("value", this.concept.id);
+
+                //TODO clear everything
+                this.container.insertNodes(this.concept.properties, false, null);
+
+                if(this.concept.belongs_to.length <= 0) {
+                    domStyle.set(this.belongsRowNode, "visibility", "collapse");
+                    this.belongsNode.innerHTML = "";
+                }
+                else 
+                {
+                    var list = "";
+                    baseArray.forEach(this.concept.belongs_to, function(class_id)
+                    {
+                        list += class_id + " ";
+                    });
+                    this.belongsNode.innerHTML = list;
+                    domStyle.set(this.belongsRowNode, "visibility", "visible");
+                }
+            },
+            _setConceptsAttr: function(concepts)
+            {
+                if(concepts == null) { console.error("'concepts' set is null"); }
+                this.concepts = concepts;
+            }, 
+            _setConceptAttr: function(concept) 
+            {
+                if(concept.declaredClass != "Concept") {
+                    console.error("param is not a Concept type");
+                    return;
+                }
+
+                this.concept = concept;
+                this._resetConcept();
             },
             _onPropertyButtonClick: function( /*Event*/ e)
             {

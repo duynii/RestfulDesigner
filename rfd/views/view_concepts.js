@@ -456,13 +456,14 @@ function(
         var concepts = controller.getConcepts();
         baseArray.forEach(concepts, function(concept, index)
         {
-          createConcept(concept);
-        });
+          //createConcept(concept);
 
-        var ent = new Entity({});
-        var ent2 = new Entity({});
-        ent.placeAt("bottomLeft");
-        ent2.placeAt("bottomLeft");
+          var e = new Entity({});
+          e.placeAt("bottomLeft");
+          e.set("concepts", concepts);
+          e.set("concept", concept);
+        },
+        this);
 
         arrangeClasses();
     },
