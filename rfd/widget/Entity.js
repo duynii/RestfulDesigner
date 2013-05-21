@@ -5,6 +5,7 @@ define(["dojo/_base/declare",
         "dijit/_TemplatedMixin",
         "dojo/text!./templates/Entity.html", 
         "dijit/form/Select",
+        "dijit/form/MultiSelect",
         "dijit/form/Button",
         "dijit/form/TextBox",
         "dijit/form/DropDownButton",
@@ -24,7 +25,7 @@ define(["dojo/_base/declare",
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
-        Select, Button, TextBox, DropDownButton, TooltipDialog,
+        Select, MultiSelect, Button, TextBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
@@ -54,33 +55,28 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments);
 
-
+                // Change nodes into widgets
                 query("button", this.domNode).forEach(function(node)
                 {
                     this.own( new Button({}, node));
                 },
                 this);
-                query("select", this.domNode).forEach(function(node)
-                {
-                    this.own( new Select({}, node));
-                },
-                this);
                 query("label.inputbox", this.domNode).forEach(function(node)
                 {
-                    this.own( new TextBox({}, node));
+                    this.own( new TextBox({trim: true}, node));
                 },
                 this);
 
-/*
-                this.own(
+                var typeSel = new Select({}, this.typeSelect);
+                var belongs = new MultiSelect({}, this.belongsSelect); 
 
-                    new Button({}, "propertyNode"),
-                    new Button({}, "belongsNode")
-                );
-*/
+
                 //Instantiate the dijit widgets
                 this.tooltip = new TooltipDialog({}, this.tooltipNode);
                 this.dropdown = new DropDownButton({}, this.dropdownNode);
+                this.own(
+                    this.tooltip, this.dropdown
+                );
 
                 this.container = new Container(this.containerNode,
                 {
