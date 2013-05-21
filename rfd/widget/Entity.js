@@ -94,7 +94,7 @@ define(["dojo/_base/declare",
                 {
                     creator: function(item, hint)
                     {
-                        var inner = item.name + ": " + item.type;
+                        var inner = item.name + "-->" + item.type;
                         console.log("creator called with " + item);
                         var tr = domConstruct.create("tr");
                         var td = domConstruct.create("td", { 

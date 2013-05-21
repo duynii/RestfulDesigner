@@ -12,15 +12,15 @@
 					"indexed": "true"
 				},
 				{ 
-					"name": "physical address",
+					"name": "physical_address",
 					"type": "string"
 				},
 				{
-					"name": "postal address",
+					"name": "postal_address",
 					"type": "string"
 				},
 				{
-					"name": "general phone",
+					"name": "general_phone",
 					"type": "phone"
 				},
 				{
