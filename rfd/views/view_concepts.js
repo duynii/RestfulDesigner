@@ -460,7 +460,9 @@ function(
         });
 
         var ent = new Entity({});
+        var ent2 = new Entity({});
         ent.placeAt("bottomLeft");
+        ent2.placeAt("bottomLeft");
 
         arrangeClasses();
     },

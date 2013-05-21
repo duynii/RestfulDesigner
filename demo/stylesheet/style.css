@@ -167,6 +167,13 @@ html, body, #mainDiv {
     visibility: hidden;
 }
 
+.floatLeft {
+  float: left;
+}
+.floatRight {
+  float: right;
+}
+
 
 /* ER classes */
 .classesList {

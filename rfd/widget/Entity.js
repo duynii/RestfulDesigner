@@ -4,6 +4,7 @@ define(["dojo/_base/declare",
         "dijit/_WidgetBase", 
         "dijit/_TemplatedMixin",
         "dojo/text!./templates/Entity.html", 
+        "dijit/form/Select",
         "dijit/form/Button",
         "dijit/form/TextBox",
         "dijit/form/DropDownButton",
@@ -18,23 +19,19 @@ define(["dojo/_base/declare",
         "dijit/Menu", 
         "dijit/MenuItem", 
         "rfd/Concept", 
-        "dojo/dnd/Container", 
-        "dojo/dnd/Moveable", 
-        "dojo/on", 
-        "dojo/_base/fx", 
-        "dojo/_base/array",
-        "dojo/_base/lang"
+        "dojo/dnd/Container", "dojo/dnd/Moveable", 
+        "dojo/on", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
-        Button, TextBox, DropDownButton, TooltipDialog,
+        Select, Button, TextBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
         classStyle,
         Menu, MenuItem,
         Concept, Container, Moveable,
-        on, baseFx, baseArray, lang)
+        on, query, baseFx, baseArray, lang)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -47,6 +44,8 @@ define(["dojo/_base/declare",
             templateString: template,
             container: null,
             moveable: null,
+            dropdown: null,
+            tooltip: null,
             buildRendering: function()
             {
                 this.inherited(arguments);
@@ -55,6 +54,34 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments);
 
+
+                query("button", this.domNode).forEach(function(node)
+                {
+                    this.own( new Button({}, node));
+                },
+                this);
+                query("select", this.domNode).forEach(function(node)
+                {
+                    this.own( new Select({}, node));
+                },
+                this);
+                query("label.inputbox", this.domNode).forEach(function(node)
+                {
+                    this.own( new TextBox({}, node));
+                },
+                this);
+
+/*
+                this.own(
+
+                    new Button({}, "propertyNode"),
+                    new Button({}, "belongsNode")
+                );
+*/
+                //Instantiate the dijit widgets
+                this.tooltip = new TooltipDialog({}, this.tooltipNode);
+                this.dropdown = new DropDownButton({}, this.dropdownNode);
+
                 this.container = new Container(this.containerNode,
                 {
                     creator: function(item, hint)
@@ -62,8 +89,6 @@ define(["dojo/_base/declare",
 
                     }
                 });
-
-                this.header.innerHTML = "Blah header";
 
                 this.moveable = new Moveable(this.domNode, {handle: this.header});
             },

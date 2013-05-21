@@ -8,6 +8,35 @@
 	<table class="${baseClass}" 
 			data-dojo-attach-point="containerNode">
 		<th data-dojo-attach-point="header">Class Name
+			<div data-dojo-attach-point="dropdownNode">
+				<span>edit</span>
+				<div data-dojo-attach-point="tooltipNode" >
+					<h4>Add new Property</h4>
+			        <label for="name">Name:</label> <input style="width: 100px" class="inputbox" type="text" id="name" name="name" />
+			        <label for="type">Type:</label> 
+			        <select  name="type" >
+    					<option value="string">String</option>
+    					<option value="integer">Integer</option>
+    					<option value="decimal">Decimal</option>
+    					<option value="enum">Enumeration</option>
+			        </select>
+			        <br/>
+			        <label  class="hidden" for="enumInput">Define enum values:</label> <input style="min-width: 120px" class="inputbox hidden" type="text" id="enumInput" name="enumInput" />
+			        <br />
+			        <button data-dojo-attach-point="propertyNode" type="submit"
+			        	>Add</button>
+			        <hr>
+					<h4>Relationships</h4>
+			        <!-- Add multi select here -->
+			        <label for="relations">Belongs to:</label> 
+					<select name="relations">
+    					<option value="custom">dummy</option>
+    					<option value="custom1">dummy1</option>
+    					<option value="custom2">dummy2</option>
+    					<option value="custom3">dummy3</option>
+					</select>
+				</div>
+			</div>
 		</th>
 		<tr class="dojoDndItem">
 			<td>name: String</td>
