@@ -8,6 +8,7 @@ define(["dojo/_base/declare",
         "dijit/form/MultiSelect",
         "dijit/form/Button",
         "dijit/form/TextBox",
+        "dijit/form/Form",
         "dijit/InlineEditBox",
         "dijit/form/DropDownButton",
         "dijit/TooltipDialog",
@@ -26,7 +27,7 @@ define(["dojo/_base/declare",
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
-        Select, MultiSelect, Button, TextBox, InlineEditBox, DropDownButton, TooltipDialog,
+        Select, MultiSelect, Button, TextBox, Form, InlineEditBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
@@ -50,39 +51,56 @@ define(["dojo/_base/declare",
             moveable: null,
             dropdown: null,
             tooltip: null,
+            belongs: null,
             classname: null,
 
             buildRendering: function()
             {
                 this.inherited(arguments);
             },
+            setErrorMsg: function(msg)
+            {
+                this.errorNode.innerHTML = msg;
+                domStyle.set(this.errorNode, "visibility", "hidden");
+            },
+            resetErrorMsg: function()
+            {
+                this.errorNode.innerHTML = "";
+                domStyle.set(this.errorNode, "visibility", "visible");
+            },
             postCreate: function()
             {
                 this.inherited(arguments);
 
                 // Change nodes into widgets
-                query("button", this.domNode).forEach(function(node)
-                {
-                    this.own( new Button({}, node));
-                },
-                this);
-
 
                 query("label.inputbox", this.domNode).forEach(function(node)
                 {
                     this.own( new TextBox({trim: true}, node));
                 },
                 this);
-
                 var addProp = new Button(
                     {
-                        onClick: function(e) { console.log("Prop clicks");}
+                        onClick: lang.hitch(this, this._onPropertyButtonClick)
                     },
                     this.propertyNode
                 );
 
                 var typeSel = new Select({}, this.typeSelect);
-                var belongs = new MultiSelect({}, this.belongsSelect); 
+                this.belongs = new MultiSelect({
+                    onChange: function(newValue)
+                    {
+                        console.log("new value is of " + typeof newValue + ", value: " + newValue);
+                    }
+                }, this.belongsSelect); 
+
+                var form = new Form({}, this.formNode);
+                this.own(form);
+
+                form.on("submit", function(e)
+                {
+                    console.log("Submit caught");
+                });
 
                 this.classname = new InlineEditBox(
                     {
@@ -94,10 +112,12 @@ define(["dojo/_base/declare",
                             if(!this.isClassnameOK(newValue)) {
                                 // reset to old value
                                 this.classname.set("value", this.concept.id);
+                                this.setErrorMsg("Class name cannot clash with each other");
                             }
                             else {
                                 this.concept.setId(newValue);
                                 this.titleNode.innerHTML = newValue;
+                                this.resetErrorMsg();
                             }
                         })
                     },
@@ -180,16 +200,25 @@ define(["dojo/_base/declare",
                     domStyle.set(this.belongsRowNode, "visibility", "visible");
                 }
             },
+            _validNewProperty: function(form)
+            {
+
+            },
             _setConceptsAttr: function(concepts)
             {
                 if(concepts == null) { console.error("'concepts' set is null"); }
                 this.concepts = concepts;
                 // Set convenient list of class namess
                 this.names = []; //clears it and new reference for array
+                //var sels = [];
                 baseArray.forEach(concepts, function(c)
                 {
+                    console.log("pushing " + c.id);
                     this.names.push(c.id);
+                    //sels.push({value: c.id, label: c.id});
                 }, this);
+
+                //this.belongs.set("value", sels);
             }, 
             _setConceptAttr: function(concept) 
             {
@@ -204,8 +233,10 @@ define(["dojo/_base/declare",
             _onPropertyButtonClick: function( /*Event*/ e)
             {
               // Trust me, _onClick calls this._onClick
-              console.log("Property add clicked")
-              return this.onPropertyClick(e);
+              console.log("Property add clicked");
+
+              //Valid the fields
+              
             },
             _onBelongsButtonClick: function( /*Event*/ e)
             {

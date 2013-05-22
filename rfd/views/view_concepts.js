@@ -462,7 +462,6 @@ function(
           e.placeAt("bottomLeft");
           e.set("concepts", concepts);
           e.set("concept", concept);
-          e.set("concept", concept);
         },
         this);
 

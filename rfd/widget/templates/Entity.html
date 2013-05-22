@@ -13,23 +13,25 @@
 			<div data-dojo-attach-point="dropdownNode">
 				<span>edit</span>
 				<div data-dojo-attach-point="tooltipNode" >
+					<p data-dojo-attach-point="errorNode"></p>
 					<h4>Class</h4>
 			        	<label for="classname">Name:</label> <span style="width: 100px"
 			        	data-dojo-attach-point="classnameNode">Class Name</span>
 					<hr/>
 					<h4>Add new Property</h4>
-			        <label for="name">Name:</label> <input style="width: 100px" class="inputbox" type="text" 
-			        data-dojo-attach-point="name" name="name" />
-			        <label for="type">Type:</label> 
-			        <select  name="type" data-dojo-attach-point="typeSelect" >
-    					<option value="string" select>String</option>
-    					<option value="integer">Integer</option>
-    					<option value="decimal">Decimal</option>
-    					<option value="enum">Enumeration</option>
-    					<option value="phone">Phone</option>
-			        </select>
-			        <br/>
-			        <label  class="hidden" for="enumInput">Define enum values:</label> <input style="min-width: 120px" class="inputbox hidden" type="text" data-dojo-attach-point="enumInput" name="enumInput" />
+			        	<label for="name">Name:</label> <input style="width: 100px" 
+			        	class="inputbox" type="text" 
+			        	data-dojo-attach-point="name" name="name" />
+			        	<label for="type">Type:</label> 
+			        	<select  name="type" data-dojo-attach-point="typeSelect" >
+    						<option value="string" select>String</option>
+    						<option value="integer">Integer</option>
+    						<option value="decimal">Decimal</option>
+    						<option value="enum">Enumeration</option>
+    						<option value="phone">Phone</option>
+			        	</select>
+			        	<br/>
+			        	<label  class="hidden" for="enumInput">Define enum values:</label> <input style="min-width: 120px" class="inputbox hidden" type="text" data-dojo-attach-point="enumInput" name="enumInput" />
 			        <br />
 			        <button data-dojo-attach-point="propertyNode" type="submit"
 			        	>Add</button>
@@ -38,10 +40,12 @@
 			        <!-- Add multi select here -->
 			        <label for="relations">belongs to: </label> 
 					<select name="relations" style="min-wdith: 70px" data-dojo-attach-point="belongsSelect">
+						<!--
     					<option value="custom">dummy</option>
     					<option value="custom1">dummy1</option>
     					<option value="custom2">dummy2</option>
     					<option value="custom3">dummy3</option>
+    				-->
 					</select>
 				</div>
 			</div>
