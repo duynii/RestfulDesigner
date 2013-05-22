@@ -39,7 +39,7 @@ define([
                 }
             }, this);
 
-            return (ind == -1);
+            return (ind != -1);
         },
         deleteProperty: function(prop) 
         {
@@ -57,6 +57,12 @@ define([
             if(indexOf != -1) {
                 this.properties.splice(indexOf, 1); // remove one
             }
+        },
+        lastProp: function() {
+            if(this.properties.length < 0) {
+                return null;
+            }
+            return this.properties[this.properties.length-1];
         },
         addProperty: function(name, type, indexed, required) {
             // Add the property, must be unique name

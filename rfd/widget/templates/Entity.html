@@ -13,13 +13,15 @@
 			<div data-dojo-attach-point="dropdownNode">
 				<span>edit</span>
 				<div data-dojo-attach-point="tooltipNode" >
-					<p data-dojo-attach-point="errorNode"></p>
+					<p data-dojo-attach-point="errorNode" style="font-color: rgb(255,0,0);"></p>
 					<h4>Class</h4>
 			        	<label for="classname">Name:</label> <span style="width: 100px"
 			        	data-dojo-attach-point="classnameNode">Class Name</span>
 					<hr/>
 					<h4>Add new Property</h4>
-			        	<label for="name">Name:</label> <input style="width: 100px" 
+					<form class="myForm" data-dojo-attach-point="formNode" action="" method="">
+			        	<label for="name">Name:</label> 
+			        	<input style="width: 80px" data-dojo-attach-point="nameNode"
 			        	class="inputbox" type="text" 
 			        	data-dojo-attach-point="name" name="name" />
 			        	<label for="type">Type:</label> 
@@ -30,11 +32,15 @@
     						<option value="enum">Enumeration</option>
     						<option value="phone">Phone</option>
 			        	</select>
-			        	<br/>
-			        	<label  class="hidden" for="enumInput">Define enum values:</label> <input style="min-width: 120px" class="inputbox hidden" type="text" data-dojo-attach-point="enumInput" name="enumInput" />
-			        <br />
-			        <button data-dojo-attach-point="propertyNode" type="submit"
-			        	>Add</button>
+			        	<div>
+			        	<span>
+			        	<label   for="enumInput">Define enum values:</label> 
+			        	<input style="min-width: 120px" class="inputbox hidden" data-dojo-attach-point="enumNode"
+			        	type="text" data-dojo-attach-point="enumInput" name="enumInput" />
+			        	</span>
+			        	<br />
+			        	<button data-dojo-attach-point="propertyNode" type="submit">Add</button>
+			        </form>
 			        <hr/>
 					<h4>Relationships</h4>
 			        <!-- Add multi select here -->

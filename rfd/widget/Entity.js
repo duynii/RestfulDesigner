@@ -23,7 +23,7 @@ define(["dojo/_base/declare",
         "dijit/MenuItem", 
         "rfd/Concept", 
         "dojo/dnd/Container", "dojo/dnd/Moveable", 
-        "dojo/on", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang"
+        "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
@@ -34,7 +34,7 @@ define(["dojo/_base/declare",
         classStyle,
         Menu, MenuItem,
         Concept, Container, Moveable,
-        on, query, baseFx, baseArray, lang)
+        on, JSON, query, baseFx, baseArray, lang)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -53,6 +53,9 @@ define(["dojo/_base/declare",
             tooltip: null,
             belongs: null,
             classname: null,
+            typeSel: null,
+            propName: null,
+            enumInput: null,
 
             buildRendering: function()
             {
@@ -61,24 +64,33 @@ define(["dojo/_base/declare",
             setErrorMsg: function(msg)
             {
                 this.errorNode.innerHTML = msg;
-                domStyle.set(this.errorNode, "visibility", "hidden");
+                domStyle.set(this.errorNode, "visibility", "visible");
             },
             resetErrorMsg: function()
             {
                 this.errorNode.innerHTML = "";
-                domStyle.set(this.errorNode, "visibility", "visible");
+                domStyle.set(this.errorNode, "visibility", "hidden");
             },
             postCreate: function()
             {
                 this.inherited(arguments);
 
                 // Change nodes into widgets
+                //Instantiate the dijit widgets
+                this.tooltip = new TooltipDialog({}, this.tooltipNode);
+                this.dropdown = new DropDownButton({}, this.dropdownNode);
+                this.own(
+                    this.tooltip, this.dropdown
+                );
+                var f = new Form({}, this.formNode);
+                this.own( f );
+                f.on("submit", function(e){console.log("formmmmmmmm");})
 
-                query("label.inputbox", this.domNode).forEach(function(node)
-                {
-                    this.own( new TextBox({trim: true}, node));
-                },
-                this);
+                //var nodes = query(".inputbox", this.domNode);
+                this.propName = new TextBox({trim: true}, this.nameNode);
+                this.enumInput = new TextBox({trim: true, style: "visibility: hidden;"}, this.enumNode);
+                this.enumInput.className += " hidden";
+
                 var addProp = new Button(
                     {
                         onClick: lang.hitch(this, this._onPropertyButtonClick)
@@ -86,7 +98,20 @@ define(["dojo/_base/declare",
                     this.propertyNode
                 );
 
-                var typeSel = new Select({}, this.typeSelect);
+                this.typeSel = new Select(
+                {
+                    onChange: lang.hitch(this, function(newValue)
+                    {
+                        if(newValue == "enum") {
+                            domStyle.set(this.enumInput.domNode, "visibility", "visible");
+                        }
+                        else {
+                            domStyle.set(this.enumInput.domNode, "visibility", "hidden");
+                            this.enumInput.set("value", "");
+                        }
+                    })
+
+                }, this.typeSelect);
                 this.belongs = new MultiSelect({
                     onChange: function(newValue)
                     {
@@ -94,13 +119,6 @@ define(["dojo/_base/declare",
                     }
                 }, this.belongsSelect); 
 
-                var form = new Form({}, this.formNode);
-                this.own(form);
-
-                form.on("submit", function(e)
-                {
-                    console.log("Submit caught");
-                });
 
                 this.classname = new InlineEditBox(
                     {
@@ -125,12 +143,6 @@ define(["dojo/_base/declare",
                 );
 
 
-                //Instantiate the dijit widgets
-                this.tooltip = new TooltipDialog({}, this.tooltipNode);
-                this.dropdown = new DropDownButton({}, this.dropdownNode);
-                this.own(
-                    this.tooltip, this.dropdown
-                );
 
                 this._setupContainer();
 
@@ -235,8 +247,23 @@ define(["dojo/_base/declare",
               // Trust me, _onClick calls this._onClick
               console.log("Property add clicked");
 
-              //Valid the fields
-              
+              var name = this.propName.get('value');
+              var type = this.typeSel.get('value');
+
+              console.log("name: " + name + ", type:" + type);
+
+              // property must be uniquely named
+              if( name == "" || this.concept.hasProperty(name)) {
+                this.setErrorMsg("Property already exists: " + name);
+                return;
+              }
+
+              this.resetErrorMsg();
+
+              this.propName.set("value", "");
+
+              this.concept.addProperty(name, type);
+              this.container.insertNodes([this.concept.lastProp()], false, null);
             },
             _onBelongsButtonClick: function( /*Event*/ e)
             {
