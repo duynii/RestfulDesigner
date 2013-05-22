@@ -60,7 +60,7 @@ function(
       var divBox = domGeometry.getMarginBox(bottomLeft);
       // TODO, bug when adding new class, re-arrange oddly
       // use container.forEachNodeItem
-      query("#bottomLeft > .classTable").forEach(function(node)
+      query("table", bottomLeft).forEach(function(node)
       {
         console.log("table: " + node.id);
         domStyle.set(node, "position", "absolute");
@@ -461,6 +461,7 @@ function(
           var e = new Entity({});
           e.placeAt("bottomLeft");
           e.set("concepts", concepts);
+          e.set("concept", concept);
           e.set("concept", concept);
         },
         this);

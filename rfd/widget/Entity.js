@@ -104,6 +104,18 @@ define(["dojo/_base/declare",
                         return { node: tr, data: item, type: ["text"] };
                     }
                 });
+
+                this.container.clearAll = function()
+                {
+                    var nodes = this.getAllNodes();
+                    nodes.forEach(function(node)
+                    {
+                        console.log("deleting this node: " + node.id);
+                        this.delItem(node.id);
+                        domConstruct.destroy(node);
+                    },
+                    this);
+                };
             },
             // Clear everything and repopulate
             _resetConcept: function()
@@ -114,6 +126,7 @@ define(["dojo/_base/declare",
                 this.classname.set("value", this.concept.id);
 
                 //TODO clear everything
+                this.container.clearAll();
                 this.container.insertNodes(this.concept.properties, false, null);
 
                 if(this.concept.belongs_to.length <= 0) {
