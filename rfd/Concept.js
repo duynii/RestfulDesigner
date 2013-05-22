@@ -15,7 +15,9 @@ define([
             //many to one relationship, this is the many side
             this.belongs_to = new Array();
         },
-
+        setId: function(id) {
+            this.id = id;
+        },
         toString : function() {
             var str = "name: " + this.name + ", parent: " + this.parentId;
         },
@@ -26,6 +28,18 @@ define([
                str += prop.toString() + "\n";
             });
             console.log(str);
+        },
+        hasProperty: function(name)
+        {
+            var ind = -1;
+            arrayUtil.forEach(this.properties, function(prop, index)
+            {
+                if(prop.name === name) {
+                    ind = index;
+                }
+            }, this);
+
+            return (ind == -1);
         },
         deleteProperty: function(prop) 
         {

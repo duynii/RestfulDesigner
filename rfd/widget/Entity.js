@@ -43,6 +43,7 @@ define(["dojo/_base/declare",
         {
             concept: null,
             concepts: null,
+            names: [],
             baseClass: "classTable",
             templateString: template,
             container: null,
@@ -65,16 +66,43 @@ define(["dojo/_base/declare",
                     this.own( new Button({}, node));
                 },
                 this);
+
+
                 query("label.inputbox", this.domNode).forEach(function(node)
                 {
                     this.own( new TextBox({trim: true}, node));
                 },
                 this);
 
+                var addProp = new Button(
+                    {
+                        onClick: function(e) { console.log("Prop clicks");}
+                    },
+                    this.propertyNode
+                );
+
                 var typeSel = new Select({}, this.typeSelect);
                 var belongs = new MultiSelect({}, this.belongsSelect); 
 
-                this.classname = new InlineEditBox({editor: TextBox, autoSave: true}, this.classnameNode);
+                this.classname = new InlineEditBox(
+                    {
+                        editor: TextBox, 
+                        autoSave: true,
+                        onChange: lang.hitch(this, function(newValue)
+                        {
+                            console.log("class id onChange");
+                            if(!this.isClassnameOK(newValue)) {
+                                // reset to old value
+                                this.classname.set("value", this.concept.id);
+                            }
+                            else {
+                                this.concept.setId(newValue);
+                                this.titleNode.innerHTML = newValue;
+                            }
+                        })
+                    },
+                    this.classnameNode
+                );
 
 
                 //Instantiate the dijit widgets
@@ -87,6 +115,14 @@ define(["dojo/_base/declare",
                 this._setupContainer();
 
                 this.moveable = new Moveable(this.domNode, {handle: this.header});
+            },
+            // Class name id cannot be the same as another one
+            isClassnameOK: function(id) {
+                if(id != this.concept.id && this.names.indexOf(id) != -1) {
+                    return false;
+                }
+
+                return true;
             },
             _setupContainer: function()
             {
@@ -105,7 +141,7 @@ define(["dojo/_base/declare",
                     }
                 });
 
-                this.container.clearAll = function()
+                Container.prototype.clearAll = function()
                 {
                     var nodes = this.getAllNodes();
                     nodes.forEach(function(node)
@@ -148,6 +184,12 @@ define(["dojo/_base/declare",
             {
                 if(concepts == null) { console.error("'concepts' set is null"); }
                 this.concepts = concepts;
+                // Set convenient list of class namess
+                this.names = []; //clears it and new reference for array
+                baseArray.forEach(concepts, function(c)
+                {
+                    this.names.push(c.id);
+                }, this);
             }, 
             _setConceptAttr: function(concept) 
             {
