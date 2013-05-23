@@ -3,6 +3,7 @@
 define(["dojo/_base/declare",
         "dijit/_WidgetBase", 
         "dijit/_TemplatedMixin",
+        "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./templates/Entity.html", 
         "dijit/form/Select",
         "dijit/form/MultiSelect",
@@ -26,7 +27,7 @@ define(["dojo/_base/declare",
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang"
         ],
 
-    function(declare, _WidgetBase, _TemplatedMixin, template, 
+    function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
         Select, MultiSelect, Button, TextBox, Form, InlineEditBox, DropDownButton, TooltipDialog,
         Dictionary,
         domStyle, domGeometry, domConstruct, 
@@ -40,8 +41,9 @@ define(["dojo/_base/declare",
         * This is a custom widget that wraps a table dom.
         * It is used to create a dnd Moveable class, dojo/dnd/Container is also used
         */
-        return declare("Entity",[_WidgetBase, _TemplatedMixin], 
+        return declare("Entity",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
+            widgetInTemplate: true,
             concept: null,
             concepts: null,
             names: [],
@@ -49,13 +51,6 @@ define(["dojo/_base/declare",
             templateString: template,
             container: null,
             moveable: null,
-            dropdown: null,
-            tooltip: null,
-            belongs: null,
-            classname: null,
-            typeSel: null,
-            propName: null,
-            enumInput: null,
 
             buildRendering: function()
             {
@@ -63,13 +58,13 @@ define(["dojo/_base/declare",
             },
             setErrorMsg: function(msg)
             {
-                this.errorNode.innerHTML = msg;
-                domStyle.set(this.errorNode, "visibility", "visible");
+                //this.errorNode.innerHTML = msg;
+                //domStyle.set(this.errorNode, "visibility", "visible");
             },
             resetErrorMsg: function()
             {
-                this.errorNode.innerHTML = "";
-                domStyle.set(this.errorNode, "visibility", "hidden");
+                //this.errorNode.innerHTML = "";
+                //domStyle.set(this.errorNode, "visibility", "hidden");
             },
             postCreate: function()
             {
@@ -77,72 +72,6 @@ define(["dojo/_base/declare",
 
                 // Change nodes into widgets
                 //Instantiate the dijit widgets
-                this.tooltip = new TooltipDialog({}, this.tooltipNode);
-                this.dropdown = new DropDownButton({}, this.dropdownNode);
-                this.own(
-                    this.tooltip, this.dropdown
-                );
-                var f = new Form({}, this.formNode);
-                this.own( f );
-                f.on("submit", function(e){console.log("formmmmmmmm");})
-
-                //var nodes = query(".inputbox", this.domNode);
-                this.propName = new TextBox({trim: true}, this.nameNode);
-                this.enumInput = new TextBox({trim: true, style: "visibility: hidden;"}, this.enumNode);
-                this.enumInput.className += " hidden";
-
-                var addProp = new Button(
-                    {
-                        onClick: lang.hitch(this, this._onPropertyButtonClick)
-                    },
-                    this.propertyNode
-                );
-
-                this.typeSel = new Select(
-                {
-                    onChange: lang.hitch(this, function(newValue)
-                    {
-                        if(newValue == "enum") {
-                            domStyle.set(this.enumInput.domNode, "visibility", "visible");
-                        }
-                        else {
-                            domStyle.set(this.enumInput.domNode, "visibility", "hidden");
-                            this.enumInput.set("value", "");
-                        }
-                    })
-
-                }, this.typeSelect);
-                this.belongs = new MultiSelect({
-                    onChange: function(newValue)
-                    {
-                        console.log("new value is of " + typeof newValue + ", value: " + newValue);
-                    }
-                }, this.belongsSelect); 
-
-
-                this.classname = new InlineEditBox(
-                    {
-                        editor: TextBox, 
-                        autoSave: true,
-                        onChange: lang.hitch(this, function(newValue)
-                        {
-                            console.log("class id onChange");
-                            if(!this.isClassnameOK(newValue)) {
-                                // reset to old value
-                                this.classname.set("value", this.concept.id);
-                                this.setErrorMsg("Class name cannot clash with each other");
-                            }
-                            else {
-                                this.concept.setId(newValue);
-                                this.titleNode.innerHTML = newValue;
-                                this.resetErrorMsg();
-                            }
-                        })
-                    },
-                    this.classnameNode
-                );
-
-
 
                 this._setupContainer();
 
@@ -188,29 +117,6 @@ define(["dojo/_base/declare",
             // Clear everything and repopulate
             _resetConcept: function()
             {
-
-                console.log("Set name for: " + this.concept.id);
-                this.titleNode.innerHTML = this.concept.id;
-                this.classname.set("value", this.concept.id);
-
-                //TODO clear everything
-                this.container.clearAll();
-                this.container.insertNodes(this.concept.properties, false, null);
-
-                if(this.concept.belongs_to.length <= 0) {
-                    domStyle.set(this.belongsRowNode, "visibility", "collapse");
-                    this.belongsNode.innerHTML = "";
-                }
-                else 
-                {
-                    var list = "";
-                    baseArray.forEach(this.concept.belongs_to, function(class_id)
-                    {
-                        list += class_id + " ";
-                    });
-                    this.belongsNode.innerHTML = list;
-                    domStyle.set(this.belongsRowNode, "visibility", "visible");
-                }
             },
             _validNewProperty: function(form)
             {
@@ -222,15 +128,11 @@ define(["dojo/_base/declare",
                 this.concepts = concepts;
                 // Set convenient list of class namess
                 this.names = []; //clears it and new reference for array
-                //var sels = [];
                 baseArray.forEach(concepts, function(c)
                 {
                     console.log("pushing " + c.id);
                     this.names.push(c.id);
-                    //sels.push({value: c.id, label: c.id});
                 }, this);
-
-                //this.belongs.set("value", sels);
             }, 
             _setConceptAttr: function(concept) 
             {
@@ -244,31 +146,9 @@ define(["dojo/_base/declare",
             },
             _onPropertyButtonClick: function( /*Event*/ e)
             {
-              // Trust me, _onClick calls this._onClick
-              console.log("Property add clicked");
-
-              var name = this.propName.get('value');
-              var type = this.typeSel.get('value');
-
-              console.log("name: " + name + ", type:" + type);
-
-              // property must be uniquely named
-              if( name == "" || this.concept.hasProperty(name)) {
-                this.setErrorMsg("Property already exists: " + name);
-                return;
-              }
-
-              this.resetErrorMsg();
-
-              this.propName.set("value", "");
-
-              this.concept.addProperty(name, type);
-              this.container.insertNodes([this.concept.lastProp()], false, null);
             },
             _onBelongsButtonClick: function( /*Event*/ e)
             {
-              console.log("Belongs add clicked")
-              return this.onBelongsClick(e);
             },
             onPropertyClick: function(e) { // nothing here: the extension point!
 

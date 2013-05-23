@@ -9,26 +9,23 @@
 	<table class="${baseClass}" 
 			data-dojo-attach-point="containerNode">
 		<th data-dojo-attach-point="header">
-			<label data-dojo-attach-point="title"
-					 
-					class="boldFont" >class_name</label>
-			<div data-dojo-attach-point="dropdown" data-dojo-type="dijit/form/DropDownButton">
+			<label data-dojo-attach-point="titleNode" class="boldFont" >class_name</label>
+			<div data-dojo-attach-point="dropdownNode">
 				<span>edit</span>
-				<div data-dojo-type="dijit/TooltipDialog" >
+				<div data-dojo-attach-point="tooltipNode" >
 					<p data-dojo-attach-point="errorNode" style="font-color: rgb(255,0,0);"></p>
 					<h4>Class</h4>
-			        	<label for="classname">Name:</label> 
-			        	<span style="width: 100px"
-			        	data-dojo-type="dijit/InlineEditBox">Class Name Edit</span>
+			        	<label for="classname">Name:</label> <span style="width: 100px"
+			        	data-dojo-attach-point="classnameNode">Class Name</span>
 					<hr/>
 					<h4>Add new Property</h4>
-					<form class="myForm" data-dojo-attach-point="form" data-dojo-type="dijit/form/Form" action="" method="">
+					<form class="myForm" data-dojo-attach-point="formNode" action="" method="">
 			        	<label for="name">Name:</label> 
-			        	<input style="width: 80px" data-dojo-attach-point="name" 
+			        	<input style="width: 80px" data-dojo-attach-point="nameNode"
 			        	class="inputbox" type="text" 
-			        	data-dojo-type="dijit/form/TextBox" name="name" />
+			        	data-dojo-attach-point="name" name="name" />
 			        	<label for="type">Type:</label> 
-			        	<select  name="type" data-dojo-attach-point="typeSelect"  data-dojo-type="dijit/form/Select">
+			        	<select  name="type" data-dojo-attach-point="typeSelect" >
     						<option value="string" select>String</option>
     						<option value="integer">Integer</option>
     						<option value="decimal">Decimal</option>
@@ -37,27 +34,23 @@
 			        	</select>
 			        	<div>
 			        	<span>
-			        	<label for="enumInput">Define enum values:</label> 
-			        	<input style="min-width: 120px" class="inputbox hidden" 
-			        		data-dojo-type="dijit/form/TextBox"
-			        		type="text" data-dojo-attach-point="enumInput" name="enumInput" />
+			        	<label   for="enumInput">Define enum values:</label> 
+			        	<input style="min-width: 120px" class="inputbox hidden" data-dojo-attach-point="enumNode"
+			        	type="text" data-dojo-attach-point="enumInput" name="enumInput" />
 			        	</span>
 			        	<br />
-			        	<button data-dojo-attach-point="propertyNode"  
-			        		data-dojo-type="dijit/form/Button" type="submit">Add</button>
+			        	<button data-dojo-attach-point="propertyNode" type="submit">Add</button>
 			        </form>
 			        <hr/>
 					<h4>Relationships</h4>
 			        <!-- Add multi select here -->
 			        <label for="relations">belongs to: </label> 
-					<select name="relations" style="min-wdith: 70px" 
-						data-dojo-type="dijit/form/MultiSelect"
-						data-dojo-attach-point="belongsSelect">
+					<select name="relations" style="min-wdith: 70px" data-dojo-attach-point="belongsSelect">
+						<!--
     					<option value="custom">dummy</option>
     					<option value="custom1">dummy1</option>
     					<option value="custom2">dummy2</option>
     					<option value="custom3">dummy3</option>
-						<!--
     				-->
 					</select>
 				</div>
