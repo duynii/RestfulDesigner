@@ -110,9 +110,11 @@ define(["dojo/_base/declare",
                     this.setErrorMsg("Property already exists: " + name);
                     return;
                 }
+
                 //TO DO check enum
                 if(data.type == "enum")
                 {
+                    data.enumInput = "[ " + data.enumInput + " ]";
                     try {
                         var enumArray = JSON.parse(data.enumInput, true);
                         console.log("We got an array: " + JSON.stringify(enumArray));
