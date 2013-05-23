@@ -143,18 +143,27 @@ define(["dojo/_base/declare",
             {
                 this.container = new Container(this.containerNode,
                 {
-                    creator: function(item, hint)
+                    creator: lang.hitch(this, function(item, hint)
                     {
-                        var inner = item.name + "-->" + item.type;
+                        var button = new Button({
+                            label: '-',
+                            onClick: lang.hitch(this, this._onItemClick)
+                        });
+                        var inner = item.name + ": " + item.type;
+                        var span = domConstruct.create("span", {innerHTML: inner });
                         console.log("creator called with " + item);
                         var tr = domConstruct.create("tr");
                         var td = domConstruct.create("td", { 
-                          innerHTML: inner 
                         }, 
                         tr);
+
+                        domConstruct.place(span, td);
+                        domConstruct.place(button.domNode, td);
                         return { node: tr, data: item, type: ["text"] };
-                    }
+                    })
                 });
+
+                on(this.containerNode, "dblclick", lang.hitch(this, this._onItemClick));
 
                 Container.prototype.clearAll = function()
                 {
@@ -167,6 +176,20 @@ define(["dojo/_base/declare",
                     },
                     this);
                 };
+            },
+            _onItemClick: function(e)
+            {
+                if(this.container.current == null) {
+                    return;
+                }
+                var propertyId = this.container.current.id;
+                var prop = this.container.getItem(propertyId).data;
+                console.log("onItem Hitch: " + propertyId + ", " + JSON.stringify(prop));
+
+                this.container.delItem(propertyId);
+                domConstruct.destroy(propertyId);
+                this.concept.deleteProperty(prop);
+                this.container.sync();
             },
             // Clear everything and repopulate
             _resetConcept: function()
