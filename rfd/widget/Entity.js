@@ -84,6 +84,11 @@ define(["dojo/_base/declare",
                 {
                     e.preventDefault();
 
+                    if(!this.form.isValid()) {
+                        this.setErrorMsg("Invalid form input");
+                        return;
+                    }
+
                     var data = this.form.get('value');
                     console.log("submit bub: " + JSON.stringify(data));
                     this._onAddingProperty(data);
@@ -147,9 +152,10 @@ define(["dojo/_base/declare",
                     {
                         var button = new Button({
                             label: '-',
+                            class: "addButton",
                             onClick: lang.hitch(this, this._onItemClick)
                         });
-                        var inner = item.name + ": " + item.type;
+                        var inner = item.name + "-->" + item.type;
                         var span = domConstruct.create("span", {innerHTML: inner });
                         console.log("creator called with " + item);
                         var tr = domConstruct.create("tr");
