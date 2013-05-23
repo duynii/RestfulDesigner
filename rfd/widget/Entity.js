@@ -23,7 +23,7 @@ define(["dojo/_base/declare",
         "dijit/Menu", 
         "dijit/MenuItem", 
         "rfd/Concept", 
-        "dojo/dnd/Container", "dojo/dnd/Moveable", 
+        "dojo/dnd/Container", "dojo/dnd/Selector", "dojo/dnd/Moveable", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
         "dijit/registry"
         ],
@@ -35,7 +35,7 @@ define(["dojo/_base/declare",
         Branch, Section,
         classStyle,
         Menu, MenuItem,
-        Concept, Container, Moveable,
+        Concept, Container, Selector, Moveable,
         on, JSON, query, baseFx, baseArray, lang,
         registry)
     {
@@ -101,6 +101,7 @@ define(["dojo/_base/declare",
                 }));
 
                 this._hookClassnameEdit();
+                this._setupBelongsList();
             },
             _onAddingProperty: function(data)
             {
@@ -176,7 +177,7 @@ define(["dojo/_base/declare",
                     var nodes = this.getAllNodes();
                     nodes.forEach(function(node)
                     {
-                        console.log("deleting this node: " + node.id);
+                        //console.log("deleting this node: " + node.id);
                         this.delItem(node.id);
                         domConstruct.destroy(node);
                     },
@@ -208,14 +209,31 @@ define(["dojo/_base/declare",
                 this.container.clearAll();
                 this.container.insertNodes(this.concept.properties, false, null);
 
-                if(this.concept.belongs_to.length <= 0) {
+                // Display is in the top row - see HTML
+                this._displayBelongs(this.concept.belongs_to);
+
+                //clear all existing nodes
+                this.belongs.clearAllNodes();
+                baseArray.forEach(this.concepts, function(concept)
+                {
+                    // If the concept is in belongs_to
+                    var selected = this.concept.belongs_to.indexOf(concept.id) != -1;
+                    // Insert the node
+                    this.belongs.insertNodes(selected, [concept.id], false, null);
+                },
+                this);
+            },
+            _displayBelongs: function(belongs_to)
+            {
+
+                if(belongs_to.length <= 0) {
                     domStyle.set(this.belongsRowNode, "visibility", "collapse");
                     this.belongsNode.innerHTML = "";
                 }
                 else 
                 {
                     var list = "";
-                    baseArray.forEach(this.concept.belongs_to, function(class_id)
+                    baseArray.forEach(belongs_to, function(class_id)
                     {
                         list += class_id + " ";
                     });
@@ -238,7 +256,53 @@ define(["dojo/_base/declare",
                     console.log("pushing " + c.id);
                     this.names.push(c.id);
                 }, this);
+
             }, 
+            _setupBelongsList: function()
+            {
+                this.belongs = new Selector( this.belongsList,
+                {
+                    singular: false,
+                    onMouseDown: function(e)
+                    {
+                        console.log("Mouse is down");
+                    }
+                });
+
+                this.own(
+                    on(this.belongsList, "click", lang.hitch(this, function(e)
+                    {
+                        console.log("List is click");
+
+                        var belongs_to = []
+                        this.belongs.forInSelectedItems(function(obj, id)
+                            {
+                                //console.log("selected: " + obj.data);
+                                belongs_to.push(obj.data);
+                            },
+                            this
+                        );
+
+                        this.concept.belongs_to.splice(0, this.concept.belongs_to.length, belongs_to);
+                        //this.concept.belongs_to.length = 0;
+                        //this.concept.belongs_to.concat(belongs_to);
+                        this._displayBelongs(this.concept.belongs_to);
+                    }))
+                );
+
+                // Clears existing items
+                Selector.prototype.clearAllNodes = function() 
+                {
+                    var nodes = this.getAllNodes();
+                    nodes.forEach(function(node)
+                    {
+                        //console.log("deleting this node: " + node.id);
+                        this.delItem(node.id);
+                        domConstruct.destroy(node);
+                    },
+                    this);
+                };
+            },
             _setConceptAttr: function(concept) 
             {
                 if(concept.declaredClass != "Concept") {

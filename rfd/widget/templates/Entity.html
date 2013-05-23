@@ -48,36 +48,17 @@
 			        <hr/>
 					<h4>Relationships</h4>
 			        <!-- Add multi select here -->
-			        <label for="relations">belongs to: </label> 
-					<select name="relations" style="min-wdith: 70px" 
-						data-dojo-type="dijit/form/MultiSelect"
-						data-dojo-attach-point="belongsSelect">
-    					<option value="custom">dummy</option>
-    					<option value="custom1">dummy1</option>
-    					<option value="custom2">dummy2</option>
-    					<option value="custom3">dummy3</option>
-						<!--
-    				-->
-					</select>
+			        <label for="belongs">belongs to: </label> 
+			        <ul name="belongs"
+			        	data-dojo-attach-point="belongsList">
+			        <ul>
 				</div>
 			</div>
 		</th>
 		<tr class="collapse" data-dojo-attach-point="belongsRowNode">
 			<td>
-				<b><span>belongs to:</span><span data-dojo-attach-point="belongsNode"></span></b>
+				<b><span>belongs to: </span><span data-dojo-attach-point="belongsNode"></span></b>
 			</td>
 		<tr/>
 	</table>
-	<!-- TODO dijit in template does not work, init it in post create 
-	<div data-dojo-type="dijit/form/DropDownButton">
-		<span>Register</span>
-		<div data-dojo-type="dijit/TooltipDialog">
-			        <label for="name2">Name:</label> <input data-dojo-type="dijit/form/TextBox" id="name2" name="name2" /><br />
-			        <label for="hobby2">Hobby:</label> <input data-dojo-type="dijit/form/TextBox" id="hobby2" name="hobby2" /><br />
-			        <button data-dojo-type="dijit/form/Button" type="submit"
-			        	>Add new Property</button>
-			        <button data-dojo-type="dijit/form/Button" type="submit">Save</button>
-		</div>
-	</div>
-	-->
 </div>
