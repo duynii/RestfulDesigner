@@ -24,7 +24,8 @@ define(["dojo/_base/declare",
         "dijit/MenuItem", 
         "rfd/Concept", 
         "dojo/dnd/Container", "dojo/dnd/Moveable", 
-        "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang"
+        "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
+        "dijit/registry"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -35,7 +36,8 @@ define(["dojo/_base/declare",
         classStyle,
         Menu, MenuItem,
         Concept, Container, Moveable,
-        on, JSON, query, baseFx, baseArray, lang)
+        on, JSON, query, baseFx, baseArray, lang,
+        registry)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -76,6 +78,21 @@ define(["dojo/_base/declare",
                 this._setupContainer();
 
                 this.moveable = new Moveable(this.domNode, {handle: this.header});
+
+
+                this.form.on("submit", lang.hitch(this, function(e)
+                {
+                    e.preventDefault();
+
+                    var data = this.form.get('value');
+                    console.log("submit bub: " + JSON.stringify(data));
+                }));
+
+                this.typeSelect.set("onChange", lang.hitch(this, function(newValue)
+                {
+                    //show enum inputs if Enumeration type selected
+                    domStyle.set(this.spanNode, "visibility", newValue == "enum" ? "visible" : "hidden");
+                }));
             },
             // Class name id cannot be the same as another one
             isClassnameOK: function(id) {
