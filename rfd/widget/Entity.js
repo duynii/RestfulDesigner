@@ -60,13 +60,13 @@ define(["dojo/_base/declare",
             },
             setErrorMsg: function(msg)
             {
-                //this.errorNode.innerHTML = msg;
-                //domStyle.set(this.errorNode, "visibility", "visible");
+                this.errorNode.innerHTML = msg;
+                domStyle.set(this.errorNode, "visibility", "visible");
             },
             resetErrorMsg: function()
             {
-                //this.errorNode.innerHTML = "";
-                //domStyle.set(this.errorNode, "visibility", "hidden");
+                this.errorNode.innerHTML = "";
+                domStyle.set(this.errorNode, "visibility", "hidden");
             },
             postCreate: function()
             {
@@ -86,6 +86,7 @@ define(["dojo/_base/declare",
 
                     var data = this.form.get('value');
                     console.log("submit bub: " + JSON.stringify(data));
+                    this._onAddingProperty(data);
                 }));
 
                 this.typeSelect.set("onChange", lang.hitch(this, function(newValue)
@@ -93,6 +94,42 @@ define(["dojo/_base/declare",
                     //show enum inputs if Enumeration type selected
                     domStyle.set(this.spanNode, "visibility", newValue == "enum" ? "visible" : "hidden");
                 }));
+
+                this._hookClassnameEdit();
+            },
+            _onAddingProperty: function(data)
+            {
+                // property must be uniquely named
+                if( data.name == "" || this.concept.hasProperty(data.name)) {
+                    this.setErrorMsg("Property already exists: " + name);
+                    return;
+                }
+                //TO DO check enum
+
+                // Success 
+                this.resetErrorMsg();
+                this.form.reset();
+
+                this.concept.addProperty(data.name, data.type);
+                this.container.insertNodes([this.concept.lastProp()], false, null);
+            },
+            _hookClassnameEdit: function()
+            {
+               this.classname.set("onChange", lang.hitch(this, function(newValue)
+               {
+                    console.log("class id onChange");
+                    if(!this.isClassnameOK(newValue)) {
+                        // reset to old value
+                        //this.classname.set("value", this.concept.id);
+                        this.classname.domNode.innerHTML = this.concept.id;
+                        this.setErrorMsg("Class name cannot clash with each other");
+                    }
+                    else {
+                        this.concept.setId(newValue);
+                        this.titleNode.innerHTML = newValue;
+                        this.resetErrorMsg();
+                    }
+               })) 
             },
             // Class name id cannot be the same as another one
             isClassnameOK: function(id) {
@@ -134,6 +171,28 @@ define(["dojo/_base/declare",
             // Clear everything and repopulate
             _resetConcept: function()
             {
+                console.log("Set name for: " + this.concept.id);
+                this.titleNode.innerHTML = this.concept.id;
+                this.classname.set("value", this.concept.id);
+
+                //TODO clear everything
+                this.container.clearAll();
+                this.container.insertNodes(this.concept.properties, false, null);
+
+                if(this.concept.belongs_to.length <= 0) {
+                    domStyle.set(this.belongsRowNode, "visibility", "collapse");
+                    this.belongsNode.innerHTML = "";
+                }
+                else 
+                {
+                    var list = "";
+                    baseArray.forEach(this.concept.belongs_to, function(class_id)
+                    {
+                        list += class_id + " ";
+                    });
+                    this.belongsNode.innerHTML = list;
+                    domStyle.set(this.belongsRowNode, "visibility", "visible");
+                }
             },
             _validNewProperty: function(form)
             {

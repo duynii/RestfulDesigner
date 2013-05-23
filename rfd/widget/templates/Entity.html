@@ -9,16 +9,15 @@
 	<table class="${baseClass}" 
 			data-dojo-attach-point="containerNode">
 		<th data-dojo-attach-point="header">
-			<label data-dojo-attach-point="title"
-					 
+			<label data-dojo-attach-point="titleNode"
 					class="boldFont" >class_name</label>
 			<div data-dojo-attach-point="dropdown" data-dojo-type="dijit/form/DropDownButton">
 				<span>edit</span>
 				<div data-dojo-type="dijit/TooltipDialog" >
-					<p data-dojo-attach-point="errorNode" style="font-color: rgb(255,0,0);"></p>
+					<p data-dojo-attach-point="errorNode" class="hidden" style="color: red;"></p>
 					<h4>Class</h4>
 			        	<label for="classname">Name:</label> 
-			        	<span style="width: 100px"
+			        	<span style="width: 100px" data-dojo-attach-point="classname"
 			        	data-dojo-type="dijit/InlineEditBox">Class Name Edit</span>
 					<hr/>
 					<h4>Add new Property</h4>
