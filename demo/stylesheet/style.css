@@ -140,6 +140,12 @@ html, body, #mainDiv {
   /*font-size: 100%;*/
 }
 
+.delButton {
+  max-height: 7px;
+  background-color: white;
+  color: red;
+}
+
 .newBranch {
   min-height: 40px;
   background-color: rgb(255, 255, 255);

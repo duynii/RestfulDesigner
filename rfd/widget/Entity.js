@@ -111,6 +111,19 @@ define(["dojo/_base/declare",
                     return;
                 }
                 //TO DO check enum
+                if(data.type == "enum")
+                {
+                    try {
+                        var enumArray = JSON.parse(data.enumInput, true);
+                        console.log("We got an array: " + JSON.stringify(enumArray));
+                    }
+                    catch(err) {
+                        console.log("Failed to json parse: " + data.enumInput);
+                        this.setErrorMsg("Enumeration values are not valid JSON array of strings.\n" +
+                            err + ": " + data.enumInput);
+                        return;
+                    }
+                }
 
                 // Success 
                 this.resetErrorMsg();
@@ -151,11 +164,15 @@ define(["dojo/_base/declare",
                 {
                     creator: lang.hitch(this, function(item, hint)
                     {
+/*
                         var button = new Button({
                             label: '-',
-                            class: "addButton",
+                            class: "delButton",
                             onClick: lang.hitch(this, this._onItemClick)
                         });
+                        domStyle.set(button.domNode, "width", "5px");
+                        domStyle.set(button.domNode, "height", "5px");
+*/
                         var inner = item.name + "-->" + item.type;
                         var span = domConstruct.create("span", {innerHTML: inner });
                         console.log("creator called with " + item);
@@ -165,7 +182,7 @@ define(["dojo/_base/declare",
                         tr);
 
                         domConstruct.place(span, td);
-                        domConstruct.place(button.domNode, td);
+                        //domConstruct.place(button.domNode, td, "after");
                         return { node: tr, data: item, type: ["text"] };
                     })
                 });
@@ -197,6 +214,51 @@ define(["dojo/_base/declare",
                 domConstruct.destroy(propertyId);
                 this.concept.deleteProperty(prop);
                 this.container.sync();
+            },
+            _setupBelongsList: function()
+            {
+                this.belongs = new Selector( this.belongsList,
+                {
+                    singular: false,
+                    onMouseDown: function(e)
+                    {
+                        console.log("Mouse is down");
+                    }
+                });
+
+                this.own(
+                    on(this.belongsList, "click", lang.hitch(this, function(e)
+                    {
+                        console.log("List is click");
+
+                        var belongs_to = []
+                        this.belongs.forInSelectedItems(function(obj, id)
+                            {
+                                //console.log("selected: " + obj.data);
+                                belongs_to.push(obj.data);
+                            },
+                            this
+                        );
+
+                        this.concept.belongs_to.splice(0, this.concept.belongs_to.length, belongs_to);
+                        //this.concept.belongs_to.length = 0;
+                        //this.concept.belongs_to.concat(belongs_to);
+                        this._displayBelongs(this.concept.belongs_to);
+                    }))
+                );
+
+                // Clears existing items
+                Selector.prototype.clearAllNodes = function() 
+                {
+                    var nodes = this.getAllNodes();
+                    nodes.forEach(function(node)
+                    {
+                        //console.log("deleting this node: " + node.id);
+                        this.delItem(node.id);
+                        domConstruct.destroy(node);
+                    },
+                    this);
+                };
             },
             // Clear everything and repopulate
             _resetConcept: function()
@@ -258,51 +320,6 @@ define(["dojo/_base/declare",
                 }, this);
 
             }, 
-            _setupBelongsList: function()
-            {
-                this.belongs = new Selector( this.belongsList,
-                {
-                    singular: false,
-                    onMouseDown: function(e)
-                    {
-                        console.log("Mouse is down");
-                    }
-                });
-
-                this.own(
-                    on(this.belongsList, "click", lang.hitch(this, function(e)
-                    {
-                        console.log("List is click");
-
-                        var belongs_to = []
-                        this.belongs.forInSelectedItems(function(obj, id)
-                            {
-                                //console.log("selected: " + obj.data);
-                                belongs_to.push(obj.data);
-                            },
-                            this
-                        );
-
-                        this.concept.belongs_to.splice(0, this.concept.belongs_to.length, belongs_to);
-                        //this.concept.belongs_to.length = 0;
-                        //this.concept.belongs_to.concat(belongs_to);
-                        this._displayBelongs(this.concept.belongs_to);
-                    }))
-                );
-
-                // Clears existing items
-                Selector.prototype.clearAllNodes = function() 
-                {
-                    var nodes = this.getAllNodes();
-                    nodes.forEach(function(node)
-                    {
-                        //console.log("deleting this node: " + node.id);
-                        this.delItem(node.id);
-                        domConstruct.destroy(node);
-                    },
-                    this);
-                };
-            },
             _setConceptAttr: function(concept) 
             {
                 if(concept.declaredClass != "Concept") {
