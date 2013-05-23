@@ -38,9 +38,9 @@ function(
             ) 
 {
     var store = null,
+    concepts = null,
     tablesMap = new Dictionary(),
     temp_id_num = 1,
-    dialog  = new Dialog({title: "New Property", content: newprop}),
     controller = new Controller(),
     resCatalogue = null, //Widget of the catalogue, to be changed to many?
     resDesigner = null, // The one container for Resource Designer
@@ -84,130 +84,32 @@ function(
         }
       });
     },
-    createConcept = function(concept)
+    createConceptDisplay = function(concept)
     {
-        console.log("createConcept called");
-        var outter = dom.byId("bottomLeft");
-        // The table
-        var table = domConstruct.create("table", 
-          {
-            id: concept.name + "_table",
-            class: "classTable", 
-            position: "absolute"
-          }, 
-          outter);
-        domConstruct.create("th", {innerHTML: concept.name}, table);
-        var container = new Container(table, { 
-                      creator: function(item, hint) 
-                      {
-                        var inner = null;
-                        if(item instanceof Array) 
-                        {
-                          console.log("typeof is an array");
-                          inner = "<b>belongs to: ";
-                          baseArray.forEach(item, function(item)
-                          {
-                            inner += item + " ";
-                          });  
-                          inner += "<b>";
-                        }
-                        else 
-                        {
-                          inner = item.name + ": " + item.type;
-                        }
-                        console.log("creator called with " + item);
-                        var tr = domConstruct.create("tr");
-                        var td = domConstruct.create("td", { 
-                          innerHTML: inner 
-                        }, 
-                        tr);
-                        return { node: tr, data: item, type: ["text"] };
-                      },
-                      singular: true,
-                      id: concept.name + "_table",
-                      data: concept
-        });
-        baseArray.forEach(concept.properties, function(prop, index)
-        {
-          console.log("\tproperty" + (index+1)  + " is " + prop.name);
-        });
-        container.insertNodes(concept.properties, false, null);
-        if(concept.belongs_to.length > 0) {
-          container.insertNodes([ concept.belongs_to ], false, null);
-        }
-
-        on(table, "dblclick", function(evt)
-          {
-            console.log("clicked table: " + JSON.stringify(evt));
-
-            if(container.current == null) 
-            { // If so header clicked, add property, else double click
-              console.log("no hover over property");
-              dialog.on("submit", function(e)
-              {
-                e.preventDefault(); // Do not submit the form to server
-                var form = registry.byId("myForm");
-                if(form.validate()) 
-                {
-                  var prop = form.getValues();
-                  console.log(JSON.stringify(prop));
-                  concept.addProperty(prop);
-                  container.insertNodes([prop], false, null);
-                  container.sync();
-                }
-                else {
-                  alert("form has invalid data, please correct");
-                }
-                dialog.hide();
-              });
-              dialog.show();
-            }
-            else
-            {
-              var propertyId = container.current.id;
-              var prop = container.getItem(propertyId).data;
-              if(prop instanceof Array) {
-                console.warn("Cannot delete relationship at this time");
-                return;
-              } // Else it must be a property
-              else if(confirm("Delete the property? " + prop.name)) 
-              {
-                console.log("deleting the property");
-                console.log("prop delete: " + JSON.stringify(prop));
-                concept.deleteProperty(prop);
-                //Now remove from UI
-                domConstruct.destroy(propertyId);
-                container.delItem(propertyId);
-                container.sync();
-              }
-            }
-
-          });
-
-        // Set it into a map
-        console.log("adding concept");
-        tablesMap.add(concept.name + "_table", table);
-
-        // Make it dragable any where inside its container div
-        new Moveable(table);
+      var e = new Entity({});
+      e.placeAt("bottomLeft");
+      e.set("concepts", this.concepts);
+      e.set("concept", concept);
     },
-    setupAddClass = function(node) {
+    setupAddClass = function(node) 
+    {
       var menu = new Menu({targetNodeIds: [ node.id ] });
       var menuItem = new MenuItem({
         label: "Create new concept",
-        onClick: function(event) 
+        onClick: lang.hitch(this, function(event) 
         {
           // Create a new class
-          var name = "DefaultClass_" + temp_id_num;
+          var name = "Class_" + temp_id_num;
           temp_id_num += 1;
           var concept = new Concept(name, name, null);
-          createConcept(concept);
+          this.concepts.push(concept);
+          createConceptDisplay(concept);
 
           console.log("mouse: " + event.layerX + " " + event.layerY);
           console.log("page mouse: " + event.pageX + " " + event.pageY);
 
           arrangeClasses();
-        }
+        })
       });
       menu.addChild(menuItem);
     }, 
@@ -234,8 +136,8 @@ function(
           {
             dialog.destroyRecursive(false);
           }
-        });
-      dialog.init(branch, controller.getConcepts());
+      });
+      dialog.init(branch, this.concepts);
       dialog.show();
     },
     addListItem = function(branch, res_designer, refBranchNode)
@@ -251,21 +153,6 @@ function(
         [ branch ], is_before, refBranchNode);
 
       return  registry.getEnclosingWidget(res_designer.getSelected());
-    },
-    setupResourceDesigner = function() 
-    {
-      var branch = controller.getDummyBranch();
-      console.log("TESTING");
-      var br = branch.branchOut( new StaticResource("public", "/"));
-      console.log("TEST from public: " + br);
-      var concept = controller.queryById("hospitals");
-      var br = branch.branchOut( new Concept_R("hospitals", "/", concept));
-      console.log("TEST from hospitals: " + br);
-
-      var li = addListItem(branch, resDesigner);
-      var res = new StaticResource("added", "hospitals");
-      branch.addActiveResource(res);
-      li.addResource(res, branch);
     },
     // This will only be called upon if the Designer is initially
     // TODO, is this correct?
@@ -294,15 +181,11 @@ function(
     // When a dnd catalogue item is droped into selected resource branch
     onResourcesListDrop = function(source, nodes, copy) 
     {
-      console.log("onResourcesListDrop left called");
-      console.log("source:" + typeof(source));
-      console.log("node id:" + nodes[0].id);
+      //console.log("onResourcesListDrop left called");
+      //console.log("source:" + typeof(source));
+      //console.log("node id:" + nodes[0].id);
 
       var nodeId = nodes[0].id;
-
-      //Check if there s no resource
-      var itemNo = resDesigner.size();
-      console.log("Drop found " + itemNo + " item/s");
 
       //Data item
       var resource = source.getItem(nodeId).data;
@@ -323,9 +206,8 @@ function(
       }
       else 
       {
-        console.log("current: " + resDesigner.current);
-        console.log("no: " + resDesigner.size());
-
+        //console.log("current: " + resDesigner.current);
+        //console.log("no: " + resDesigner.size());
         var li = registry.getEnclosingWidget(resDesigner.current);
         console.log("li type: " + li.declaredClass);
         li.branch.addActiveResource(resource);
@@ -338,7 +220,8 @@ function(
     },
     createResourceDesigner = function()
     {
-        newBranchDom = dom.byId("dropNewBranch");
+      // A static dom in Designer to drop a resource for a new branch
+      newBranchDom = dom.byId("dropNewBranch");
 
       resDesigner = new Source("resourcesList", {
         id: "resourcesContainer",
@@ -346,28 +229,22 @@ function(
         isSource: false, // Only acts as dnd target
         accept: ["resource"], // Accept resource objects only
         type: ["concepts"],
-        /*
-        onSelectStart: lang.hitch(this, function(e)
-        {
-          console.log("On Selected item: " + e.target);
-          console.log("On Selected item: " + e.target.id);
-        }),
-        */
         onDropExternal: onResourcesListDrop,
         creator: resourcesListCreator
       });
 
-      /*
-      aspect.after(resDesigner, "onSelectStart", function(e){
-          console.log("On Selected item: " + e.target);
-      }, true);
+      
 
-      resDesigner.on("onselectstart", function(e)
+      /* This should act as a onChange of selected item
+      on(resDesigner.domNode, "click", function(e)
       {
-          console.log("On Selected item: " + e.target);
-          console.log("On Selected item: " + e.target.id);
+        if(resDesigner.getSelected() != null) 
+        {
+          //TODO
+        }
       });
-      */
+*/
+
 
       resDesigner.size = function() {
         return resDesigner.getAllNodes().length;
@@ -376,11 +253,11 @@ function(
       // return the selected node, it can only be one in this app
       resDesigner.getSelected = function()
       {
-        
          var nodes = resDesigner.getSelectedNodes();
 
          if(nodes.length == 0) {
           console.error("Cannot get selected ListItem node");
+          return null;
          }
 
          return nodes[0];
@@ -403,14 +280,12 @@ function(
       var cssStyle = classStyle.entry(item.declaredClass);
       //console.log("css: " + item.declaredClass + " to " + cssStyle);
       var li = domConstruct.create("li");
-      domConstruct.create(
-      "button", 
+      domConstruct.create("button", 
         { 
           class: cssStyle,
           innerHTML:  item.toString() 
         },
-        li,
-        null
+        li
       );
 
       return { node: li, data: item, type: item.type };
@@ -436,8 +311,7 @@ function(
       var static_R = new StaticResource("static", "/");
       var custom_R = new Custom_R("Custom", "/");
       var available = [ template_R, static_R, custom_R ];
-      var concepts = controller.getConcepts();
-      baseArray.forEach(concepts, 
+      baseArray.forEach(this.concepts, 
         function(concept, index)
         {
           console.log("Looping through: " + concept.id);
@@ -453,15 +327,9 @@ function(
     setupEntityDesigner = function()
     {
         // Get all existing concepts
-        var concepts = controller.getConcepts();
-        baseArray.forEach(concepts, function(concept, index)
+        baseArray.forEach(this.concepts, function(concept, index)
         {
-          //createConcept(concept);
-
-          var e = new Entity({});
-          e.placeAt("bottomLeft");
-          e.set("concepts", concepts);
-          e.set("concept", concept);
+          createConceptDisplay(concept);
         },
         this);
 
@@ -470,6 +338,7 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
+        this.concepts = controller.getConcepts();
 
         setupEntityDesigner();
 
@@ -482,17 +351,6 @@ function(
         createResourcesCatalogue();
 
         //createDialog();
-    },
-    doSearch = function() {
-        // summary:
-        //      inititate a search for the given keywords
-        console.log("doSearch called");
-    },
-    renderItem = function(item, refNode, posn) 
-    {
-        // summary:
-        //      Create HTML string to represent the given item
-        console.log("renderItem called");
     };
     return {
         init: function() {
