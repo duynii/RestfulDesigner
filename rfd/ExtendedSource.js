@@ -1,7 +1,7 @@
 define(["dojo/_base/declare", "dojo/dnd/Source",
         "dijit/registry", "dojo/dom-construct"],
 
-    function(declare, Source, baseArray, 
+    function(declare, Source, 
                 registry, domConstruct)
     {
         return declare("ExtendedSource",[ Source], 
@@ -24,7 +24,7 @@ define(["dojo/_base/declare", "dojo/dnd/Source",
             },
             getFirstSelectedWidget: function()
             {
-                var sel = this.getSelected();
+                var sel = this.getFirstSelected();
                 return (sel == null ? null : registry.getEnclosingWidget(sel));
             },
             clearAll: function()

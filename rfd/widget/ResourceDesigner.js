@@ -37,6 +37,7 @@ define(["dojo/_base/declare",
             concepts: null,
             templateString: template,
             container: null,
+            branch_url: "",
             postCreate: function()
             {
                 this.inherited(arguments);
@@ -46,15 +47,48 @@ define(["dojo/_base/declare",
                     isSource: false, // Only acts as dnd target
                     accept: ["resource"], // Accept resource objects only
                     type: ["concepts"],
-                    onDropExternal: lang.hitch(this, this.onResourcesListDrop),
-                    creator: lang.hitch(this, this.resourcesListCreator)
+                    onDropExternal: lang.hitch(this, this._onResourcesListDrop),
+                    creator: lang.hitch(this, this._resourcesListCreator)
                 });
+
+                // Handler for new branch selected
+                on(this.listNode, "click", lang.hitch(this, function()
+                {
+                    if(this.container.current == null) {
+                        return;
+                    }
+
+                    var li = this.container.getFirstSelectedWidget();
+                    if(li != null && this.branch_url != li.branch.toUrl()) 
+                    {
+                        this.branch_url = li.branch.toUrl();
+                        this.onNewSelectedBranch(li.branch);
+                    }
+                }));
+            },
+            // Override this to find out when a new branch is selected,
+            //  Not covering dropping resource into a new branch
+            onNewSelectedBranch: function(branch) {
+                console.log("new branch selection: " + branch.toUrl());
+            },
+            // Override to change behaviour by:
+            // Return true to accept, false to cancel
+            onBranchingOut:function(branch, resource)
+            {
+                console.log("Branching event: " + branch.toUrl(), + " + " + resource);
+                return true;
+            },
+            // Override to change behaviour by:
+            // Return true to accept, false to cancel
+            onBranchDrop:function(branch, resource)
+            {
+                return true;
             },
             _setConceptsAttr: function(concepts)
             {
                 this.concepts = concepts;
             },
-            onBranching: function(branch, domNode)
+            _onBranching: function(branch, domNode)
             {
                 console.log("Branching out of: " + branch);
 
@@ -66,11 +100,14 @@ define(["dojo/_base/declare",
                         // TODO Why are branches created here and only know in ListItem
                         var br = dialog.branch.clone();
                         br.addActiveResource(newRes);
-                        console.log("finished with new branch: " + br);
-                        this.addListItem(br, domNode);
+
                         //Add the new branch to Controller
-                        dialog.destroyRecursive(false);
-                        //dialog.destroy();
+                        if(this.onBranchingOut(br, newRes) == true) 
+                        {
+                            console.log("finished with new branch: " + br);
+                            this.addListItem(br, domNode);
+                            dialog.hide();
+                        }
                     }),
                     onHide: function() {
                         dialog.destroyRecursive(false);
@@ -80,13 +117,13 @@ define(["dojo/_base/declare",
                 dialog.init(branch, this.concepts);
                 dialog.show();
             },
-            resourcesListCreator: function(branch, hint) 
+            _resourcesListCreator: function(branch, hint) 
             {
                 //console.log("Designer creator: hint - " + hint + ", branch - " + branch);
                 this.container.selectNone();
                 var li = new ListItem(
                 {
-                    onBranchOut: lang.hitch(this, this.onBranching)
+                    onBranchOut: lang.hitch(this, this._onBranching)
                 });
                 li.placeAt(this.listNode);
                 li.set("branch", branch);
@@ -104,9 +141,9 @@ define(["dojo/_base/declare",
                 return {node: li.domNode, data: branch, type: ["branch"]};
             },
             // When a dnd catalogue item is droped into selected resource branch
-            onResourcesListDrop: function(source, nodes, copy) 
+            _onResourcesListDrop: function(source, nodes, copy) 
             {
-                //console.log("onResourcesListDrop left called");
+                //console.log("_onResourcesListDrop left called");
                 //console.log("source:" + typeof(source));
                 //console.log("node id:" + nodes[0].id);
 
@@ -131,15 +168,17 @@ define(["dojo/_base/declare",
                 }
                 else 
                 {
-                    //console.log("no: " + this.container.size());
                     var li = registry.getEnclosingWidget(this.container.current);
-                    console.log("li type: " + li.declaredClass);
-                    li.branch.addActiveResource(resource);
-                    li.addResource(resource, li.branch);
 
-                    //TODO, may not want to do this
-                    //source.getSelectedNodes().orphan();
-                    //source.delItem(nodeId);
+                    if(this.onBranchDrop(li.branch, resource) == true) 
+                    {
+                        li.branch.addActiveResource(resource);
+                        li.addResource(resource, li.branch);
+                        //TODO, may not want to do this
+                        //source.getSelectedNodes().orphan();
+                        //source.delItem(nodeId);
+                    }
+
                 }
             },
             addListItem: function(branch, refBranchNode)
@@ -154,22 +193,13 @@ define(["dojo/_base/declare",
                 this.container.insertNodes(true, //new selected node 
                     [ branch ], is_before, refBranchNode);
 
+                this.onNewSelectedBranch(branch);
+
                 return  registry.getEnclosingWidget(this.container.getFirstSelected());
             },
             clearAll: function()
             {
                 this.container.clearAll();
-            },
-            addResource:  function(resource)
-            {
-            },
-            // add many at once
-            addResources: function(resouces)
-            {
-            },
-            dummy: function()
-            {
-
             }
         });
     }

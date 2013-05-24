@@ -138,7 +138,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 //this.newResource = new Static_R(data.name, "/");
                 var res = new Static_R(data.name, "/");
                 this.onFinish(res);
-                this.hide();
+                //this.hide();
             },
             onTemplatedSubmit: function(form)
             {
@@ -156,7 +156,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                     console.log("Parsed json: " + JSON.stringify(doc));
                     var res = new Templated_R(data.name, "/", data.json_doc, null);
                     this.onFinish(res);
-                    this.hide();
+                    //this.hide();
                 }
                 
                 if(typeof doc === 'undefined')

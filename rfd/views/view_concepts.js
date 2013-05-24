@@ -92,9 +92,9 @@ function(
       e.set("concepts", this.concepts);
       e.set("concept", concept);
     },
-    setupAddClass = function(node) 
+    setupAddClass = function(id) 
     {
-      var menu = new Menu({targetNodeIds: [ node.id ] });
+      var menu = new Menu({targetNodeIds: [ id ] });
       var menuItem = new MenuItem({
         label: "Create new concept",
         onClick: lang.hitch(this, function(event) 
@@ -114,145 +114,10 @@ function(
       });
       menu.addChild(menuItem);
     }, 
-    popup = null,
-    onBranching = function(branch, domNode)
-    {
-      console.log("Branching out of: " + branch);
-
-      var dialog = new NewResourceDialog({
-          //id: "NRDialog",
-          title:"Custom Dialog",
-          style: "min-width: 500px; min-height: 400px",
-          onFinish: function(newRes)
-          {
-            var br = dialog.branch.clone();
-            br.addActiveResource(newRes);
-            console.log("finished with new branch: " + br);
-            addListItem(br, resDesigner, domNode);
-            //Add the new branch to Controller
-            dialog.destroyRecursive(false);
-            //dialog.destroy();
-          },
-          onHide: function()
-          {
-            dialog.destroyRecursive(false);
-          }
-      });
-      dialog.init(branch, this.concepts);
-      dialog.show();
-    },
-    addListItem = function(branch, res_designer, refBranchNode)
-    {
-      // If a ref node is specified, create the new branch under it
-      //  for branching out - onBranchOut
-
-      // Defaults to 'before' the newBranchDom
-      is_before = typeof refBranchNode !== 'undefined' ? false : true;
-      refBranchNode = typeof refBranchNode !== 'undefined' ? refBranchNode : newBranchDom;
-
-      res_designer.insertNodes(true, //new selected node 
-        [ branch ], is_before, refBranchNode);
-
-      return  registry.getEnclosingWidget(res_designer.getFirstSelected());
-    },
-    // This will only be called upon if the Designer is initially
-    // TODO, is this correct?
-    // Give a new branch to be added to Designer
-    resourcesListCreator = function(branch, hint) 
-    {
-      //console.log("Designer creator: hint - " + hint + ", branch - " + branch);
-      resDesigner.selectNone();
-      var li = new ListItem(
-      {
-        onBranchOut: onBranching
-      });
-      li.placeAt("resourcesList");
-      li.set("branch", branch);
-      li.startup();
-
-      li.watch("className", function(attr, oldVal, newVal){
-        console.log("class old: " + oldVal + "; new: " + newVal);
-      });
-      li.watch("class", function(attr, oldVal, newVal){
-        console.log("class old: " + oldVal + "; new: " + newVal);
-      });
-
-      return {node: li.domNode, data: branch, type: ["branch"]};
-    },
-    // When a dnd catalogue item is droped into selected resource branch
-    onResourcesListDrop = function(source, nodes, copy) 
-    {
-      //console.log("onResourcesListDrop left called");
-      //console.log("source:" + typeof(source));
-      //console.log("node id:" + nodes[0].id);
-
-      var nodeId = nodes[0].id;
-
-      //Data item
-      var resource = source.getItem(nodeId).data;
-      console.log("Drop resource: " + resource);
-
-      if(resDesigner.current == null) // Add the first ListItem for first branch
-      {
-
-        var br = new Branch();
-        br.addActiveResource(resource);
-        addListItem(br, resDesigner);
-        resDesigner.sync();
-
-        //TODO, may not want to do this
-        //source.getSelectedNodes().orphan();
-        //source.delItem(nodeId);
-        ////Dont uncomment, compile error: source.sync():
-      }
-      else 
-      {
-        //console.log("current: " + resDesigner.current);
-        //console.log("no: " + resDesigner.size());
-        var li = registry.getEnclosingWidget(resDesigner.current);
-        console.log("li type: " + li.declaredClass);
-        li.branch.addActiveResource(resource);
-        li.addResource(resource, li.branch);
-
-        //TODO, may not want to do this
-        //source.getSelectedNodes().orphan();
-        //source.delItem(nodeId);
-      }
-    },
     createResourceDesigner = function()
     {
       resDesigner = new ResourceDesigner();
       resDesigner.placeAt("topLeft");
-      /*
-      // A static dom in Designer to drop a resource for a new branch
-      newBranchDom = dom.byId("dropNewBranch");
-
-      resDesigner = new ExtendedSource("resourcesList", {
-        id: "resourcesContainer",
-        singular: true,  // Single item selection
-        isSource: false, // Only acts as dnd target
-        accept: ["resource"], // Accept resource objects only
-        type: ["concepts"],
-        onDropExternal: onResourcesListDrop,
-        creator: resourcesListCreator
-      });
-
-      // This should act as a onChange of selected item
-      // TBD Can also replace onMouseDown, after saving the func in resDesigner.oldOnMouseDown
-      //   then calling it there
-      on(dom.byId("resourcesList"), "click", function()
-      {
-        if(resDesigner.current == null) {
-          return;
-        }
-
-        var li = resDesigner.getFirstSelected();
-        if(li != null) 
-        {
-          console.log("clicked clicked");
-        }
-      });
-    */
 
     },
     //Populate based on context of selected branch on the Designer
@@ -300,14 +165,9 @@ function(
         setupEntityDesigner();
 
         // Right click Menu for bottom Left area
-        var outter = dom.byId("bottomLeft");
-        setupAddClass(outter);
-
+        setupAddClass("bottomLeft");
         createResourceDesigner();
-        //setupResourceDesigner();
         createResourcesCatalogue();
-
-        //createDialog();
     };
     return {
         init: function() {
