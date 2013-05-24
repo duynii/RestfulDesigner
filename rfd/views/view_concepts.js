@@ -233,18 +233,21 @@ function(
         creator: resourcesListCreator
       });
 
-      
-
-      /* This should act as a onChange of selected item
-      on(resDesigner.domNode, "click", function(e)
+      // This should act as a onChange of selected item
+      // TBD Can also replace onMouseDown, after saving the func in resDesigner.oldOnMouseDown
+      //   then calling it there
+      on(dom.byId("resourcesList"), "click", function()
       {
-        if(resDesigner.getSelected() != null) 
+        if(resDesigner.current == null) {
+          return;
+        }
+
+        var li = resDesigner.getSelected();
+        if(li != null) 
         {
-          //TODO
+          console.log("clicked clicked");
         }
       });
-*/
-
 
       resDesigner.size = function() {
         return resDesigner.getAllNodes().length;
