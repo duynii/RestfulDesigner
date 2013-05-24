@@ -5,38 +5,26 @@ define(["dojo/_base/declare",
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./templates/ResourceDesigner.html", 
-        "dijit/form/Select",
-        "dijit/form/MultiSelect",
         "dijit/form/Button",
-        "dijit/form/TextBox",
-        "dijit/form/Form",
-        "dijit/InlineEditBox",
-        "dijit/form/DropDownButton",
-        "dijit/TooltipDialog",
         "dojox/collections/Dictionary",
-        "dojo/dom-style", 
-        "dojo/dom-geometry", 
-        "dojo/dom-construct", 
-        "rfd/model/Branch", 
-        "rfd/model/Section", 
+        "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
+        "rfd/model/Branch", "rfd/model/Section", 
         "rfd/module/ClassStyle", 
-        "dijit/Menu", 
-        "dijit/MenuItem", 
+        "dijit/Menu", "dijit/MenuItem", 
         "rfd/Concept", 
-        "rfd/ExtendedSource", 
-        "rfd/widget/ListItem", 
+        "rfd/ExtendedSource", "rfd/widget/ListItem", "rfd/widget/NewResourceDialog", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
         "dijit/registry"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
-        Select, MultiSelect, Button, TextBox, Form, InlineEditBox, DropDownButton, TooltipDialog,
+        Button, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section,
         classStyle,
         Menu, MenuItem,
-        Concept, ExtendedSource, ListItem,
+        Concept, ExtendedSource, ListItem, NewResourceDialog,
         on, JSON, query, baseFx, baseArray, lang,
         registry)
     {
@@ -62,13 +50,43 @@ define(["dojo/_base/declare",
                     creator: lang.hitch(this, this.resourcesListCreator)
                 });
             },
+            _setConceptsAttr: function(concepts)
+            {
+                this.concepts = concepts;
+            },
+            onBranching: function(branch, domNode)
+            {
+                console.log("Branching out of: " + branch);
+
+                var dialog = new NewResourceDialog({
+                    title:"Custom Dialog",
+                    style: "min-width: 500px; min-height: 400px",
+                    onFinish: lang.hitch(this, function(newRes)
+                    {
+                        // TODO Why are branches created here and only know in ListItem
+                        var br = dialog.branch.clone();
+                        br.addActiveResource(newRes);
+                        console.log("finished with new branch: " + br);
+                        this.addListItem(br, domNode);
+                        //Add the new branch to Controller
+                        dialog.destroyRecursive(false);
+                        //dialog.destroy();
+                    }),
+                    onHide: function() {
+                        dialog.destroyRecursive(false);
+                    }
+                });
+                // Initialise with branch and show
+                dialog.init(branch, this.concepts);
+                dialog.show();
+            },
             resourcesListCreator: function(branch, hint) 
             {
                 //console.log("Designer creator: hint - " + hint + ", branch - " + branch);
                 this.container.selectNone();
                 var li = new ListItem(
                 {
-                    //TODO onBranchOut: onBranching
+                    onBranchOut: lang.hitch(this, this.onBranching)
                 });
                 li.placeAt(this.listNode);
                 li.set("branch", branch);
@@ -131,7 +149,7 @@ define(["dojo/_base/declare",
 
                 // Defaults to 'before' the newBranchDom
                 is_before = typeof refBranchNode !== 'undefined' ? false : true;
-                refBranchNode = typeof refBranchNode !== 'undefined' ? null : this.dropNewBranchNode;
+                refBranchNode = typeof refBranchNode !== 'undefined' ? refBranchNode : this.dropNewBranchNode;
 
                 this.container.insertNodes(true, //new selected node 
                     [ branch ], is_before, refBranchNode);
