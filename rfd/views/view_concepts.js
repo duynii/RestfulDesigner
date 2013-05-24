@@ -15,7 +15,7 @@ define([
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
     "rfd/widget/Entity", 
-    "rfd/widget/ResourceCatalogue", 
+    "rfd/widget/ResourceCatalogue", "rfd/widget/ResourceDesigner", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
@@ -31,7 +31,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, classStyle,
-            ListItem, NewResourceDialog, Entity, ResourceCatalogue,
+            ListItem, NewResourceDialog, Entity, ResourceCatalogue, ResourceDesigner,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
@@ -221,6 +221,9 @@ function(
     },
     createResourceDesigner = function()
     {
+      resDesigner = new ResourceDesigner();
+      resDesigner.placeAt("topLeft");
+      /*
       // A static dom in Designer to drop a resource for a new branch
       newBranchDom = dom.byId("dropNewBranch");
 
@@ -249,6 +252,7 @@ function(
           console.log("clicked clicked");
         }
       });
+    */
 
     },
     //Populate based on context of selected branch on the Designer
