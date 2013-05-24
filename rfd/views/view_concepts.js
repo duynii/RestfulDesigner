@@ -16,7 +16,7 @@ define([
     "rfd/widget/NewResourceDialog", 
     "rfd/widget/Entity", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
-    "dojo/dnd/Container", "dojo/dnd/Selector", "dojo/dnd/Source", "dojo/dnd/Moveable", 
+    "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
     "rfd/controller/controller_concepts",
@@ -32,7 +32,7 @@ function(
             Concept_R, Collection_R, classStyle,
             ListItem, NewResourceDialog, Entity,
             CheckBox, NumberTextBox, Dialog,
-            Container, Selector, Source, Moveable,
+            Container, Selector, ExtendedSource, Moveable,
             text, newprop,
             Controller
             ) 
@@ -152,7 +152,7 @@ function(
       res_designer.insertNodes(true, //new selected node 
         [ branch ], is_before, refBranchNode);
 
-      return  registry.getEnclosingWidget(res_designer.getSelected());
+      return  registry.getEnclosingWidget(res_designer.getFirstSelected());
     },
     // This will only be called upon if the Designer is initially
     // TODO, is this correct?
@@ -223,7 +223,7 @@ function(
       // A static dom in Designer to drop a resource for a new branch
       newBranchDom = dom.byId("dropNewBranch");
 
-      resDesigner = new Source("resourcesList", {
+      resDesigner = new ExtendedSource("resourcesList", {
         id: "resourcesContainer",
         singular: true,  // Single item selection
         isSource: false, // Only acts as dnd target
@@ -242,38 +242,13 @@ function(
           return;
         }
 
-        var li = resDesigner.getSelected();
+        var li = resDesigner.getFirstSelected();
         if(li != null) 
         {
           console.log("clicked clicked");
         }
       });
 
-      resDesigner.size = function() {
-        return resDesigner.getAllNodes().length;
-      };
-
-      // return the selected node, it can only be one in this app
-      resDesigner.getSelected = function()
-      {
-         var nodes = resDesigner.getSelectedNodes();
-
-         if(nodes.length == 0) {
-          console.error("Cannot get selected ListItem node");
-          return null;
-         }
-
-         return nodes[0];
-      };
-      resDesigner.selectedWidget = function()
-      {
-        var sel = this.getSelected();
-        if(sel == null ) {
-          return null;
-        }
-
-        return registry.getEnclosingWidget(sel);
-      };
     },
     catalogueListCreator = function(item, hint)
     {
@@ -302,7 +277,7 @@ function(
     {
       console.log("rightTree called");
       //create the first catalogue for first branch    
-      resCatalogue = new Source("catalogueList_" + 1, {
+      resCatalogue = new ExtendedSource("catalogueList_" + 1, {
           singular: true,
           accept: [], // This is a dnd source only
           creator: catalogueListCreator,
