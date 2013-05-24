@@ -1,8 +1,8 @@
 define(["dojo/_base/declare", "dojo/dnd/Source",
-        "dijit/registry"],
+        "dijit/registry", "dojo/dom-construct"],
 
     function(declare, Source, baseArray, 
-                registry)
+                registry, domConstruct)
     {
         return declare("ExtendedSource",[ Source], 
         {
@@ -26,7 +26,19 @@ define(["dojo/_base/declare", "dojo/dnd/Source",
             {
                 var sel = this.getSelected();
                 return (sel == null ? null : registry.getEnclosingWidget(sel));
+            },
+            clearAll: function()
+            {
+                var nodes = this.getAllNodes();
+                nodes.forEach(function(node)
+                {
+                    this.delItem(node.id);
+                    domConstruct.destroy(node);
+                },
+                this);
             }
+
+
 
         });
     }

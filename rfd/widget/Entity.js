@@ -53,11 +53,6 @@ define(["dojo/_base/declare",
             templateString: template,
             container: null,
             moveable: null,
-
-            buildRendering: function()
-            {
-                this.inherited(arguments);
-            },
             setErrorMsg: function(msg)
             {
                 this.errorNode.innerHTML = msg;

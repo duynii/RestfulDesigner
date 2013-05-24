@@ -15,6 +15,7 @@ define([
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
     "rfd/widget/Entity", 
+    "rfd/widget/ResourceCatalogue", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
@@ -30,7 +31,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, classStyle,
-            ListItem, NewResourceDialog, Entity,
+            ListItem, NewResourceDialog, Entity, ResourceCatalogue,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
@@ -250,24 +251,6 @@ function(
       });
 
     },
-    catalogueListCreator = function(item, hint)
-    {
-      //console.log("Catalogue creator: hint - " + hint + ", item - " + item);
-      //console.log("catalogue creator's item: " + item.declaredClass);
-
-      var cssStyle = classStyle.entry(item.declaredClass);
-      //console.log("css: " + item.declaredClass + " to " + cssStyle);
-      var li = domConstruct.create("li");
-      domConstruct.create("button", 
-        { 
-          class: cssStyle,
-          innerHTML:  item.toString() 
-        },
-        li
-      );
-
-      return { node: li, data: item, type: item.type };
-    },
     //Populate based on context of selected branch on the Designer
     populateCatalogue = function(widget)
     {
@@ -276,31 +259,23 @@ function(
     createResourcesCatalogue = function()
     {
       console.log("rightTree called");
-      //create the first catalogue for first branch    
-      resCatalogue = new ExtendedSource("catalogueList_" + 1, {
-          singular: true,
-          accept: [], // This is a dnd source only
-          creator: catalogueListCreator,
-          type: ["concepts"]
-      });
-      // Testing purpose only
-      var template_R = new TemplatedResource("JSON Template", "/", {title: "Test JSON data"
-        , data: "some text"}, null );
-      var static_R = new StaticResource("static", "/");
-      var custom_R = new Custom_R("Custom", "/");
-      var available = [ template_R, static_R, custom_R ];
-      baseArray.forEach(this.concepts, 
-        function(concept, index)
+
+      resCatalogue = new ResourceCatalogue();
+      resCatalogue.placeAt("topRight");
+
+      resCatalogue.addResource( new StaticResource("static", "/") );
+      resCatalogue.addResource( new TemplatedResource("JSON template", "/") );
+      resCatalogue.addResource( new Custom_R("Custom Method", "/") );
+      baseArray.forEach(this.concepts, function(concept, index)
         {
           console.log("Looping through: " + concept.id);
           var coll_R = new Collection_R(concept.id, "/", concept);
           var concept_R = new Concept_R(concept.id, "/", concept);
-          available.push(coll_R);
-          available.push(concept_R);
+          resCatalogue.addResource(coll_R);
+          resCatalogue.addResource(concept_R);
         }, 
         this
       );
-      resCatalogue.insertNodes(false, available, false, null);
     },
     setupEntityDesigner = function()
     {

@@ -24,7 +24,7 @@
 					<form class="myForm" data-dojo-attach-point="form" data-dojo-type="dijit/form/Form" action="" method="">
 			        	<label for="name">Name:</label> 
 			        	<input style="width: 80px" data-dojo-attach-point="name" 
-			        	class="inputbox" type="text" data-dojo-props="regExp:'^\\w+$'"
+			        	class="inputbox" type="text" data-dojo-props="pattern:'^\\w+$'"
 			        	data-dojo-type="dijit/form/ValidationTextBox" name="name" />
 			        	<label for="type">Type:</label> 
 			        	<select  name="type" data-dojo-attach-point="typeSelect"  data-dojo-type="dijit/form/Select">
@@ -37,7 +37,7 @@
 			        	<div>
 			        	<span data-dojo-attach-point="spanNode" class="hidden">
 			        		<label for="enumInput">Define enum values: [</label> 
-			        		<input  data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="regExp:'^\\w+$'"
+			        		<input  data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="pattern:'^\\w+$'"
 			        			type="text" data-dojo-attach-point="enumName" name="enumName"
 			        		> </input>
 			        		<input style="min-width: 120px" class="inputbox" 
