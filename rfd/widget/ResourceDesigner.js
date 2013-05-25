@@ -129,15 +129,6 @@ define(["dojo/_base/declare",
                 li.set("branch", branch);
                 li.startup();
 
-/*
-                li.watch("className", function(attr, oldVal, newVal){
-                    console.log("class old: " + oldVal + "; new: " + newVal);
-                });
-                li.watch("class", function(attr, oldVal, newVal){
-                    console.log("class old: " + oldVal + "; new: " + newVal);
-                });
-*/
-
                 return {node: li.domNode, data: branch, type: ["branch"]};
             },
             // When a dnd catalogue item is droped into selected resource branch

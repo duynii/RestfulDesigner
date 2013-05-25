@@ -35,14 +35,12 @@ function(
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
-            Controller
+            controller
             ) 
 {
     var store = null,
-    concepts = null,
-    tablesMap = new Dictionary(),
     temp_id_num = 1,
-    controller = new Controller(),
+    //controller = new Controller(), Now a global module
     resCatalogue = null, //Widget of the catalogue, to be changed to many?
     resDesigner = null, // The one container for Resource Designer
     newBranchDom = null,
@@ -89,7 +87,7 @@ function(
     {
       var e = new Entity({});
       e.placeAt("bottomLeft");
-      e.set("concepts", this.concepts);
+      e.set("concepts", controller.getConcepts());
       e.set("concept", concept);
     },
     setupAddClass = function(id) 
@@ -103,7 +101,7 @@ function(
           var name = "Class_" + temp_id_num;
           temp_id_num += 1;
           var concept = new Concept(name, name, null);
-          this.concepts.push(concept);
+          controller.getConcepts().push(concept);
           createConceptDisplay(concept);
 
           console.log("mouse: " + event.layerX + " " + event.layerY);
@@ -135,7 +133,7 @@ function(
       resCatalogue.addResource( new StaticResource("static", "/") );
       resCatalogue.addResource( new TemplatedResource("JSON template", "/") );
       resCatalogue.addResource( new Custom_R("Custom Method", "/") );
-      baseArray.forEach(this.concepts, function(concept, index)
+      baseArray.forEach(controller.getConcepts(), function(concept, index)
         {
           console.log("Looping through: " + concept.id);
           var coll_R = new Collection_R(concept.id, "/", concept);
@@ -149,7 +147,7 @@ function(
     setupEntityDesigner = function()
     {
         // Get all existing concepts
-        baseArray.forEach(this.concepts, function(concept, index)
+        baseArray.forEach(controller.getConcepts(), function(concept, index)
         {
           createConceptDisplay(concept);
         },
@@ -160,7 +158,6 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
-        this.concepts = controller.getConcepts();
 
         setupEntityDesigner();
 
@@ -170,7 +167,9 @@ function(
         createResourcesCatalogue();
     };
     return {
-        init: function() {
+        init: function() 
+        {
+          controller.init(); //supporting controller
             // proceed directly with startup
             startup();
         }
