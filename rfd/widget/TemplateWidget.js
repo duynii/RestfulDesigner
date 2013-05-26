@@ -20,7 +20,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         return declare("TemplateWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
             resource: null,
-            baseClass: "templatedResource",
+            //baseClass: "templatedResource",
             templateString: template,
             init: function(templateResource, branch) 
             {

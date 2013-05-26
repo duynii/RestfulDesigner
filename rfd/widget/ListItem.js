@@ -11,6 +11,7 @@ define(["dojo/_base/declare",
         "rfd/model/Branch", 
         "rfd/model/Section", 
         "rfd/module/ClassStyle", 
+        "rfd/widget/TemplateWidget", 
         "dijit/Menu", 
         "dijit/MenuItem", 
         "dojo/on", 
@@ -22,8 +23,7 @@ define(["dojo/_base/declare",
     function(declare, _WidgetBase, _TemplatedMixin, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
-        Branch, Section,
-        classStyle,
+        Branch, Section, classStyle, TemplateWidget,
         Menu, MenuItem,
         on, baseFx, baseArray, lang)
     {
@@ -66,11 +66,36 @@ define(["dojo/_base/declare",
             {
                 console.log("ListItem postcreate called");
                 this.branch = null;
-                this.wid2Res = new Dictionary();               
+                //this.wid2Res = new Dictionary();               
                 this.dom2branch = new Dictionary();               
 
                 //Events
                 //this.onBranchOut = function(branch){};
+            },
+            _createWidget: function(resource, isHidden)
+            {
+                var cssStyle = classStyle.entry(resource.declaredClass); 
+                cssStyle += (isHidden ? " hidden" : "");
+
+                if(resource.declaredClass == "TemplatedResource")
+                {
+                    var widget = new TemplateWidget({});
+                    if(isHidden) {
+                        widget.className += " hidden"
+                    }
+
+                    widget.init(resource, this.branch);
+                    widget.placeAt(this.domNode)
+                }
+                else
+                {
+                    var button = domConstruct.create("button", 
+                    {
+                        class: cssStyle,
+                        innerHTML: resource.name
+                    }, 
+                    this.domNode);
+                }
             },
             //Private func: add a resource to the branch
             // Resources in an inactive section must be added as hidden
@@ -90,13 +115,10 @@ define(["dojo/_base/declare",
 
                 var myId = this.id;
                 // create a dom under self
-                var button = domConstruct.create("button", 
-                {
-                    id: resource.id + '_' + myId,
-                    class: cssStyle,
-                    innerHTML: resource.name
-                }, 
-                this.domNode);
+
+                // Create the button widget
+                this._createWidget(resource, isHidden);
+
                 var slash = domConstruct.create("button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
@@ -149,8 +171,8 @@ define(["dojo/_base/declare",
                     menu.startup();
                 }
                 // add to the map
-                this.wid2Res.add(button, resource);
-                return button;
+                //this.wid2Res.add(button, resource);
+                //return button;
             },
             // Basic dnd functionality to add resource to the tree/branch's end
             // The new branch must be the same as old branch with 'resource' added
