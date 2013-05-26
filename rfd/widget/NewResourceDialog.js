@@ -130,10 +130,14 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
             {
                 var data = form.get('value');
                 console.log("Static submit: " + JSON.stringify(data));
+                //TBD this is not needed, unnessarily restrictive
+                /*
                 if( this.branch.hasResourceId(data.name) ) {
                     alert("Branch already has resource with identifier: " + data.name);
                     return;
                 }
+                */
+                
                 //this.isAdded = true;
                 //this.newResource = new Static_R(data.name, "/");
                 var res = new Static_R(data.name, "/");
@@ -145,10 +149,13 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 var data = form.get('value');
                 console.log("Templated submit: " + JSON.stringify(data));
 
+                //TBD this is not needed, unnessarily restrictive
+                /*
                 if( this.branch.hasResourceId(data.name) ) {
                     alert("Branch already has resource with identifier: " + data.name);
                     return;
                 }
+                */
                 // Checks that only valid JSON are accepted
                 var doc = JSON.parse(data.json_doc, true);
                 if( typeof doc !== 'undefined' && doc != null)

@@ -14,6 +14,7 @@ define([
             // The active section
             this.active = active;
             this.inactive = inactive;
+            this.id = this.toUrl();
         },
         clone: function()
         {
@@ -57,8 +58,14 @@ define([
         },
         //getActive: function() { return this.active; },
         //getInactive: function() { return this.inactive; },
-        addActiveResource: function(resource) { this.active.addResource(resource); },
-        addInactiveResource: function(resource) { this.inactive.addResource(resource); },
+        addActiveResource: function(resource) { 
+            this.active.addResource(resource);
+            this.id = this.toUrl(); 
+        },
+        addInactiveResource: function(resource) { 
+            this.inactive.addResource(resource); 
+            this.id = this.toUrl(); 
+        },
         // Create a new branch by branching midway from this resource
         // All existing resources will be in inactive, new resource will in in active
         branchOut: function(fromRes, newRes)

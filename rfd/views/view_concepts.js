@@ -116,7 +116,10 @@ function(
     {
       resDesigner = new ResourceDesigner();
       resDesigner.placeAt("topLeft");
-
+      // Hook event to allow disallow branching
+      resDesigner.onBranchingOut = lang.hitch(controller, controller.onBranchingOut);
+      // When a drop to add to a branch
+      resDesigner.onBranchDrop = lang.hitch(controller, controller.onBranchDrop);
     },
     //Populate based on context of selected branch on the Designer
     populateCatalogue = function(widget)

@@ -2,19 +2,34 @@
 define([
     "dojo/_base/declare",
     "rfd/model/Branch",
-    "dojox/collections/ArrayList",
-    "dojo/store/Memory"
-], function(declare, ArrayList, Memory){
-    return declare("rfd/model/Tree", null, 
+    "dojo/store/Memory",
+    "dojo/store/Observable"
+], function(declare, Memory, Observable){
+    return declare("Tree", null, 
     {
         constructor: function()
         {
-            this.branches = new ArrayList();
-            this.store = new Memory();
+            // This array is obsalete
+            //this.branches = new Array();
+            this.store = new Observable(new Memory({ data: [] }));
         },
+        // This does a like match for 'idUrl%', so that feature can be used
+        //  eg. "static/" will find a branch with id "static/custom/"
+        getBranch: function(idUrl)
+        {
+            // TODO Branch shall have an ID string
+            var br =  this.store.get(idUrl);
 
+            if(typeof br === 'undefined') {
+                return null;
+            }
+
+            console.log("getBranch: " + br);
+            return br;
+        },
+        addBranch: function(br) { this.store.put(br); }, // Triggers observers
+        removeBranch: function(brId) { this.store.remove(brId); },
         getBranches: function() { return this.branhces; },
-
         toString: function()
         {
             return "TODO";

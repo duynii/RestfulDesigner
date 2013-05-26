@@ -64,6 +64,38 @@ define([
         {
             return concepts;
         },
+        onBranchingOut: function(branch, resource)
+        {
+            console.log("onBranchingOut: " + branch + " - " + resource);
+            //Test if it clashs with existing branch
+            //Note: this checks that no branch starts with the specified URL also.
+            var existing_branch = _tree.getBranch(branch.toUrl());
+            if(existing_branch != null) {
+                alert("Clashing branch, it already exists: " + existing_branch.toUrl());
+                return false;
+            }
+
+            _tree.addBranch(branch);
+            //TODO check that no branch starts like this.
+            return true;
+        },
+        onBranchDrop: function(branch_ref, resource)
+        {
+            var br = branch_ref.clone();
+            br.addActiveResource(resource);
+
+            //Note: this checks that no branch starts with the specified URL also.
+            var existing_branch = _tree.getBranch(br.toUrl());
+            if(existing_branch != null) {
+                alert("Clashing branch, it already exists: " + existing_branch.toUrl());
+                return false;
+            }
+            else {
+                branch_ref.addActiveResource(resource); // adds it
+                //flows throught
+            }
+            return true;
+        },
         getDummyBranch: function()
         {
             var branch = new Branch();

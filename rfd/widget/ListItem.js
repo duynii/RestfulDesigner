@@ -96,10 +96,8 @@ define(["dojo/_base/declare",
                     class: cssStyle,
                     innerHTML: resource.name
                 }, 
-                this.domNode
-                );
-                var slash = domConstruct.create(
-                    "button",
+                this.domNode);
+                var slash = domConstruct.create("button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
                         class: "addButton",
@@ -171,8 +169,6 @@ define(["dojo/_base/declare",
                 
                 var active_section = branch.active;
                 var inactive_section = branch.inactive;
-
-                //var domNode = this.domNode;
 
                 baseArray.forEach(inactive_section.resources, function(resource, index)
                 {

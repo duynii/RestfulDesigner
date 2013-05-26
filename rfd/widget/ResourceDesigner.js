@@ -14,7 +14,7 @@ define(["dojo/_base/declare",
         "rfd/Concept", 
         "rfd/ExtendedSource", "rfd/widget/ListItem", "rfd/widget/NewResourceDialog", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/registry"
+        "dijit/registry", "dojo/aspect"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -26,7 +26,7 @@ define(["dojo/_base/declare",
         Menu, MenuItem,
         Concept, ExtendedSource, ListItem, NewResourceDialog,
         on, JSON, query, baseFx, baseArray, lang,
-        registry)
+        registry, aspect)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -65,20 +65,26 @@ define(["dojo/_base/declare",
                         this.onNewSelectedBranch(li.branch);
                     }
                 }));
+                /** also works
+                aspect.after(this.container, "onMouseDown", lang.hitch(this, function()
+                {
+                    console.log("ListItem onMouseDown");
+                }));
+                */
             },
             // Override this to find out when a new branch is selected,
             //  Not covering dropping resource into a new branch
             onNewSelectedBranch: function(branch) {
                 console.log("new branch selection: " + branch.toUrl());
             },
-            // Override to change behaviour by:
+            // Override to change behaviour by: branch already has resource added, it's a clone
             // Return true to accept, false to cancel
             onBranchingOut:function(branch, resource)
             {
                 console.log("Branching event: " + branch.toUrl(), + " + " + resource);
                 return true;
             },
-            // Override to change behaviour by:
+            // Override to change behaviour by: branch is an existing branch ref, do not modify
             // Return true to accept, false to cancel
             onBranchDrop:function(branch, resource)
             {
@@ -88,6 +94,7 @@ define(["dojo/_base/declare",
             {
                 this.concepts = concepts;
             },
+            // When branching is activated, popup a dialog to add new resource
             _onBranching: function(branch, domNode)
             {
                 console.log("Branching out of: " + branch);
@@ -129,6 +136,7 @@ define(["dojo/_base/declare",
                 li.set("branch", branch);
                 li.startup();
 
+
                 return {node: li.domNode, data: branch, type: ["branch"]};
             },
             // When a dnd catalogue item is droped into selected resource branch
@@ -146,11 +154,14 @@ define(["dojo/_base/declare",
 
                 if(this.container.current == null) // Add the first ListItem for first branch
                 {
-
                     var br = new Branch();
+                    //Dont need to check return value as there's nothing in the designer
+                    // no branch
                     br.addActiveResource(resource);
-                    this.addListItem(br);
-                    this.container.sync();
+                    if(this.onBranchingOut(br, resource) == true) {
+                        this.addListItem(br);
+                        this.container.sync();
+                    }
 
                     //TODO, may not want to do this
                     //source.getSelectedNodes().orphan();
@@ -163,13 +174,13 @@ define(["dojo/_base/declare",
 
                     if(this.onBranchDrop(li.branch, resource) == true) 
                     {
-                        li.branch.addActiveResource(resource);
+                        // Added in the event
+                        //li.branch.addActiveResource(resource);
                         li.addResource(resource, li.branch);
                         //TODO, may not want to do this
                         //source.getSelectedNodes().orphan();
                         //source.delItem(nodeId);
                     }
-
                 }
             },
             addListItem: function(branch, refBranchNode)
