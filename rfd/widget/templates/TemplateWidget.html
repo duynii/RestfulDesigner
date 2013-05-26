@@ -1,9 +1,23 @@
 <button class="templatedResource floatLeft" data-dojo-attach-point="spanNode">
-	<div class="hidden" class="visibility: collapse" data-dojo-attach-point="tooltipdialog" data-dojo-type="dijit/TooltipDialog">
-		<label>Configure:</label>
-		<p data-dojo-attach-point="errorNode" class="hidden" style="color: red;"></p>
-		<label for="resource_id">ID:</label> 
+	<div data-dojo-attach-point="tooltipdialog" data-dojo-type="dijit/TooltipDialog" title="Temapl">
+		<h4>Configure</h4>
+		<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 400px"></p>
+		<label for="resource_id">Identifier:</label> 
 		<span style="width: 100px" data-dojo-attach-point="resource_id"
 			data-dojo-type="dijit/InlineEditBox">Class Name Edit</span>
+        <hr/>
+        <div>
+        	<label for="dbname">JSON database:</label>
+        	<select type="text" disabled data-dojo-type="dijit/form/Select">
+        		<option value="Default">Default</option>
+        	</select>
+        	<br/>
+            <label>JSON Document (hit tab to save):</label>
+            </br>
+            <div data-dojo-attach-point="json_doc" name="json_doc" 
+                    style="min-width:200px; min-height: 150px" dojo-data-props="trim: true"
+                    data-dojo-type="dijit/form/Textarea"/>
+            </br>
+        </div>
 	</div>
 </button>

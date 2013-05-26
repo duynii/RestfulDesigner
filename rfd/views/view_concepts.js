@@ -164,7 +164,7 @@ function(
         console.log("initUi called");
 
         var wid = new TemplateWidget({});
-        var t = new TemplatedResource("test template", "/", '{"data": "striiing"}', "blah");
+        var t = new TemplatedResource("test template", "/", {data: "striiing"}, "blah");
         var br = new Branch();
         br.addActiveResource(t);
         wid.init(t, br);
