@@ -12,9 +12,10 @@ define([
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", 
     "rfd/module/ClassStyle",
+    "rfd/model/Branch",
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
-    "rfd/widget/Entity", 
+    "rfd/widget/Entity", "rfd/widget/TemplateWidget", 
     "rfd/widget/ResourceCatalogue", "rfd/widget/ResourceDesigner", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
@@ -30,8 +31,8 @@ function(
             parser, Button, registry, Menu, MenuItem, MenuSeparator,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
-            Concept_R, Collection_R, classStyle,
-            ListItem, NewResourceDialog, Entity, ResourceCatalogue, ResourceDesigner,
+            Concept_R, Collection_R, classStyle, Branch,
+            ListItem, NewResourceDialog, Entity, TemplateWidget, ResourceCatalogue, ResourceDesigner,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
@@ -161,6 +162,13 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
+
+        var wid = new TemplateWidget({});
+        var t = new TemplatedResource("test template", "/", '{"data": "striiing"}', "blah");
+        var br = new Branch();
+        br.addActiveResource(t);
+        wid.init(t, br);
+        wid.placeAt("bottomRight");
 
         setupEntityDesigner();
 

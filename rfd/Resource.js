@@ -16,8 +16,10 @@ define([
             this.is_concept = false;
             this.type = [ "resource" ];
         },
-
-
+        setId: function(id) {
+            this.id = id;
+            this.name = id;
+        },
         toString: function()
         {
             return this.name;

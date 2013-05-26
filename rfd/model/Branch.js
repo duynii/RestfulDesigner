@@ -76,7 +76,7 @@ define([
 
             var isBranched = this.inactive.branchOut(fromRes, br);
             if(isBranched) {
-                console.log("branched from inactive");
+                //console.log("branched from inactive");
                 return br;
             }
 
@@ -88,8 +88,8 @@ define([
                 //TODO: Make sure new br is unique?
                 br.addActiveResource(newRes);
             }
-            console.log("Branched from active: " + isBranched + " at " + fromRes.name);
-            console.log("[branchOut] branched: " + br);
+            //console.log("Branched from active: " + isBranched + " at " + fromRes.name);
+            //console.log("[branchOut] branched: " + br);
 
             return br;
         },
