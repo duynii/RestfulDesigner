@@ -5,25 +5,17 @@ define(["dojo/_base/declare",
         "dijit/_TemplatedMixin",
         "dojo/text!./templates/ListItem.html", 
         "dojox/collections/Dictionary",
-        "dojo/dom-style", 
-        "dojo/dom-geometry", 
-        "dojo/dom-construct", 
-        "rfd/model/Branch", 
-        "rfd/model/Section", 
-        "rfd/module/ClassStyle", 
-        "rfd/widget/TemplateWidget", 
-        "dijit/Menu", 
-        "dijit/MenuItem", 
-        "dojo/on", 
-        "dojo/_base/fx", 
-        "dojo/_base/array",
-        "dojo/_base/lang"
+        "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
+        "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
+        "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", 
+        "dijit/Menu",  "dijit/MenuItem", 
+        "dojo/on",  "dojo/_base/fx",  "dojo/_base/array", "dojo/_base/lang"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
-        Branch, Section, classStyle, TemplateWidget,
+        Branch, Section, classStyle, TemplateWidget, StaticWidget,
         Menu, MenuItem,
         on, baseFx, baseArray, lang)
     {
@@ -36,6 +28,7 @@ define(["dojo/_base/declare",
             // Our template - important!
             templateString: template,
             onBranchOut: null,
+            lastNode: null,
  
             // A class to be applied to the root node in our template
             baseClass: "listItem",
@@ -85,7 +78,17 @@ define(["dojo/_base/declare",
                     }
 
                     widget.init(resource, this.branch);
-                    widget.placeAt(this.domNode)
+                    widget.placeAt(this.domNode, this.lastNode);
+                }
+                else if(resource.declaredClass == "StaticResource")
+                {
+                    var widget = new StaticWidget({});
+                    if(isHidden) {
+                        widget.className += " hidden"
+                    }
+
+                    widget.init(resource, this.branch);
+                    widget.placeAt(this.domNode, this.lastNode);
                 }
                 else
                 {
@@ -127,6 +130,7 @@ define(["dojo/_base/declare",
                     }, 
                     this.domNode
                 );
+                this.lastNode = slash;
 
                 var myDom = this.domNode;
                 if(isHidden) {
