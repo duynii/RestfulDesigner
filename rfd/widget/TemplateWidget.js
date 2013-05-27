@@ -47,12 +47,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
                 //this.spanNode.innerHTML = "Blah";
 
-                on(this.domNode, "mouseover", lang.hitch(this, function()
+                on(this.spanNode, "mouseover", lang.hitch(this, function()
                 {
                     popup.open(
                     {
                         popup: this.tooltipdialog,
-                        around: this.domNode
+                        around: this.spanNode
                     });
                 }));
                 this.tooltipdialog.on("mouseLeave", function(e) {
@@ -92,6 +92,30 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         return;
                     }
                 }));
+
+                //Set branching out event
+                //Right click menu
+                var itemBranchOut = new MenuItem(
+                    {
+                        label: "New Branch",
+                        onClick: lang.hitch(this, this._onBranchOutClick)
+                    }
+                );
+
+                var menu = new Menu({});
+                menu.addChild(itemBranchOut);
+                menu.bindDomNode(this.branchButton.domNode);
+                menu.startup();
+                // Set click
+                this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
+
+            },
+            _onBranchOutClick: function() {
+                this.onBranchOutClick(this.resource);
+            },
+            //Event branchOutClick
+            onBranchOutClick : function(resource) {
+                console.info("onBranchOutClick: " + resource);
             },
             _checkAcceptableJSON: function(str)
             {

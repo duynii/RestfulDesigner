@@ -8,7 +8,7 @@ define(["dojo/_base/declare",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", 
-        "dijit/Menu",  "dijit/MenuItem", 
+        "dijit/Menu",  "dijit/MenuItem", "dijit/form/Button", 
         "dojo/on",  "dojo/_base/fx",  "dojo/_base/array", "dojo/_base/lang"
         ],
 
@@ -16,7 +16,7 @@ define(["dojo/_base/declare",
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         Branch, Section, classStyle, TemplateWidget, StaticWidget,
-        Menu, MenuItem,
+        Menu, MenuItem, Button,
         on, baseFx, baseArray, lang)
     {
         return declare("ListItem",[_WidgetBase, _TemplatedMixin], 
@@ -60,7 +60,7 @@ define(["dojo/_base/declare",
                 console.log("ListItem postcreate called");
                 this.branch = null;
                 //this.wid2Res = new Dictionary();               
-                this.dom2branch = new Dictionary();               
+                //this.dom2branch = new Dictionary();               
 
                 //Events
                 //this.onBranchOut = function(branch){};
@@ -78,7 +78,8 @@ define(["dojo/_base/declare",
                     }
 
                     widget.init(resource, this.branch);
-                    widget.placeAt(this.domNode, this.lastNode);
+                    widget.placeAt(this.domNode);
+                    return widget;
                 }
                 else if(resource.declaredClass == "StaticResource")
                 {
@@ -88,7 +89,8 @@ define(["dojo/_base/declare",
                     }
 
                     widget.init(resource, this.branch);
-                    widget.placeAt(this.domNode, this.lastNode);
+                    widget.placeAt(this.domNode);
+                    return widget;
                 }
                 else
                 {
@@ -98,6 +100,7 @@ define(["dojo/_base/declare",
                         innerHTML: resource.name
                     }, 
                     this.domNode);
+                    return button;
                 }
             },
             //Private func: add a resource to the branch
@@ -120,8 +123,9 @@ define(["dojo/_base/declare",
                 // create a dom under self
 
                 // Create the button widget
-                this._createWidget(resource, isHidden);
+                var wid = this._createWidget(resource, isHidden);
 
+                /*
                 var slash = domConstruct.create("button",
                     {
                         id: resource.id + '_' + myId + '_' + "slash",
@@ -130,7 +134,14 @@ define(["dojo/_base/declare",
                     }, 
                     this.domNode
                 );
-                this.lastNode = slash;
+                */
+/*
+                var slash = new Button({
+                    label: '/'
+                });
+                slash.className += " floatLeft";
+                slash.placeAt(this.domNode, "last");
+                this.lastNode = slash.domNode;
 
                 var myDom = this.domNode;
                 if(isHidden) {
@@ -138,7 +149,18 @@ define(["dojo/_base/declare",
                 }
                 else {
                     // add option to branchOut
-                    this.dom2branch.add(slash.id, branch);
+                    //this.dom2branch.add(slash.id, branch);
+
+                    slash.on("click", function()
+                        {
+                            console.log("branching simple click:" + branch.toString());
+                            console.log("the branch: " + branch);
+                            if(func != null) {
+                                func(branch, myDom);
+                            }
+                        }
+                    );
+
                     var func = this.onBranchOut;
 
                     this.own(
@@ -151,7 +173,6 @@ define(["dojo/_base/declare",
                             }
                         }) 
                     );
-
                     var itemBranchOut = new MenuItem(
                         {
                             label: "New Branch",
@@ -165,15 +186,12 @@ define(["dojo/_base/declare",
                         }
                     );
 
-                    var menu = new Menu({
-                        onFocus: function() {
-                            console.log("This menu got focused: " + this.id);
-                        }
-                    });
+                    var menu = new Menu({});
                     menu.addChild(itemBranchOut);
-                    menu.bindDomNode(slash);
+                    menu.bindDomNode(slash.domNode);
                     menu.startup();
                 }
+*/
                 // add to the map
                 //this.wid2Res.add(button, resource);
                 //return button;

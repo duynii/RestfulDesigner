@@ -183,6 +183,9 @@ html, body, #mainDiv {
 .floatRight {
   float: right;
 }
+.floatTop {
+  float: top;
+}
 
 .collapse {
   visibility: collapse;

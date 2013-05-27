@@ -177,6 +177,7 @@ define(["dojo/_base/declare",
                         // Added in the event
                         //li.branch.addActiveResource(resource);
                         li.addResource(resource, li.branch);
+                        this.container.sync();
                         //TODO, may not want to do this
                         //source.getSelectedNodes().orphan();
                         //source.delItem(nodeId);
@@ -194,6 +195,8 @@ define(["dojo/_base/declare",
 
                 this.container.insertNodes(true, //new selected node 
                     [ branch ], is_before, refBranchNode);
+
+                this.branch_url = branch.toUrl();
 
                 this.onNewSelectedBranch(branch);
 
