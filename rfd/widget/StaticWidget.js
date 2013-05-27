@@ -6,7 +6,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dijit/Menu", "dijit/MenuItem", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -15,7 +15,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         TemplatedResource, Branch, Section,
         classStyle,
         Menu, MenuItem,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog)
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
     {
         return declare("StaticWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
@@ -52,6 +52,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         popup: this.tooltipdialog,
                         around: this.spanNode
                     });
+
+                    focusUtil.focus(this.resource_id.domNode);
                 }));
                 this.tooltipdialog.on("mouseLeave", function(e) {
                     //console.log("mouseLeave widget");

@@ -1,12 +1,12 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
-        "dojo/text!./templates/TemplateWidget.html", 
+        "dojo/text!./templates/PartialWidget.html", 
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
         "rfd/TemplatedResource", 
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
-        "dijit/Menu", "dijit/MenuItem", "dijit/focus",
+        "dijit/Menu", "dijit/MenuItem", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -14,10 +14,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         domStyle, domGeometry, domConstruct, 
         TemplatedResource, Branch, Section,
         classStyle,
-        Menu, MenuItem, focusUtil,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog)
+        Menu, MenuItem,
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
     {
-        return declare("TemplateWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
+        return declare("PartialWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
             resource: null,
             //baseClass: "templatedResource",
@@ -28,8 +28,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.spanNode.innerHTML = this.resource;
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.toString());
-                //Set the existing JSON doc
-                this.json_doc.set('value', this.resource.getJSONStr() );
             },
             setErrorMsg: function(msg)
             {
@@ -74,27 +72,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     }
                 }));
 
-                //Set up JSON doc editing
-                this.json_doc.set("onChange", lang.hitch(this, function(newValue)
-                {
-                    var str = this.json_doc.get('value');
-
-                    try {
-                        var json = JSON.parse(str, true);
-                        //Success
-                        console.log("We got a JSON data: " + JSON.stringify(json));
-                        //TODO this must be saved into a specific mongo database
-                        this.resource.setJSON(json);
-                        this.resetErrorMsg();
-                    }
-                    catch(err) {
-                        console.log("Failed to json parse: '" + str + "'");
-                        this.setErrorMsg("Failed to parse JSON data, please fix.\n" +
-                            err + ": " + str);
-                        return;
-                    }
-                }));
-
                 //Set branching out event
                 //Right click menu
                 var itemBranchOut = new MenuItem(
@@ -118,10 +95,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             //Event branchOutClick
             onBranchOutClick : function(resource) {
                 console.info("onBranchOutClick: " + resource);
-            },
-            _checkAcceptableJSON: function(str)
-            {
-
             },
             // Event function to override
             onCheckResourceIdChange: function(resource) { return true; }

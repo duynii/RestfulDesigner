@@ -7,7 +7,8 @@ define(["dojo/_base/declare",
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
-        "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", 
+        "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", "rfd/widget/CollectionWidget", 
+        "rfd/widget/ConceptWidget", "rfd/widget/PartialWidget", "rfd/widget/CustomWidget", 
         "dijit/Menu",  "dijit/MenuItem", "dijit/form/Button", 
         "dojo/on",  "dojo/_base/fx",  "dojo/_base/array", "dojo/_base/lang"
         ],
@@ -15,7 +16,8 @@ define(["dojo/_base/declare",
     function(declare, _WidgetBase, _TemplatedMixin, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
-        Branch, Section, classStyle, TemplateWidget, StaticWidget,
+        Branch, Section, classStyle, TemplateWidget, StaticWidget, CollectionWidget,
+        ConceptWidget, PartialWidget, CustomWidget,
         Menu, MenuItem, Button,
         on, baseFx, baseArray, lang)
     {
@@ -70,13 +72,24 @@ define(["dojo/_base/declare",
                 var cssStyle = classStyle.entry(resource.declaredClass); 
                 cssStyle += (isHidden ? " hidden" : "");
 
-                if(resource.declaredClass == "TemplatedResource")
-                {
-                    var widget = new TemplateWidget({});
+                var widget = null;
+                if(resource.declaredClass == "TemplatedResource") {
+                    widget = new TemplateWidget({});
                 }
-                else if(resource.declaredClass == "StaticResource")
-                {
-                    var widget = new StaticWidget({});
+                else if(resource.declaredClass == "StaticResource") {
+                    widget = new StaticWidget({});
+                }
+                else if(resource.declaredClass == "Collection_R") {
+                    widget = new CollectionWidget({});
+                }
+                else if(resource.declaredClass == "Concept_R") {
+                    widget = new ConceptWidget({});
+                }
+                else if(resource.declaredClass == "Custom_R") {
+                    widget = new CustomWidget({});
+                }
+                else if(resource.declaredClass == "PartialConcept_R") {
+                    widget = new PartialWidget({});
                 }
                 else
                 {
