@@ -75,8 +75,9 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 this.branch = branch;
                 concepts = typeof concepts !== 'undefined' ? concepts : null;
                 this.concepts = concepts;
-                // To do
+                // TODO completed?
                 var last = this.branch.lastResource();
+                console.info("NewResourceDialog init: " + this.branch + " - " + last);
                 if(concepts != null && last != null) 
                 {
                     if(last.declaredClass == 'Collection_R') {

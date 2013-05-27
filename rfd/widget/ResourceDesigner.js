@@ -14,7 +14,8 @@ define(["dojo/_base/declare",
         "rfd/Concept", 
         "rfd/ExtendedSource", "rfd/widget/ListItem", "rfd/widget/NewResourceDialog", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/registry", "dojo/aspect"
+        "dijit/registry", "dojo/aspect",
+        "rfd/controller/controller_concepts"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -26,7 +27,7 @@ define(["dojo/_base/declare",
         Menu, MenuItem,
         Concept, ExtendedSource, ListItem, NewResourceDialog,
         on, JSON, query, baseFx, baseArray, lang,
-        registry, aspect)
+        registry, aspect, controller)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -34,7 +35,6 @@ define(["dojo/_base/declare",
         */
         return declare("ResourceDesigner",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
-            concepts: null,
             templateString: template,
             container: null,
             branch_url: "",
@@ -90,10 +90,6 @@ define(["dojo/_base/declare",
             {
                 return true;
             },
-            _setConceptsAttr: function(concepts)
-            {
-                this.concepts = concepts;
-            },
             // When branching is activated, popup a dialog to add new resource
             _onBranching: function(branch, domNode)
             {
@@ -121,7 +117,7 @@ define(["dojo/_base/declare",
                     }
                 });
                 // Initialise with branch and show
-                dialog.init(branch, this.concepts);
+                dialog.init(branch, controller.getConcepts());
                 dialog.show();
             },
             _resourcesListCreator: function(branch, hint) 
