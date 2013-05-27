@@ -73,24 +73,10 @@ define(["dojo/_base/declare",
                 if(resource.declaredClass == "TemplatedResource")
                 {
                     var widget = new TemplateWidget({});
-                    if(isHidden) {
-                        widget.className += " hidden"
-                    }
-
-                    widget.init(resource, this.branch);
-                    widget.placeAt(this.domNode);
-                    return widget;
                 }
                 else if(resource.declaredClass == "StaticResource")
                 {
                     var widget = new StaticWidget({});
-                    if(isHidden) {
-                        widget.className += " hidden"
-                    }
-
-                    widget.init(resource, this.branch);
-                    widget.placeAt(this.domNode);
-                    return widget;
                 }
                 else
                 {
@@ -101,6 +87,26 @@ define(["dojo/_base/declare",
                     }, 
                     this.domNode);
                     return button;
+                }
+
+                if(isHidden) {
+                    domStyle.set(widget.domNode, {visibility: 'hidden'});
+                }
+
+                widget.init(resource);
+                widget.placeAt(this.domNode);
+
+                if(this.onBranchOut != null) {
+                    widget.onBranchOutClick = lang.hitch(this, this._onBranchOut);
+                }
+                return widget;
+            },
+            _onBranchOut: function(resource) 
+            {
+                if(this.onBranchOut) {
+                    var br = this.branch.branchOut(resource, null); //Create the new branch
+                    //console.info("branch--->" + br);
+                    this.onBranchOut(br, this.domNode);
                 }
             },
             //Private func: add a resource to the branch
@@ -125,76 +131,6 @@ define(["dojo/_base/declare",
                 // Create the button widget
                 var wid = this._createWidget(resource, isHidden);
 
-                /*
-                var slash = domConstruct.create("button",
-                    {
-                        id: resource.id + '_' + myId + '_' + "slash",
-                        class: "addButton",
-                        innerHTML: "/"
-                    }, 
-                    this.domNode
-                );
-                */
-/*
-                var slash = new Button({
-                    label: '/'
-                });
-                slash.className += " floatLeft";
-                slash.placeAt(this.domNode, "last");
-                this.lastNode = slash.domNode;
-
-                var myDom = this.domNode;
-                if(isHidden) {
-                    slash.className += " hidden";
-                }
-                else {
-                    // add option to branchOut
-                    //this.dom2branch.add(slash.id, branch);
-
-                    slash.on("click", function()
-                        {
-                            console.log("branching simple click:" + branch.toString());
-                            console.log("the branch: " + branch);
-                            if(func != null) {
-                                func(branch, myDom);
-                            }
-                        }
-                    );
-
-                    var func = this.onBranchOut;
-
-                    this.own(
-                        on(slash, "click", function()
-                        {
-                            console.log("branching simple click:" + branch.toString());
-                            console.log("the branch: " + branch);
-                            if(func != null) {
-                                func(branch, myDom);
-                            }
-                        }) 
-                    );
-                    var itemBranchOut = new MenuItem(
-                        {
-                            label: "New Branch",
-                            onClick: function(e)
-                            {
-                                console.log("the branch: " + branch);
-                                if(func != null) {
-                                    func(branch, myDom);
-                                }
-                            }
-                        }
-                    );
-
-                    var menu = new Menu({});
-                    menu.addChild(itemBranchOut);
-                    menu.bindDomNode(slash.domNode);
-                    menu.startup();
-                }
-*/
-                // add to the map
-                //this.wid2Res.add(button, resource);
-                //return button;
             },
             // Basic dnd functionality to add resource to the tree/branch's end
             // The new branch must be the same as old branch with 'resource' added

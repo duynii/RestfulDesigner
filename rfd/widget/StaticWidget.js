@@ -61,7 +61,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Set up identifier editing
                 this.resource_id.set("onChange", lang.hitch(this, function(newValue)
                 {
-                    console.log("onChange caught");
+                    //console.log("onChange caught");
                     if(newValue != this.resource.id &&
                         this.onCheckResourceIdChange(this.resource) == true) 
                     {

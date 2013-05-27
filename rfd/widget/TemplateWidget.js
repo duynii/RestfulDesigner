@@ -22,7 +22,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             resource: null,
             //baseClass: "templatedResource",
             templateString: template,
-            init: function(templateResource, branch) 
+            init: function(templateResource) 
             {
                 this.resource = templateResource;
                 this.spanNode.innerHTML = this.resource;
@@ -63,9 +63,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Set up identifier editing
                 this.resource_id.set("onChange", lang.hitch(this, function(newValue)
                 {
-                    console.log("onChange caught");
+                    //console.log("onChange caught");
                     if(newValue != this.resource.id &&
-                        this.onCheckResourceIdChange(this.branch, this.resource) == true) 
+                        this.onCheckResourceIdChange(this.resource) == true) 
                     {
                         this.resource.setId(newValue); // Set it
                         this.spanNode.innerHTML = this.resource;
@@ -122,7 +122,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
             },
             // Event function to override
-            onCheckResourceIdChange: function(branch, resource) { return true; }
+            onCheckResourceIdChange: function(resource) { return true; }
         });
     }
 ); // and that's it!
