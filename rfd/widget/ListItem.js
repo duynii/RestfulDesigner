@@ -93,13 +93,7 @@ define(["dojo/_base/declare",
                 }
                 else
                 {
-                    var button = domConstruct.create("button", 
-                    {
-                        class: cssStyle,
-                        innerHTML: resource.name
-                    }, 
-                    this.domNode);
-                    return button;
+                    console.error("Unknown resource found in ListItem");
                 }
 
                 if(isHidden) {

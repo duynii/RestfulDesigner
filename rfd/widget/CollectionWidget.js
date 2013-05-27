@@ -17,6 +17,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         Menu, MenuItem,
         on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
     {
+
+        var img = '<img width="20" alt="C" height="20" src="../rfd/widget/images/coll_red.png" />';
         return declare("CollectionWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
             resource: null,
@@ -25,7 +27,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             init: function(templateResource) 
             {
                 this.resource = templateResource;
-                this.spanNode.innerHTML = this.resource;
+                this.spanNode.innerHTML = this.resource + img;
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.id);
             },
@@ -42,8 +44,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             postCreate: function()
             {
                 this.inherited(arguments);
-
-                //this.spanNode.innerHTML = "Blah";
 
                 on(this.spanNode, "mouseover", lang.hitch(this, function()
                 {
@@ -68,7 +68,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         this.onCheckResourceIdChange(this.resource) == true) 
                     {
                         this.resource.setId(newValue); // Set it
-                        this.spanNode.innerHTML = this.resource;
+                        this.spanNode.innerHTML = this.resource + img;
                     }
                 }));
 
