@@ -15,7 +15,7 @@ define([
     "rfd/model/Branch",
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
-    "rfd/widget/Entity", "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget",
+    "rfd/widget/Entity",
     "rfd/widget/ResourceCatalogue", "rfd/widget/ResourceDesigner", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
@@ -32,7 +32,7 @@ function(
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, classStyle, Branch,
-            ListItem, NewResourceDialog, Entity, TemplateWidget, StaticWidget, ResourceCatalogue, ResourceDesigner,
+            ListItem, NewResourceDialog, Entity, ResourceCatalogue, ResourceDesigner,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
@@ -163,20 +163,6 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
-
-        var wid = new TemplateWidget({});
-        var t = new TemplatedResource("test template", "/", {data: "striiing"}, "blah");
-        var s = new StaticResource("static", "/");
-        var br = new Branch();
-        br.addActiveResource(t);
-        br.addActiveResource(s);
-        wid.init(t, br);
-        wid.placeAt("bottomRight");
-
-        var w = new StaticWidget({});
-        w.init(s, br);
-        w.placeAt("bottomRight");
-
         setupEntityDesigner();
 
         // Right click Menu for bottom Left area
