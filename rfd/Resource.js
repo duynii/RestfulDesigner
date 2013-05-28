@@ -20,13 +20,6 @@ define([
             this.id = id;
             this.name = id;
         },
-        clone: function() 
-        {
-            var res = new Resource(this.id, this.parentId);
-            res.is_concept = this.is_concept;
-            res.methods.splice(0, 0, this.methods);
-            return res;
-        },
         toString: function()
         {
             return this.name;
