@@ -5,6 +5,14 @@ define([
     "rfd/ConceptResource"
 ], function(declare, ConceptResource){
     return declare("Concept_R", ConceptResource, {
+        constructor: function(name, parentId, concept)
+        {
+            //un pluralise name
+            if(name.charAt(name.length-1) == 's') {
+                name  = name.substr(0, name.length-1);
+                this.name = name + "_id";
+            }
+        },
         autoName: function() 
         {
             // Not needed for this

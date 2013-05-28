@@ -6,7 +6,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dijit/Menu", "dijit/MenuItem", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", "dijit/form/Button"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -15,7 +15,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         TemplatedResource, Branch, Section,
         classStyle,
         Menu, MenuItem,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, Button)
     {
 
         var img = '<img width="20" alt="C" height="20" src="../rfd/widget/images/coll_red.png" />';
@@ -87,6 +87,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
+
+                var button = new Button({label: "Add"}, this.addNode);
 
             },
             _onBranchOutClick: function() {

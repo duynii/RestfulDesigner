@@ -15,6 +15,8 @@ define([
                 console.error("concept cannot be null inside a ConceptResource type");
             }
             this.entity = concept;
+
+            //TODO set concept name to resource's name
         },
         toString: function() 
         {
