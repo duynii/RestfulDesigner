@@ -103,6 +103,10 @@ define(["dojo/_base/declare",
                 widget.init(resource);
                 widget.placeAt(this.domNode);
 
+                widget.onDeleteResource = function() {
+                    widget.destroyRecursive();
+                }
+
                 if(this.onBranchOut != null) {
                     widget.onBranchOutClick = lang.hitch(this, this._onBranchOut);
                 }

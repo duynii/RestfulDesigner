@@ -80,14 +80,26 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         onClick: lang.hitch(this, this._onBranchOutClick)
                     }
                 );
+                var itemDel = new MenuItem ({
+                    label: 'Delete',
+                    onClick: lang.hitch(this, this._onDeleteResource)
+                });
 
                 var menu = new Menu({});
                 menu.addChild(itemBranchOut);
+                menu.addChild(itemDel);
                 menu.bindDomNode(this.branchButton.domNode);
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
 
+            },
+            _onDeleteResource: function() {
+                this.onDeleteResource();
+                // TODO emit event if no resource left
+            },
+            onDeleteResource: function() {
+                console.log("onDeleteResource of " + this.id);
             },
             _onBranchOutClick: function() {
                 this.onBranchOutClick(this.resource);
