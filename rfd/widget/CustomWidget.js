@@ -4,7 +4,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
         "rfd/TemplatedResource", 
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
-        "dijit/Menu", "dijit/MenuItem", 
+        "dijit/Menu", "dijit/MenuItem", "dijit/form/RadioButton", "dojox/form/CheckedMultiSelect",
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
         "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
         ],
@@ -14,7 +14,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         domStyle, domGeometry, domConstruct, 
         TemplatedResource, Branch, Section,
         classStyle,
-        Menu, MenuItem,
+        Menu, MenuItem, RadioButton, CheckedMultiSelect,
         on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
     {
         return declare("CustomWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
@@ -93,6 +93,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
 
+/*
+                this.typeNode.on("onChange", lang.hitch(function(newValue)
+                {
+                    console.log("new multi value: " + newValue);
+                }));
+*/
             },
             _onDeleteResource: function() {
                 this.onDeleteResource();

@@ -107,11 +107,12 @@ define(["dojo/_base/declare",
                 }
 
                 //TO DO check enum
+                var enumInput = [];
                 if(data.type == "enum")
                 {
                     data.enumInput = "[ " + data.enumInput + " ]";
                     try {
-                        var enumArray = JSON.parse(data.enumInput, true);
+                        enumArray = JSON.parse(data.enumInput, true);
                         console.log("We got an array: " + JSON.stringify(enumArray));
                     }
                     catch(err) {
@@ -126,7 +127,12 @@ define(["dojo/_base/declare",
                 this.resetErrorMsg();
                 this.form.reset();
 
-                this.concept.addProperty(data.name, data.type);
+                if(data.type == "enum") {
+                    this.concept.addObjProperty({name: data.name, type: 'enum', enum_values: enumInput});
+                }
+                else {
+                    this.concept.addProperty(data.name, data.type);
+                }
                 this.container.insertNodes([this.concept.lastProp()], false, null);
             },
             _hookClassnameEdit: function()

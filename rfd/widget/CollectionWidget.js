@@ -6,7 +6,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dijit/Menu", "dijit/MenuItem", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", "dijit/form/Button"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", 
+        "dijit/form/Button", "dijit/form/Select"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -15,7 +16,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         TemplatedResource, Branch, Section,
         classStyle,
         Menu, MenuItem,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, Button)
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, 
+        Button, Select)
     {
 
         var img = '<img width="20" alt="C" height="20" src="../rfd/widget/images/coll_red.png" />';
@@ -34,6 +36,38 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.checkPaging.set('value', coll.has_paging ? 'true' : 'false');
                 this.textPagingNo.set('value', coll.paging_size);
 
+            },
+            _initFilterWidgets: function()
+            {
+                var concept = this.resource.concept;
+
+                baseArray.forEach(concept.properties, function(prop)
+                {
+                    this.filterField.options.push({value: prop.name, text: prop.name});
+                    console.log("pushing: " + prop.name);
+                },
+                this);
+
+                this.filterField.on("onChange", function(newValue)
+                {
+                    var prop = this.resource.concept.findProperty(newValue);
+
+                    if(prop.type == 'enum') {
+                        this.stringCriteria.set('value', 'equals');
+                        this.stringCriteria.set('disabled', true);
+                        domStyle.set(this.stringNode, 'visibility', 'visible');
+                        domStyle.set(this.numberNode, 'visibility', 'hidden');
+                    }
+                    else if(prop.type == 'string') {
+                        domStyle.set(this.stringNode, 'visibility', 'visible');
+                        domStyle.set(this.numberNode, 'visibility', 'hidden');
+                        this.stringCriteria.set('disabled', false);
+                    }
+                    else { //Must be integer or decimal
+                        domStyle.set(this.stringNode, 'visibility', 'hidden');
+                        domStyle.set(this.numberNode, 'visibility', 'visible');
+                    }
+                });
             },
             _setupEditing: function()
             {
@@ -115,9 +149,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
 
+                //Template cant seem to handle more dijit widget inside it
                 var button = new Button({label: "Add"}, this.addNode);
 
+                this.filterField.options.push({value:'id', label: 'id key', selected: true});
+
                 this._setupEditing();
+
+                //Populate Filter
+                this._initFilterWidgets();
 
             },
             _onDeleteResource: function() {

@@ -35,7 +35,8 @@ define([
             });
             console.log(str);
         },
-        hasProperty: function(name)
+        // return -1 if not found otherwise an index
+        _findProperty: function(name) 
         {
             var ind = -1;
             arrayUtil.forEach(this.properties, function(prop, index)
@@ -45,6 +46,17 @@ define([
                 }
             }, this);
 
+            return ind;
+        },
+        findProperty: function(name) {
+            var ind = this._findProperty(name);
+            if(ind == -1) { return null;}
+
+            return this.properties[ind];
+        },
+        hasProperty: function(name)
+        {
+            var ind = this._findProperty(name);
             return (ind != -1);
         },
         deleteProperty: function(prop) 
@@ -70,7 +82,15 @@ define([
             }
             return this.properties[this.properties.length-1];
         },
-        addProperty: function(name, type, indexed, required) {
+        addObjProperty: function(prop) 
+        {
+            this.properties.push(prop);
+            console.log("added new prop: " + JSON.stringify(prop));
+
+            return true;
+        },
+        addProperty: function(name, type, indexed, required) 
+        {
             // Add the property, must be unique name
 
             // default param value
@@ -78,12 +98,14 @@ define([
             required = typeof required !== 'undefined' ? required : true;
 
             // Checks here
+            /* TODO fix this, cannot return from loop
             arrayUtil.forEach(this.properties, function(prop) {
                 if(prop.name == name) {
                     console.warn("Property with name exists: " + name);
                     return false;
                 }
             });
+*/
 
             //Add property here
             var prop = {name: name, type: type, indexed: indexed};

@@ -10,7 +10,7 @@ define([
     "dojo/parser", 
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
-    "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", 
+    "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
     "rfd/module/ClassStyle",
     "rfd/model/Branch",
     "rfd/widget/ListItem", 
@@ -31,7 +31,8 @@ function(
             parser, Button, registry, Menu, MenuItem, MenuSeparator,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
-            Concept_R, Collection_R, classStyle, Branch,
+            Concept_R, Collection_R, PartialConcept_R, 
+            classStyle, Branch,
             ListItem, NewResourceDialog, Entity, ResourceCatalogue, ResourceDesigner,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
@@ -143,8 +144,10 @@ function(
           console.log("Looping through: " + concept.id);
           var coll_R = new Collection_R(concept.id, "/", concept);
           var concept_R = new Concept_R(concept.id, "/", concept);
+          var partial_R = new PartialConcept_R(concept.id, "/", concept);
           resCatalogue.addResource(coll_R);
           resCatalogue.addResource(concept_R);
+          resCatalogue.addResource(partial_R);
         }, 
         this
       );

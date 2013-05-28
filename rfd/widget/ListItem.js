@@ -53,8 +53,7 @@ define(["dojo/_base/declare",
                     this._set("url", urlString);
              
                     // Using our avatarNode attach point, set its src value
-                    //this.urlLabel.innerHTML = this.url;
-                    //console.log("set Url is called");
+                    this.urlLabel.innerHTML = this.url;
                 }
             },
             postCreate: function()
@@ -63,9 +62,6 @@ define(["dojo/_base/declare",
                 this.branch = null;
                 //this.wid2Res = new Dictionary();               
                 //this.dom2branch = new Dictionary();               
-
-                //Events
-                //this.onBranchOut = function(branch){};
             },
             _createWidget: function(resource, isHidden)
             {
@@ -80,7 +76,7 @@ define(["dojo/_base/declare",
                     widget = new StaticWidget({});
                 }
                 else if(resource.declaredClass == "Collection_R") {
-                    widget = new CollectionWidget({});
+                    widget = new CollectionWidget({resource: resource});
                 }
                 else if(resource.declaredClass == "Concept_R") {
                     widget = new ConceptWidget({});
@@ -149,7 +145,7 @@ define(["dojo/_base/declare",
             {
                 this._addResource(resource, false);
                 //TODO this should be in the controller
-                this._setUrlAttr(this.branch.toString());
+                this._setUrlAttr(this.branch.toUrl());
             },
             setBranch: function(branch)
             {
@@ -169,7 +165,7 @@ define(["dojo/_base/declare",
                 },
                 this); // this context
                 //console.log("Branch set: " + branch.toString());
-                this._setUrlAttr(this.branch.toString());
+                this._setUrlAttr(this.branch.toUrl());
             }
     
         });

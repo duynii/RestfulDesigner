@@ -1,6 +1,7 @@
 <span class="floatTop">
 <button class="collectionResource floatLeft" data-dojo-attach-point="spanNode">
 	<div data-dojo-attach-point="tooltipdialog" data-dojo-type="dijit/TooltipDialog" title="Temapl">
+		<form data-dojo-type="dijit/form/Form" data-dojo-attach-point="form">
 		<h4>Configure</h4>
 		<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 800px"></p>
 		<label class="menu_heading" for="resource_id">Identifier:</label> 
@@ -17,31 +18,83 @@
 		    data-dojo-type="dijit/form/NumberTextBox"
 		    data-dojo-props="value: 100"/>
 		&nbsp;&nbsp;&nbsp;&nbsp; 
+		<label for="staleNo">Staleness:</label>
+		<input data-dojo-attach-point="staleNo" type="text" 
+		    style="max-width: 60px;" name="staleNo"
+		    data-dojo-type="dijit/form/NumberTextBox"
+		    data-dojo-props="value: 0"/>s
 		<br/>
-		    <span class="menu_heading">Hospital representation</span>
-		    <!-- TBC use css class left margin -->
-		    <select class="form_margin_left" data-dojo-type="dijit/form/Select" data-dojo-attach-point="repSelect">
-		        <!-- auto generated id/name -->
-		        <option value='link' selected>ID Linking</option>
-		    </select>
-			&nbsp;&nbsp;&nbsp;&nbsp; 
-		    <label data-dojo-attach-point="addNode">Add</label>
+		<span class="menu_heading">Hospital representation</span>
+		<!-- TBC use css class left margin -->
+		<select class="form_margin_left" data-dojo-type="dijit/form/Select" data-dojo-attach-point="repSelect">
+		<!-- auto generated id/name -->
+			<option value='link' selected>ID Linking</option>
+		</select>
+		&nbsp;&nbsp;&nbsp;&nbsp; 
+		<label data-dojo-attach-point="addNode">Add</label>
 		<br/>
 		<!-- use accordian layout here -->
 		<span class="menu_heading">Search Criteria</span>
 		<div style="min-width: 600px; width: 100%; height: 100%">
 		    <div data-dojo-type="dijit/layout/AccordionContainer" style="height: 300px;">
-		        <div data-dojo-type="dijit/layout/ContentPane" title="Filters">
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Filters" selected>
 		            Filters
+		            <br/>
+					<label class="floatLeft" for="field">field:</label>
+		            <select name="field" class="floatLeft" data-dojo-attach-point="filterField" data-dojo-type="dijit/form/Select">
+		            </select>
+					&nbsp;&nbsp;&nbsp;&nbsp; 
+					<div class="floatLeft">
+						<span data-dojo-attach-point="stringNode">
+							<label for="criteria">Criteria:</label>
+							<!-- Enum is exact match of string -->
+		            		<select name="criteria" data-dojo-attach-point="stringCriteria" data-dojo-type="dijit/form/Select">
+		            			<option value="equals">equals</option>
+		            			<option value="contains">contains</option>
+		            			<option value="starts with">starts with</option>
+		            			<option value="ends with">ends with</option>
+		            		</select>
+		            		<br/>
+						</span>
+						<span data-dojo-attach-point="numberNode">
+							<label for="number">Criteria:</label>
+		            		<select name="number" data-dojo-attach-point="numberCriteria" data-dojo-type="dijit/form/Select">
+		            		<option value="="> == </option>
+		            		<option value="<"> &gt; </option>
+		            		<option value=">"> &lt; </option>
+		            	</select>
+						</span>
+		            </div>
+					&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label class="floatLeft" for="orderbys">Order Bys:</label>
+		            <select class="floatLeft" data-dojo-attach-point="filterOrderbys" data-dojo-type="dijit/form/Select" name="orderbys" disabled>
+		            		<option value="testing">testing</option>
+		            </select>
 		        </div>
-		        <div data-dojo-type="dijit/layout/ContentPane" title="Order By" selected="true">
-		            Hi how are you?
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Order By">
+		            Order Bys
+		            <br/>
+					<label class="floatLeft" for="orderFields">Fields:</label>
+		            <ul class="floatLeft" name="orderFields" class="floatLeft" data-dojo-attach-point="orderFields" disabled>
+		            </ul>
+					&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label class="floatLeft" class="floatLeft" for="orderType">Type:</label>
+		            <select name="orderType" class="floatLeft" data-dojo-attach-point="orderType"
+		            	data-dojo-type="dijit/form/Select" disabled>
+		            		<option value="ascending" selected>ascending</option>
+		            		<option value="descending">descending</option>
+		            </select>
+					&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label class="floatLeft" data-dojo-type="dijit/form/Button">Add</label>
 		        </div>
-		        <div data-dojo-type="dijit/layout/ContentPane" title="Limitis">
+		        <!-- TODO not needed
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Limits">
 		            Hi how are you? .....Great, thx
 		        </div>
+		    	-->
 		    </div>
 		</div>
+		</form>
 	</div>
 </button>
 <button data-dojo-type="dijit/form/Button" class="floatLeft"
