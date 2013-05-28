@@ -4,7 +4,7 @@
 define([
     "dojo/_base/declare"
 ], function(declare){
-    return declare("rfd/Resource", null, 
+    return declare("Resource", null, 
     {
         constructor: function(name, parentId)
         {
@@ -19,6 +19,13 @@ define([
         setId: function(id) {
             this.id = id;
             this.name = id;
+        },
+        clone: function() 
+        {
+            var res = new Resource(this.id, this.parentId);
+            res.is_concept = this.is_concept;
+            res.methods.splice(0, 0, this.methods);
+            return res;
         },
         toString: function()
         {

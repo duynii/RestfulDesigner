@@ -134,10 +134,10 @@ function(
       resCatalogue = new ResourceCatalogue();
       resCatalogue.placeAt("topRight");
 
-      resCatalogue.addResource( new StaticResource("static", "/") );
-      resCatalogue.addResource( new TemplatedResource("JSON template", "/", 
+      resCatalogue.addResource( new StaticResource("inactive", "/") );
+      resCatalogue.addResource( new TemplatedResource("Static", "/", 
                                           {title: "my title", data: "my document"}, "empty") );
-      resCatalogue.addResource( new Custom_R("Custom Method", "/") );
+      resCatalogue.addResource( new Custom_R("param", "/") );
       baseArray.forEach(controller.getConcepts(), function(concept, index)
         {
           console.log("Looping through: " + concept.id);

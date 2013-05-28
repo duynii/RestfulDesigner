@@ -27,7 +27,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.resource = templateResource;
                 this.spanNode.innerHTML = this.resource;
                 //Set the identifier for editing.
-                this.resource_id.set('value', this.resource.toString());
+                this.resource_id.set('value', this.resource.id);
             },
             setErrorMsg: function(msg)
             {

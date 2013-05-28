@@ -22,6 +22,8 @@ define([
     _tree =  new Tree(),
     // Array of concepts
     concepts = null,
+    //create to access static function of class
+    //_dummyStatic = new StaticResource("dummy", "/"),
     loadFromFile = function()
     {
         var data = JSON.parse(mark1);
@@ -46,6 +48,7 @@ define([
             concepts = loadFromFile();
             store = new Memory({data: concepts});
         },
+        //static: function() { return _dummyStatic; },
         constructor: function()
         {
         },

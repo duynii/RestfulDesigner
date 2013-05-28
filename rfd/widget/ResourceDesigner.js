@@ -38,6 +38,9 @@ define(["dojo/_base/declare",
             templateString: template,
             container: null,
             branch_url: "",
+            paramNo: 1, //For automatic naming of dropped resources eg. static1
+            placeholderNo: 1,
+            staticNo: 1,
             postCreate: function()
             {
                 this.inherited(arguments);
@@ -146,7 +149,9 @@ define(["dojo/_base/declare",
 
                 //Data item
                 var resource = source.getItem(nodeId).data;
-                console.log("Drop resource: " + resource);
+                resource = resource.clone();
+                console.log("Drop resource type: " + resource.declaredClass);
+                resource.autoName();
 
                 if(this.container.current == null) // Add the first ListItem for first branch
                 {

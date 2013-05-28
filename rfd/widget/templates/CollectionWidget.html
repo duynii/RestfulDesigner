@@ -6,6 +6,47 @@
 		<label for="resource_id">Identifier:</label> 
 		<span style="width: 100px" data-dojo-attach-point="resource_id"
 			data-dojo-type="dijit/InlineEditBox" disabled>Class Name Edit</span>
+		<h4>Paging</h4>
+		<div class="form_margin_left">
+		    <input id="checkPaging" name="checkPaging" 
+		        value="paged"
+		        data-dojo-type="dijit/form/CheckBox"
+		        data-dojo-props="checked: false"
+		        >Has Paging</input>
+		    <input id="textPagingNo" type="text" 
+		        style="max-width: 60px;"
+		        data-dojo-type="dijit/form/NumberTextBox"
+		        data-dojo-props="value: 100"/>
+		    <br/>
+		</div>
+		<div>
+		    <h4>Hospital representation</h4>
+		    <!-- TBC use css class left margin -->
+		    <div class="form_margin_left">
+		        <!-- auto generated id/name -->
+		        <input id="hospitals_rep_1" type="checkbox" name="hospiatls_rep_1" value="1">Link 1</input>
+		        <br/>
+		        <input id="hospitals_rep_2" type="checkbox" name="hospiatls_rep_2" value="1">Custom 1</input>
+		        <br/>
+		        <input id="hospitals_rep_3" type="checkbox" name="hospiatls_rep_3" value="1">Custom 2</input>
+		        <br/>
+		    </div>
+		</div>
+		<!-- use accordian layout here -->
+		<h4>Search Criteria</h4>
+		<div style="min-width: 300px; max-width: 500px; height: 100%" class="form_margin_left">
+		    <div data-dojo-type="dijit/layout/AccordionContainer" style="height: 300px;">
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Filters">
+		            Filters
+		        </div>
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Order By" selected="true">
+		            Hi how are you?
+		        </div>
+		        <div data-dojo-type="dijit/layout/ContentPane" title="Limitis">
+		            Hi how are you? .....Great, thx
+		        </div>
+		    </div>
+		</div>
 	</div>
 </button>
 <button data-dojo-type="dijit/form/Button" class="floatLeft"

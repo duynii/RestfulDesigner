@@ -15,6 +15,12 @@ define([
             //many to one relationship, this is the many side
             this.belongs_to = new Array();
         },
+        clone: function() 
+        {
+            var c = new Concept(this.id, this.name, this.parentId);
+            res.properties.splice(0,0, this.properties);
+            res.belongs_to.splice(0,0, this.belongs_to);
+        },
         setId: function(id) {
             this.id = id;
         },
