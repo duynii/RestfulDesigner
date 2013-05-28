@@ -24,12 +24,34 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             resource: null,
             //baseClass: "templatedResource",
             templateString: template,
-            init: function(templateResource) 
+            init: function(coll) 
             {
-                this.resource = templateResource;
+                this.resource = coll;
                 this.spanNode.innerHTML = this.resource + img;
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.id);
+
+                this.checkPaging.set('value', coll.has_paging ? 'true' : 'false');
+                this.textPagingNo.set('value', coll.paging_size);
+
+            },
+            _setupEditing: function()
+            {
+                this.checkPaging.on("onChange", lang.hitch(this, function(newValue)
+                {
+                    console.info("checkPaging: " + newValue);
+                    this.resource.has_paging = newValue;
+                }));
+
+                this.textPagingNo.on("onChange", lang.hitch(this, function(newValue)
+                {
+                    if(value <=0) {
+                        alert("Paging value cannot be 0 or negative, 10 or more recommended");
+                    }
+                    else {
+                        this.resource.paging_size = newValue;
+                    }
+                }));
             },
             setErrorMsg: function(msg)
             {
@@ -94,6 +116,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
 
                 var button = new Button({label: "Add"}, this.addNode);
+
+                this._setupEditing();
 
             },
             _onDeleteResource: function() {

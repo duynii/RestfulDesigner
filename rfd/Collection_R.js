@@ -10,6 +10,7 @@ define([
             this.id = concept.id;
             this.name = concept.id;
 
+
             if(concept.id.charAt(concept.id.length-1) != 's') {
                 this.id += "s";
                 this.name += "s";
@@ -17,6 +18,9 @@ define([
     		// Array of associated OrderBy objects
     		this.orderbys = new Array();
             this.concept = concept; //concept do not get copied
+
+            this.has_paging = true;
+            this.paging_size = 100;
     	},
         autoName: function() 
         {
@@ -25,6 +29,9 @@ define([
         clone: function() 
         {
             var res = new Collection_R(this.id, this.parentId, this.concept);
+
+            res.has_paging =  this.has_paging;
+            res.paging_size = this.paging_size;
             //res.is_concept = this.is_concept;
             res.methods.splice(0, 0, this.methods);
             res.orderbys.splice(0, 0, this.orderbys);

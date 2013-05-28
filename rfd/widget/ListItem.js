@@ -124,7 +124,7 @@ define(["dojo/_base/declare",
             // Resources in an inactive section must be added as hidden
             // Add to the end of <li>'s childs'
             // branch: pass in if allow creation of new ListItem, context of this resource
-            _addResource: function(resource, isHidden, branch)
+            _addResource: function(resource, isHidden)
             {
                 //default to not hidden
                 isHidden = typeof isHidden !== 'undefined' ? isHidden : false;
@@ -145,12 +145,9 @@ define(["dojo/_base/declare",
             },
             // Basic dnd functionality to add resource to the tree/branch's end
             // The new branch must be the same as old branch with 'resource' added
-            addResource: function(resource, branch)
+            addResource: function(resource)
             {
-                this.branch = branch;
-                var br = this.branch.clone();
-                br.allToInactive();
-                this._addResource(resource, false, br);
+                this._addResource(resource, false);
                 //TODO this should be in the controller
                 this._setUrlAttr(this.branch.toString());
             },
@@ -168,8 +165,7 @@ define(["dojo/_base/declare",
                 this); // this context
                 baseArray.forEach(active_section.resources, function(resource, index)
                 {
-                    this._addResource(resource, false, 
-                                        this.branch.branchOut(resource, null));
+                    this._addResource(resource, false);
                 },
                 this); // this context
                 //console.log("Branch set: " + branch.toString());

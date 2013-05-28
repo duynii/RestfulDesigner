@@ -178,7 +178,7 @@ define(["dojo/_base/declare",
                     {
                         // Added in the event
                         li.branch.addActiveResource(resource);
-                        li.addResource(resource, li.branch);
+                        li.addResource(resource);
                         listitem = li;
                         this.container.sync();
                         //TODO, may not want to do this
@@ -193,7 +193,7 @@ define(["dojo/_base/declare",
                 {
                     var res = new Concept_R("dummy", "/", resource.concept);
                     listitem.branch.addActiveResource(res);
-                    listitem.addResource(res, listitem.branch);
+                    listitem.addResource(res);
 
                 }
             },
