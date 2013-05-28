@@ -7,11 +7,14 @@ define([
     return declare("Concept_R", ConceptResource, {
         constructor: function(name, parentId, concept)
         {
+            this.id = concept.id;
+            this.name = concept.id;
             //un pluralise name
-            if(name.charAt(name.length-1) == 's') {
-                name  = name.substr(0, name.length-1);
-                this.name = name + "_id";
+            if(this.name.charAt(this.name.length-1) == 's') {
+                this.name  = this.name.substr(0, this.name.length-1);
             }
+            this.name = this.name + "_id";
+            this.id = this.name;
         },
         autoName: function() 
         {

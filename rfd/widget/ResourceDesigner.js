@@ -150,9 +150,10 @@ define(["dojo/_base/declare",
                 //Data item
                 var resource = source.getItem(nodeId).data;
                 resource = resource.clone();
-                console.log("Drop resource type: " + resource.declaredClass);
+                console.log("Drop resource: " + resource);
                 resource.autoName();
 
+                var listitem = null;
                 if(this.container.current == null) // Add the first ListItem for first branch
                 {
                     var br = new Branch();
@@ -160,7 +161,7 @@ define(["dojo/_base/declare",
                     // no branch
                     br.addActiveResource(resource);
                     if(this.onBranchingOut(br, resource) == true) {
-                        this.addListItem(br);
+                        listitem = this.addListItem(br);
                         this.container.sync();
                     }
 
@@ -176,13 +177,24 @@ define(["dojo/_base/declare",
                     if(this.onBranchDrop(li.branch, resource) == true) 
                     {
                         // Added in the event
-                        //li.branch.addActiveResource(resource);
+                        li.branch.addActiveResource(resource);
                         li.addResource(resource, li.branch);
+                        listitem = li;
                         this.container.sync();
                         //TODO, may not want to do this
                         //source.getSelectedNodes().orphan();
                         //source.delItem(nodeId);
                     }
+                }
+
+                //If resource is a collection, add an extra resource
+                //TODO ??? find existing Concept_R on this branch? unnecessary complicated
+                if(listitem != null && resource.declaredClass == "Collection_R") 
+                {
+                    var res = new Concept_R("dummy", "/", resource.concept);
+                    listitem.branch.addActiveResource(res);
+                    listitem.addResource(res, listitem.branch);
+
                 }
             },
             addListItem: function(branch, refBranchNode)

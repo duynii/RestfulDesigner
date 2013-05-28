@@ -7,6 +7,13 @@ define([
     return declare("Collection_R", ConceptResource, {
     	constructor: function(name, parentId, concept) 
     	{
+            this.id = concept.id;
+            this.name = concept.id;
+
+            if(concept.id.charAt(concept.id.length-1) != 's') {
+                this.id += "s";
+                this.name += "s";
+            }
     		// Array of associated OrderBy objects
     		this.orderbys = new Array();
             this.concept = concept; //concept do not get copied

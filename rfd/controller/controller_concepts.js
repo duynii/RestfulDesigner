@@ -94,7 +94,7 @@ define([
                 return false;
             }
             else {
-                branch_ref.addActiveResource(resource); // adds it
+                //branch_ref.addActiveResource(resource); // adds it
                 //flows throught
             }
             return true;
