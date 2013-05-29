@@ -61,10 +61,14 @@ define([
         addActiveResource: function(resource) { 
             this.active.addResource(resource);
             this.id = this.toUrl(); 
+
+            //TODO add handler for id changed
         },
         addInactiveResource: function(resource) { 
             this.inactive.addResource(resource); 
             this.id = this.toUrl(); 
+
+            //TODO add handler for id changed
         },
         // Create a new branch by branching midway from this resource
         // All existing resources will be in inactive, new resource will in in active

@@ -15,6 +15,11 @@ define([
             }
             this.name = this.name + "_id";
             this.id = this.name;
+
+            this.methods.length = 0;
+            this.methods.push("GET");
+            this.methods.push("DELETE");
+            this.resource_type = this.declaredClass;
         },
         autoName: function() 
         {
@@ -22,7 +27,7 @@ define([
         },
         clone: function() 
         {
-            var res = new Concept_R(this.id, this.parentId);
+            var res = new Concept_R(this.id, this.parentId, this.concept);
             //res.is_concept = this.is_concept;
             res.methods.splice(0, 0, this.methods);
             return res;

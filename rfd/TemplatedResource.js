@@ -15,6 +15,9 @@ define([
             this.template = template; 
             // Data source
             this.json_doc = json_data;
+
+            this.addMethod("GET"); //only support GET
+            this.resource_type = this.declaredClass;
         },
         getJSON: function() { return this.json_doc; },
         getJSONStr: function() { return JSON.stringify(this.json_doc); },

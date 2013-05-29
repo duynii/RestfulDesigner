@@ -7,6 +7,12 @@ define([
 	//This is like a global pholder number
 	var pholderNo = 0; //for automatic naming of resource eg. pholder1
     return declare("StaticResource", Resource, {
+        constructor: function(name, parentId)
+        {
+            this.clearMethods();   //Does not support anything
+            this.addMethod("GET");
+            this.resource_type = this.declaredClass;
+        },
     	createResource: function(parent)
     	{
     		parent = typeof parent !== 'undefined' ? parent : "/";

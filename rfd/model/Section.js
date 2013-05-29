@@ -1,11 +1,4 @@
 
-METHODS = { 
-                GET : { value: 0, name: "GET", code: "G" },
-                POST : { value: 0, name: "GET", code: "G" },
-                PUT : { value: 0, name: "GET", code: "G" },
-                DELETE : { value: 0, name: "GET", code: "G" }
-            };
-
 // Example class
 define([
     "dojo/_base/declare",

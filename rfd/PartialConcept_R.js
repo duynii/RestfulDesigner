@@ -5,6 +5,14 @@ define([
     "rfd/ConceptResource"
 ], function(declare, ConceptResource){
     return declare("PartialConcept_R", ConceptResource, {
+        constructor: function(name, parentId, json_data, template)
+        {
+            // 'name' and 'parentId' are auto init'ed in parent
+
+            this.addMethod("GET");  // support GET
+            this.addMethod("PUT");  // support PUT
+            this.resource_type = this.declaredClass;
+        },
         autoName: function() 
         {
             // Not needed for this

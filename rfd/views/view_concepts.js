@@ -122,6 +122,13 @@ function(
       resDesigner.onBranchingOut = lang.hitch(controller, controller.onBranchingOut);
       // When a drop to add to a branch
       resDesigner.onBranchDrop = lang.hitch(controller, controller.onBranchDrop);
+
+      resDesigner.onNewSelectedBranch = lang.hitch(this, _onBranchSelect);
+    },
+    _onBranchSelect = function(branch)
+    {
+      var json = JSON.stringify(branch, null, '\t');
+      dom.byId("outputNode").innerHTML = json;
     },
     //Populate based on context of selected branch on the Designer
     populateCatalogue = function(widget)

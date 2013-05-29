@@ -2,8 +2,8 @@
 // Example class
 define([
     "dojo/_base/declare",
-    "rfd/Resource"
-], function(declare, Resource)
+    "rfd/Resource", "dojo/_base/lang"
+], function(declare, Resource, lang)
 {
     return declare("ConceptResource", Resource, 
     {
@@ -14,13 +14,23 @@ define([
             if(typeof concept === 'undefined' || concept == null) {
                 console.error("concept cannot be null inside a ConceptResource type");
             }
-            this.entity = concept;
+
+            concept = typeof concept !== 'undefined' ? concept : null;
+            this.concept = concept;
 
             //TODO set concept name to resource's name
         },
         toString: function() 
         {
             return "{" + this.name + "}";
+        },
+        toJSON: function() {
+            var obj = {};
+            lang.mixin(obj, this);
+            if(this.concept != null) {
+                obj.concept = this.concept.name;
+            }
+            return obj;
         },
         print: function() 
         {

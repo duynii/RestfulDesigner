@@ -2,8 +2,8 @@
 // Example class
 define([
     "dojo/_base/declare",
-    "rfd/ConceptResource"
-], function(declare, ConceptResource){
+    "rfd/ConceptResource", "dojo/json", "dojo/_base/lang"
+], function(declare, ConceptResource, JSON, lang){
     return declare("Collection_R", ConceptResource, {
     	constructor: function(name, parentId, concept) 
     	{
@@ -21,6 +21,11 @@ define([
 
             this.has_paging = true;
             this.paging_size = 100;
+
+            this.methods.length = 0;
+            this.addMethod("GET");  //only support GET
+            this.addMethod("POST"); // create
+            this.resource_type = this.declaredClass;
     	},
         autoName: function() 
         {
