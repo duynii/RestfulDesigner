@@ -127,8 +127,9 @@ function(
     },
     _onBranchSelect = function(branch)
     {
-      var json = JSON.stringify(branch, null, '\t');
-      dom.byId("outputNode").innerHTML = json;
+      var json = JSON.stringify(branch, null, "  ");
+      registry.byId("outputNode").set('value', json);
+      //dom.byId("outputNode").innerHTML = json;
     },
     //Populate based on context of selected branch on the Designer
     populateCatalogue = function(widget)
