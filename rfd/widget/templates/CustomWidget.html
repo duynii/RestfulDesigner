@@ -7,6 +7,7 @@
 			<label for="resource_id">Identifier:</label> 
 			<span style="width: 100px" data-dojo-attach-point="resource_id"
 			data-dojo-type="dijit/InlineEditBox">Class Name Edit</span>
+			<hr/>
 			<!--
 			<select data-dojo-attach-point="typeNode" data-dojo-type="dojox/form/CheckedMultiSelect">
 				<option value="param">Input param</option>
@@ -21,16 +22,19 @@
 				<label >Restful endpoint</label>
 
 			<br/>
+			<br/>
 			<span data-dojo-attach-point="paramNode">
-			    <select  name="paramType" data-dojo-attach-point="paramSelect"  data-dojo-type="dijit/form/Select">
+			    <select  name="paramSelect" data-dojo-attach-point="paramSelect"  data-dojo-type="dijit/form/Select">
     				<option value="string" select>String</option>
     				<option value="integer">Integer</option>
+    				<option value="float">Decimal</option>
 			    </select>
 				<label for="regex">Regular expression:</label>
 				<input type="text" name="regex" data-dojo-attach-point="regex" 
 			            data-dojo-type="dijit/form/TextBox" />
 			</span>
-			<span data-dojo-attach-point="methodNode">
+			<br/>
+			<span data-dojo-attach-point="methodNode" style="visibility: collapse;">
 				<label for="method">Method</label>
 			    <select  name="method" data-dojo-attach-point="methodSelect"  data-dojo-type="dijit/form/Select">
     				<option value="POST" select>POST</option>
@@ -42,7 +46,6 @@
     				-->
 			    </select>
 			</span>
-			<hr/>
 		</form>
 	</div>
 </button>

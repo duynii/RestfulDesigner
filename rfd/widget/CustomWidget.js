@@ -55,8 +55,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
                     focusUtil.focus(this.resource_id.domNode);
                 }));
-                this.tooltipdialog.on("mouseLeave", function(e) {
-                    //console.log("mouseLeave widget");
+                this.tooltipdialog.on("dojo/mouse#leave", function(e) {
                     popup.close(this);
                 });
 
@@ -93,12 +92,53 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
 
-/*
-                this.typeNode.on("onChange", lang.hitch(function(newValue)
+                this._initUI();
+            },
+            _initUI: function()
+            {
+                this.paramButton.on("change", lang.hitch(this, function(isChecked)
                 {
-                    console.log("new multi value: " + newValue);
+                    this._showMutualExUI(isChecked);
+                    this._saveForm();
                 }));
-*/
+
+                var regexNode = this.regex.domNode; //widget
+                this.paramSelect.on("change", function(newValue)
+                {
+                    domStyle.set(regexNode, "visibility", newValue == 'string' ? "visible" : "hidden");
+                    this._saveForm();
+                });
+            },
+            _saveForm: function()
+            {
+                if(!this.form.isValid()) {
+                    this.setErrorMsg("Invalid form data");
+                    return;
+                }
+
+                var data = this.form.get('value');
+
+                var obj = null;
+                this.resource.methods.length = 0; // clears it
+                if(data.type == 'param')
+                {
+                    obj = {};
+                    obj.type = data.paramSelect;
+                    if(type == 'string') {
+                        obj.regex = data.regex;
+                    }
+                }
+                else
+                {
+                    this.resource.methods.push(data.method);
+                }
+                this.resource.param = obj;
+
+                this.resetErrorMsg();
+            },
+            _showMutualExUI: function(paramMode) {
+                domStyle.set(this.paramNode, "visibility", paramMode ? "visible" : "collapse");
+                domStyle.set(this.methodNode, "visibility", paramMode ? "collapse" : "visible");
             },
             _onDeleteResource: function() {
                 this.onDeleteResource();
