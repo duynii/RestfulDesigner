@@ -28,6 +28,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.spanNode.innerHTML = this.resource;
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.id);
+                this._saveForm();
             },
             setErrorMsg: function(msg)
             {
@@ -123,7 +124,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 var data = this.form.get('value');
 
                 var obj = null;
-                this.resource.methods.length = 0; // clears it
+                this.resource.clearMethods(); // clears it
                 if(data.type == 'param')
                 {
                     obj = {};
@@ -135,11 +136,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 }
                 else
                 {
-                    this.resource.methods.push(data.method);
+                    this.resource.addMethod(data.method);
                     this.resource.param = null;
                 }
 
-                i//var json = JSON.stringify(this.resource);
+                //var json = JSON.stringify(this.resource);
                 //this.setErrorMsg(json);
                 this.resetErrorMsg();
             },
