@@ -1,14 +1,17 @@
 CLASS_SPACING = 40;
 CLASS_Y_SPACING = 10;
 
+COOKIE_NAME = "RfD_cookie_28_05_2013";
+
 define([
     "dojo/dom",
     "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
     "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
     "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", 
     "dojox/collections/Dictionary",
-    "dojo/parser", 
+    "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
+    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
     "rfd/module/ClassStyle",
@@ -28,7 +31,8 @@ function(
             dom, domConstruct, domStyle, domGeometry, query, on, aspect, 
             JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
-            parser, Button, registry, Menu, MenuItem, MenuSeparator,
+            parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
+            MenuBar, PopupMenuBarItem, DropDownMenu,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, PartialConcept_R, 
@@ -171,9 +175,52 @@ function(
 
         arrangeClasses();
     },
+    _initToolbar = function()
+    {
+      var menubar = new MenuBar({});
+
+      var subMenu = new DropDownMenu({});
+      subMenu.addChild(new MenuItem({
+        label: 'Display as XML'
+      }));
+      subMenu.addChild(new MenuItem({
+        label: 'Save to browser cookie',
+        iconClass: "dijitEditorIconCopy",
+        onClick: lang.hitch(this, _saveToCookie)
+      }));
+      subMenu.addChild(new MenuItem({
+        label: 'Load from cookie',
+        iconClass: "dijitEditorIconOpen",
+        onClick: lang.hitch(this, _loadFromCookie)
+      }));
+
+      menubar.addChild(new MenuItem({
+        label: 'Load from cookie',
+        iconClass: "dijitEditorIconOpen",
+        onClick: lang.hitch(this, _loadFromCookie)
+      }));
+
+
+      menubar.addChild(new PopupMenuBarItem({
+        label: 'File',
+        popup: subMenu
+      }));
+
+      menubar.placeAt("toolbarNode");
+      menubar.startup();
+    },
+    _saveToCookie = function () {
+      cookie(COOKIE_NAME, "my cookie", {expires: 365});
+    },
+    _loadFromCookie = function () {
+      var value = cookie(COOKIE_NAME);
+
+      alert('cookie:' + value);
+    }
     initUi = function() 
     {
         console.log("initUi called");
+        _initToolbar();
         setupEntityDesigner();
 
         // Right click Menu for bottom Left area
