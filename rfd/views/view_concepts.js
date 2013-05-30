@@ -11,7 +11,7 @@ define([
     "dojox/collections/Dictionary",
     "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
-    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu",
+    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", "dijit/MenuBarItem",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
     "rfd/module/ClassStyle",
@@ -32,7 +32,7 @@ function(
             JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
-            MenuBar, PopupMenuBarItem, DropDownMenu,
+            MenuBar, PopupMenuBarItem, DropDownMenu, MenuBarItem,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, PartialConcept_R, 
@@ -194,19 +194,22 @@ function(
         onClick: lang.hitch(this, _loadFromCookie)
       }));
 
-      menubar.addChild(new MenuItem({
-        label: 'Load from cookie',
-        iconClass: "dijitEditorIconOpen",
-        onClick: lang.hitch(this, _loadFromCookie)
-      }));
-
-
       menubar.addChild(new PopupMenuBarItem({
         label: 'File',
         popup: subMenu
       }));
+      menubar.addChild(new MenuBarItem({
+        label: 'Load',
+        iconClass: "dijitEditorIconOpen",
+        onClick: lang.hitch(this, _loadFromCookie)
+      }));
+      menubar.addChild(new MenuBarItem({
+        label: 'Save',
+        iconClass: "dijitEditorIconOpen",
+        onClick: lang.hitch(this, _saveToCookie)
+      }));
 
-      menubar.placeAt("toolbarNode");
+      menubar.placeAt("toolbar");
       menubar.startup();
     },
     _saveToCookie = function () {
