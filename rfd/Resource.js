@@ -12,7 +12,7 @@ define([
                 PUT : { value: 2, name: "PUT", code: "U" },
                 CREATE : { value: 3, name: "CREATE", code: "C" },
                 DELETE : { value: 4, name: "DELETE", code: "D" }
-            },
+    },
     dictionaryInited = false,
     initDictionary = function() 
     {
@@ -34,10 +34,11 @@ define([
             this.id = name;
             this.name = name;
             this.parentId = parentId;
-            this.methods = new Array();
-
             this.is_concept = false;
+            this.resource_type = "Resource"; // to be overriden in child
             this.type = [ "resource" ];
+            this.methods = [];
+            this.clearMethods();
         },
         setId: function(id) {
             this.id = id;
@@ -62,8 +63,9 @@ define([
             return resultArr[0];
         },
         clearMethods: function() {
-            if(this.methods.length > 0 ) {
-                this.methods.splice(0, this.methods.length);
+            while(this.methods.length > 0 ) {
+                //this.methods.splice(0, this.methods.length);
+                this.methods.pop();
             }
         },
         toString: function()

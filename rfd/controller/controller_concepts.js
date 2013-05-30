@@ -70,8 +70,8 @@ define([
         getJSON: function() // Get the whole JSON representation of program current state eg. a save file
         {
             var saveState = {
-                concepts: this.getConcepts(),
-                branches: _tree
+                branches: _tree,
+                concepts: this.getConcepts()
             };
 
             return JSON.stringify(saveState, null, "  ");

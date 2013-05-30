@@ -218,21 +218,22 @@ function(
       menubar.startup();
     },
     _saveToCookie = function () {
-      cookie(COOKIE_NAME, "my cookie", {expires: 365});
+      cookie(COOKIE_NAME, controller.getJSON(), {expires: 365});
     },
     _loadFromCookie = function () {
       var value = cookie(COOKIE_NAME);
 
-      alert('cookie:' + value);
+      //TO DO load from cookie
+      _showExportXML(value);
     },
     _showExportXML = function() 
     {
-      var textarea = new Textarea({value: controller.getJSON(),
-      });
-
+      // Use ContentPane for scrolling, and theme
       var cont = new ContentPane({ 
-          content: textarea, 
-          style: "min-width: 400px; min-height: 500px; padding: 0; overflow: auto"
+          style: "min-width: 400px; min-height: 500px; padding: 0; overflow: auto",
+          content: new Textarea({
+            value: controller.getJSON()
+          })
       });
       var dialog = new Dialog({
         title: "Exporting XML",
@@ -251,6 +252,13 @@ function(
         setupAddClass("bottomLeft");
         createResourceDesigner();
         createResourcesCatalogue();
+
+/* TODO use publish to save
+        setInterval(function() {
+            _saveToCookie();
+        }, 300000); // Every 5 minutes
+        // No need to stop
+*/
     };
     return {
         init: function() 

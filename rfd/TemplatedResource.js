@@ -11,17 +11,17 @@ define([
         {
             // 'name' and 'parentId' are auto init'ed in parent
 
-            // template string
-            this.template = template; 
             // Data source
             this.json_doc = json_data;
+            // template string, not used TBC
+            this.template = template; 
 
             this.addMethod("GET"); //only support GET
             this.resource_type = this.declaredClass;
         },
         getJSON: function() { return this.json_doc; },
         getJSONStr: function() { return JSON.stringify(this.json_doc); },
-        setJSON: function(data) { this.json_data = data },
+        setJSON: function(data) { this.json_doc = data },
         print: function() 
         {
             var str = this.inherited(arguments);
