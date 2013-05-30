@@ -57,8 +57,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
                     focusUtil.focus(this.resource_id.domNode);
                 }));
-                this.tooltipdialog.on("dojo/mouse#leave", function(e) {
-                    //console.log("dojo/mouse#leave widget");
+                this.tooltipdialog.on("mouseleave", function(e) {
+                    //console.log("mouseleave widget");
                     popup.close(this);
                 });
 
