@@ -4,7 +4,7 @@ CLASS_Y_SPACING = 10;
 COOKIE_NAME = "RfD_cookie_28_05_2013";
 
 define([
-    "dojo/dom",
+    "dojo/dom", "dojo/topic",
     "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
     "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
     "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", 
@@ -28,7 +28,7 @@ define([
     "rfd/module"
     ],
 function(
-            dom, domConstruct, domStyle, domGeometry, query, on, aspect, 
+            dom, topic, domConstruct, domStyle, domGeometry, query, on, aspect, 
             JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
@@ -95,6 +95,7 @@ function(
       e.placeAt("bottomLeft");
       e.set("concepts", controller.getConcepts());
       e.set("concept", concept);
+
     },
     setupAddClass = function(id) 
     {
@@ -103,17 +104,17 @@ function(
         label: "Create new concept",
         onClick: lang.hitch(this, function(event) 
         {
+          //console.log("mouse: " + event.layerX + " " + event.layerY);
+          //console.log("page mouse: " + event.pageX + " " + event.pageY);
+
           // Create a new class
           var name = "Class_" + temp_id_num;
           temp_id_num += 1;
           var concept = new Concept(name, name, null);
           controller.getConcepts().push(concept);
           createConceptDisplay(concept);
-
-          console.log("mouse: " + event.layerX + " " + event.layerY);
-          console.log("page mouse: " + event.pageX + " " + event.pageY);
-
           arrangeClasses();
+          _saveToCookie();
         })
       });
       menu.addChild(menuItem);
@@ -217,22 +218,35 @@ function(
       menubar.placeAt("toolbar");
       menubar.startup();
     },
-    _saveToCookie = function () {
-      cookie(COOKIE_NAME, controller.getJSON(), {expires: 365});
+    _saveToCookie = function () 
+    {
+      var value = controller.getJSON();
+      //var value = "sssss";)
+      //cookie(COOKIE_NAME, null, {expires: -1});
+      cookie(COOKIE_NAME, value, {expires: 60});
+
+      console.info("Saving program states");
+      //_displayExportXML(value);
     },
     _loadFromCookie = function () {
       var value = cookie(COOKIE_NAME);
 
       //TO DO load from cookie
-      _showExportXML(value);
+      //_displayExportXML(JSON.stringify(value, null, "  "));
+      //_displayExportXML(value);
+      return value;
     },
-    _showExportXML = function() 
+    _showExportXML =  function()
+    {
+      _displayExportXML(controller.getJSON());
+    },
+    _displayExportXML = function(jsonStr) 
     {
       // Use ContentPane for scrolling, and theme
       var cont = new ContentPane({ 
           style: "min-width: 400px; min-height: 500px; padding: 0; overflow: auto",
           content: new Textarea({
-            value: controller.getJSON()
+            value: jsonStr
           })
       });
       var dialog = new Dialog({
@@ -245,6 +259,8 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
+        var save = _loadFromCookie();
+        _displayExportXML(save);
         _initToolbar();
         setupEntityDesigner();
 
@@ -253,12 +269,10 @@ function(
         createResourceDesigner();
         createResourcesCatalogue();
 
-/* TODO use publish to save
-        setInterval(function() {
-            _saveToCookie();
-        }, 300000); // Every 5 minutes
-        // No need to stop
-*/
+        topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
+        {
+          _saveToCookie();
+        }));
     };
     return {
         init: function() 

@@ -14,7 +14,7 @@ define(["dojo/_base/declare",
         "rfd/Concept", 
         "rfd/ExtendedSource", "rfd/widget/ListItem", "rfd/widget/NewResourceDialog", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/registry", "dojo/aspect",
+        "dijit/registry", "dojo/aspect", "dojo/topic",
         "rfd/controller/controller_concepts"
         ],
 
@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
         Menu, MenuItem,
         Concept, ExtendedSource, ListItem, NewResourceDialog,
         on, JSON, query, baseFx, baseArray, lang,
-        registry, aspect, controller)
+        registry, aspect, topic, controller)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -113,6 +113,9 @@ define(["dojo/_base/declare",
                             console.log("finished with new branch: " + br);
                             this.addListItem(br, domNode);
                             dialog.hide();
+
+                            //publish something changed
+                            topic.publish("save_update");
                         }
                     }),
                     onHide: function() {
@@ -160,15 +163,19 @@ define(["dojo/_base/declare",
                     //Dont need to check return value as there's nothing in the designer
                     // no branch
                     br.addActiveResource(resource);
-                    if(this.onBranchingOut(br, resource) == true) {
+                    if(this.onBranchingOut(br, resource) == true) 
+                    {
                         listitem = this.addListItem(br);
                         this.container.sync();
-                    }
 
-                    //TODO, may not want to do this
-                    //source.getSelectedNodes().orphan();
-                    //source.delItem(nodeId);
-                    ////Dont uncomment, compile error: source.sync():
+                        //TODO, may not want to do this
+                        //source.getSelectedNodes().orphan();
+                        //source.delItem(nodeId);
+                        ////Dont uncomment, compile error: source.sync():
+
+                        //publish something changed
+                        topic.publish("save_update");
+                    }
                 }
                 else 
                 {
@@ -184,6 +191,9 @@ define(["dojo/_base/declare",
                         //TODO, may not want to do this
                         //source.getSelectedNodes().orphan();
                         //source.delItem(nodeId);
+
+                        //publish something changed
+                        topic.publish("save_update");
                     }
                 }
 
