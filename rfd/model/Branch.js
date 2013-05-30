@@ -8,13 +8,13 @@ define([
     {
         constructor: function(active, inactive)
         {
+            this.id = "";
             // default param value if no param is specified
-            active = typeof active !== 'undefined' ? active : new Section();
             inactive = typeof inactive !== 'undefined' ? inactive : new Section();
+            active = typeof active !== 'undefined' ? active : new Section();
             // The active section
             this.active = active;
             this.inactive = inactive;
-            this.id = this.toUrl();
         },
         clone: function()
         {

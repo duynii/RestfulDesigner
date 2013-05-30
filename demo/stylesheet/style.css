@@ -198,6 +198,9 @@ html, body, #mainDiv {
   visibility: visible;
 }
 
+.whiteBg {
+  background-color: white;
+}
 
 /* ER classes */
 .classesList {

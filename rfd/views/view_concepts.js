@@ -11,11 +11,11 @@ define([
     "dojox/collections/Dictionary",
     "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
-    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", "dijit/MenuBarItem",
+    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", 
+    "dijit/MenuBarItem", "dijit/form/Textarea", "dijit/layout/ContentPane",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
-    "rfd/module/ClassStyle",
-    "rfd/model/Branch",
+    "rfd/module/ClassStyle", "rfd/model/Branch",
     "rfd/widget/ListItem", 
     "rfd/widget/NewResourceDialog", 
     "rfd/widget/Entity",
@@ -32,7 +32,7 @@ function(
             JSON, keys, lang, baseArray, baseEvent, 
             Dictionary,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
-            MenuBar, PopupMenuBarItem, DropDownMenu, MenuBarItem,
+            MenuBar, PopupMenuBarItem, DropDownMenu, MenuBarItem, Textarea, ContentPane,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, PartialConcept_R, 
@@ -181,7 +181,8 @@ function(
 
       var subMenu = new DropDownMenu({});
       subMenu.addChild(new MenuItem({
-        label: 'Display as XML'
+        label: 'Display as XML',
+        onClick: lang.hitch(this, _showExportXML)
       }));
       subMenu.addChild(new MenuItem({
         label: 'Save to browser cookie',
@@ -208,6 +209,10 @@ function(
         iconClass: "dijitEditorIconOpen",
         onClick: lang.hitch(this, _saveToCookie)
       }));
+      menubar.addChild(new MenuBarItem({
+        label: 'Display as XML',
+        onClick: lang.hitch(this, _showExportXML)
+      }));
 
       menubar.placeAt("toolbar");
       menubar.startup();
@@ -219,7 +224,23 @@ function(
       var value = cookie(COOKIE_NAME);
 
       alert('cookie:' + value);
-    }
+    },
+    _showExportXML = function() 
+    {
+      var textarea = new Textarea({value: controller.getJSON(),
+      });
+
+      var cont = new ContentPane({ 
+          content: textarea, 
+          style: "min-width: 400px; min-height: 500px; padding: 0; overflow: auto"
+      });
+      var dialog = new Dialog({
+        title: "Exporting XML",
+        content: cont
+      });
+
+      dialog.show();
+    },
     initUi = function() 
     {
         console.log("initUi called");

@@ -34,6 +34,12 @@ define([
         {
             return "TODO";
         },
+        // serialise a tree to JSON string, return the object for it
+        toJSON: function() 
+        {
+            var branches = this.store.query(function(dummy){return true;});
+            return branches; // returns as an array object
+        },
         print: function() 
         {
             //"TODO";

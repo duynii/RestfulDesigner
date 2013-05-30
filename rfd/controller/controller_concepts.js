@@ -65,7 +65,16 @@ define([
         // Get existing concepts
         getConcepts: function() 
         {
-            return concepts;
+            return store.query(function(item) {return true});
+        },
+        getJSON: function() // Get the whole JSON representation of program current state eg. a save file
+        {
+            var saveState = {
+                concepts: this.getConcepts(),
+                branches: _tree
+            };
+
+            return JSON.stringify(saveState, null, "  ");
         },
         onBranchingOut: function(branch, resource)
         {
