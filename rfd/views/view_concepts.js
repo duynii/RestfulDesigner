@@ -259,8 +259,8 @@ function(
     initUi = function() 
     {
         console.log("initUi called");
-        var save = _loadFromCookie();
-        _displayExportXML(save);
+        //var save = _loadFromCookie();
+        //_displayExportXML(save);
         _initToolbar();
         setupEntityDesigner();
 

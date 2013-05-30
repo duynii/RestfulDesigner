@@ -3,9 +3,17 @@
 	<div data-dojo-attach-point="tooltipdialog" data-dojo-type="dijit/TooltipDialog" title="Temapl">
 		<h4>Configure</h4>
 		<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 400px"></p>
-		<label for="resource_id">Identifier:</label> 
-		<span style="width: 100px" data-dojo-attach-point="resource_id" 
-			data-dojo-type="dijit/InlineEditBox" disabled>Class Name Edit</span>
+		<form data-dojo-type="dijit/form/Form">
+			<label for="resource_id">Identifier:</label> 
+			<span style="width: 100px" data-dojo-attach-point="resource_id" 
+				data-dojo-type="dijit/InlineEditBox" disabled>Class Name Edit</span>
+			<hr/>
+			<br />
+			<label for="selectRep">Representation select:</label>
+			<ul name="selectRep" data-dojo-attach-point="selectRep">
+			</ul>
+			<div data-dojo-type="dijit/form/Button" data-dojo-attach-point="createButton">Create</div>
+		</form>
 	</div>
 </button>
 <button data-dojo-type="dijit/form/Button" class="floatLeft"

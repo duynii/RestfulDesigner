@@ -2,20 +2,24 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "dojo/text!./templates/ConceptWidget.html", 
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
-        "rfd/TemplatedResource", 
+        "rfd/TemplatedResource", "rfd/widget/MakeRepDialog", "rfd/Representation",
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
-        "dijit/Menu", "dijit/MenuItem", 
+        "dijit/Menu", "dijit/MenuItem", "dijit/Dialog", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus",
+        "rfd/widget/ExtendedSelector",
+        "rfd/controller/controller_concepts"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
-        TemplatedResource, Branch, Section,
+        TemplatedResource, MakeRepDialog, Representation, Branch, Section,
         classStyle,
-        Menu, MenuItem,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
+        Menu, MenuItem, Dialog,
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil,
+        ExtendedSelector,
+        controller)
     {
         return declare("ConceptWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
         {
@@ -28,6 +32,48 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.spanNode.innerHTML = this.resource;
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.toString());
+
+
+                this.select = new ExtendedSelector(this.selectRep, {
+                    singular: true,
+                    onNewSelected: lang.hitch(this, function(data)
+                    {
+                        console.info("have new selected rep: " + data);
+                        this.resource.setSelectedRep(data);
+                    })
+                });
+                this.select.insertNodes(true, ["Full"], false, null);
+                this.select.hookOnNewSelected(function(data) {
+                    console.info("have new selected rep2: " + data);
+                });
+
+                this.createButton.on("click", lang.hitch(this, function()
+                {
+                    var d = new MakeRepDialog({
+                        concept: this.resource.concept,
+                        onFinish: lang.hitch(this, function(rep)
+                        {
+                            console.info("New rep: " + rep);
+
+                            //if the representation is not already saved, add it
+                            if(true) //TODO
+                            {
+                                this.resource.addRep(rep);
+                                // new selected item 
+                                this.select.selectNone();
+                                this.select.insertNodes(true, [rep], false, null);
+                                d.hide();
+                            }
+                            else {
+                                alert("This representaion exists: " + rep);
+                            }
+                        }),
+                        onHide: function() {
+                            d.destroyRecursive();
+                        }
+                    });
+                    d.show();
+                }))
             },
             setErrorMsg: function(msg)
             {
@@ -93,6 +139,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
+
+            },
+            _saveForm : function() {
 
             },
             _onDeleteResource: function() {
