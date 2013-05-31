@@ -1,9 +1,9 @@
 // Example class
 define([
     "dojo/_base/declare",
-    "dojo/_base/array",
+    "dojo/_base/array", "dojo/_base/lang",
     "rfd/model/Section"
-], function(declare, baseArray, Section){
+], function(declare, baseArray, lang, Section){
     return declare("Branch", null, 
     {
         constructor: function(active, inactive)
@@ -127,6 +127,21 @@ define([
         print: function() 
         {
             console.log("Branch: (" + this.inactive + ")[" + this.active + "]");
+        },
+        load: function(raw_branch)
+        {
+            this.active = new Section();
+            lang.mixin(this.active, raw_branch.active);
+            this.active.load();
+            //this.active.load(raw_branch.active.resources);
+            this.inactive = new Section();
+            lang.mixin(this.inactive, raw_branch.inactive);
+            this.inactive.load();
+
+
+            //TODO: Still need to set correct Concept references
+
+            this.id = this.toUrl();
         }
     });
 });

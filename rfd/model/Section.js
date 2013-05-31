@@ -1,10 +1,42 @@
 
 // Example class
 define([
-    "dojo/_base/declare",
-    "dojo/_base/array",
-    "rfd/Resource"
-], function(declare, baseArray, Resource){
+    "dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang",
+    "rfd/StaticResource", "rfd/TemplatedResource", "rfd/Custom_R", "rfd/Collection_R", 
+    "rfd/Concept_R", "rfd/PartialConcept_R", "rfd/Concept"
+], function(declare, baseArray, lang,
+            StaticResource, TemplatedResource, Custom_R, 
+            Collection_R, Concept_R, PartialConcept_R,
+            Concept){
+    var dummyConcept = new Concept("dummyC", "dummyC", "na");
+    var s_getResourceClass = function(name) 
+    {
+
+            switch(name)
+            {
+                case "StaticResource":
+                    return new StaticResource("dummy", "dummy");
+                break;
+                case "TemplatedResource":
+                    return new TemplatedResource("dummy", "dummy", {}, "");
+                break;
+                case "Custom_R":
+                    return new Custom_R("dummy", "dummy", null);
+                break;
+                case "Collection_R":
+                    return new Collection_R("dummy", "dummy", dummyConcept);
+                break;
+                case "Concept_R":
+                    return new Concept_R("dummy", "dummy", dummyConcept);
+                break;
+                case "PartialConcept_R":
+                    return new PartialConcept_R("dummy", "dummy", dummyConcept);
+                break;
+                default:
+                    console.error("Unknown resource found: " + name);
+                    return null;
+            }
+    };
     return declare("Section", null, 
     {
         constructor: function()
@@ -67,6 +99,16 @@ define([
         print: function() 
         {
             console.log("Section: " + toString());
+        },
+        load: function()
+        {
+            this.resources = baseArray.map(this.resources, function(res)
+            {
+                var resource = s_getResourceClass(res.resource_type);
+                lang.mixin(resource, res);
+
+                return resource;
+            }); 
         }
     });
 });

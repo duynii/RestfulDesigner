@@ -3,6 +3,7 @@ define([
     "dojo/_base/declare",
     "dojo/_base/array",
     "dojo/_base/lang",
+    "dojo/cookie",
     "rfd/Concept",
     "rfd/model/Tree",
     "rfd/model/Branch",
@@ -12,7 +13,7 @@ define([
     "rfd/Collection_R",
     "dojo/store/Memory",
     "dojo/text!RfD_documents/saves/mark1.rfd" 
-], function(declare, baseArray, lang, Concept, 
+], function(declare, baseArray, lang, cookie, Concept, 
             Tree, Branch, Section, 
             StaticResource, TemplatedResource, Collection_R,
             Memory, mark1)
@@ -47,13 +48,23 @@ define([
         });
 
         return arr;
+    },
+    //Load tree from saved savedState
+    _loadTree = function()
+    {
+        _tree.load()
     };
     return {
-        init: function(concepts)
+        init: function(concepts, branches)
         {
             //load from file or argument
             var concepts = loadFromFile(concepts);
             store = new Memory({data: concepts});
+
+            //load the tree
+            if(typeof branches !== 'undefined' && branches != null) {
+                _tree.load(branches);
+            }
         },
         //static: function() { return _dummyStatic; },
         constructor: function()
@@ -78,16 +89,20 @@ define([
         {
             return store.query(function(item) {return true});
         },
-        getJSON: function() // Get the whole JSON representation of program current state eg. a save file
+        toJSON: function() // Get the whole JSON representation of program current state eg. a save file
         {
             var saveState = {
                 branches: _tree,
                 concepts: this.getConcepts()
             };
 
-            return JSON.stringify(saveState, null, "  ");
+            return saveState;
         },
-        onBranchingOut: function(branch, resource)
+        getJSONString: function() // Get the whole JSON representation of program current state eg. a save file
+        {
+            return JSON.stringify(this.toJSON());
+        },
+       onBranchingOut: function(branch, resource)
         {
             console.log("onBranchingOut: " + branch + " - " + resource);
             //Test if it clashs with existing branch

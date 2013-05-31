@@ -3,8 +3,9 @@ define([
     "dojo/_base/declare",
     "rfd/model/Branch",
     "dojo/store/Memory",
-    "dojo/store/Observable"
-], function(declare, Memory, Observable){
+    "dojo/store/Observable",
+    "dojo/_base/array"
+], function(declare, Branch, Memory, Observable, baseArray){
     return declare("Tree", null, 
     {
         constructor: function()
@@ -33,6 +34,16 @@ define([
         toString: function()
         {
             return "TODO";
+        },
+        load: function(raw_branches)
+        {
+            baseArray.forEach(raw_branches, function(raw_branch, index)
+            {
+                var br = new Branch();
+                br.load(raw_branch);
+                this.addBranch(br);
+            },
+            this);
         },
         // serialise a tree to JSON string, return the object for it
         toJSON: function() 

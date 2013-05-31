@@ -220,7 +220,7 @@ function(
     },
     _saveToCookie = function () 
     {
-      var value = controller.getJSON();
+      var value = controller.getJSONString();
       //var value = "sssss";)
       //cookie(COOKIE_NAME, null, {expires: -1});
       cookie(COOKIE_NAME, value, {expires: 60});
@@ -231,19 +231,19 @@ function(
     _loadFromCookie = function () {
       var value = cookie(COOKIE_NAME);
 
-      //TO DO load from cookie
-      //_displayExportXML(JSON.stringify(value, null, "  "));
-      //_displayExportXML(value);
       return value;
     },
     _displayLoadedXML = function()
     {
       var data = _loadFromCookie();
-      _displayExportXML(data);
+      // parses and re stringify for better formating with new lines
+      var formatted = JSON.stringify(JSON.parse(data), null, "  ");
+      _displayExportXML(formatted);
     },
     _showExportXML =  function()
     {
-      _displayExportXML(controller.getJSON());
+      var formattedStr = JSON.stringify(controller, null, "  ");
+      _displayExportXML(formattedStr);
     },
     _displayExportXML = function(jsonStr) 
     {
@@ -287,7 +287,7 @@ function(
           var savedState = _loadFromCookie();
           var data = JSON.parse(savedState);
 
-          controller.init(data.concepts); //supporting controller
+          controller.init(data.concepts, data.branches); //supporting controller
             // proceed directly with startup
             startup();
         }
