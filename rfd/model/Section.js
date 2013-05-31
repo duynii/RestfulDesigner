@@ -100,13 +100,23 @@ define([
         {
             console.log("Section: " + toString());
         },
-        load: function()
+        load: function(concepts)
         {
             this.resources = baseArray.map(this.resources, function(res)
             {
                 var resource = s_getResourceClass(res.resource_type);
                 lang.mixin(resource, res);
 
+                // Now set up references to concepts correctly, when JSON'ed only concept name is used
+                if(typeof resource.concept !== 'undefined' || resource.concept != null)
+                {
+                    // Filter act as a search, should return only one
+                    var concept_real_refs = baseArray.filter(concepts, function(concept) {
+                        return (concept.id == resource.concept);
+                    });
+                    // Set it to point to real reference
+                    resource.concept = concept_real_refs[0];
+                }
                 return resource;
             }); 
         }

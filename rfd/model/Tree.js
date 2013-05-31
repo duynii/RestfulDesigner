@@ -35,12 +35,12 @@ define([
         {
             return "TODO";
         },
-        load: function(raw_branches)
+        load: function(raw_branches, concepts)
         {
             baseArray.forEach(raw_branches, function(raw_branch, index)
             {
                 var br = new Branch();
-                br.load(raw_branch);
+                br.load(raw_branch, concepts);
                 this.addBranch(br);
             },
             this);

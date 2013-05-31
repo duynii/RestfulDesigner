@@ -63,7 +63,7 @@ define([
 
             //load the tree
             if(typeof branches !== 'undefined' && branches != null) {
-                _tree.load(branches);
+                _tree.load(branches, concepts);
             }
         },
         //static: function() { return _dummyStatic; },

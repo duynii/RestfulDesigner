@@ -128,15 +128,15 @@ define([
         {
             console.log("Branch: (" + this.inactive + ")[" + this.active + "]");
         },
-        load: function(raw_branch)
+        load: function(raw_branch, concepts)
         {
             this.active = new Section();
             lang.mixin(this.active, raw_branch.active);
-            this.active.load();
+            this.active.load(concepts);
             //this.active.load(raw_branch.active.resources);
             this.inactive = new Section();
             lang.mixin(this.inactive, raw_branch.inactive);
-            this.inactive.load();
+            this.inactive.load(concepts);
 
 
             //TODO: Still need to set correct Concept references
