@@ -1,0 +1,20 @@
+<div>
+	<label>Select fields for a concept's presentation.</label>
+	<br />
+
+	<label for="name">Concept:</label><label id="conceptName"></label>
+	<hr />
+	<br />
+	<form data-dojo-type="dijit/form/Form">
+		<label for="repName">Name: </label>
+		<input name="name" data-dojo-type="dijit/form/ValidationTextBox"
+			data-dojo-props="pattern: '^[a-zA-Z]+$'" style="width: 100px"></input>
+		<br />
+		<label for="fields">Field Select (Hold 'Shift' or 'Control' for multiple selection):</label>
+		<br />
+        <select data-dojo-type="dijit/form/MultiSelect" id="selectProps" name="fields" multiple=true>
+        </select>
+		<br />
+		<button data-dojo-type="dijit/form/Button" type="submit">Submit</button>
+	</form>
+</div>
