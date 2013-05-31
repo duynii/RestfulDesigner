@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="stylesheet/style.css" media="screen">
 </head>
 <body class="claro">
-    <div id="appLayout" class="demoLayout"
+    <div class="demoLayout"
         style="width: 1280px; height:800px"
         data-dojo-type="dijit/layout/BorderContainer"
         data-dojo-props="design: 'headline'">
@@ -24,6 +24,22 @@
                     <h4>Group 2 Content</h4>
                     <button id="id_hospitals">{hospitals}</button>
                     <button id="id_button">click here</button>
+                    <div id="select" ></div>
+                    <div id="multiselect" ></div>
+                    <form data-dojo-type="dijit/form/Form" id="testForm">
+                        <select data-dojo-type="dijit/form/Select" id="selectsingle" name="typesingle">
+                        </select>
+                        <select data-dojo-type="dijit/form/MultiSelect" id="selecthtml" name="type" multiple=true>
+                        <!--
+                        <option selected>String</option>
+                        <option >Integer</option>
+                        <option>Phone</option>
+                        <option>Decimal</option>
+                    -->
+                        </select>
+                        <button id="eButton" data-dojo-type="dijit/form/Button" >Add</button>
+                        <input type="submit" data-dojo-type="dijit/form/Button" >Submit</input>
+                    </form>
                 </div>
                 <div
                         data-dojo-type="dijit/layout/ContentPane"
@@ -203,8 +219,8 @@ require([ "dojo/parser",
           "dojo/dom",
           "dojo/ready",
           "dojo/query",
-          "dojo/on",
-          "dojo/dom-style",
+          "dojo/on", "dojo/json",
+          "dojo/dom-style", "dojo/dom-construct",
           "rfd/Resource",
           "rfd/StaticResource",
           "rfd/TemplatedResource",
@@ -213,6 +229,9 @@ require([ "dojo/parser",
           "rfd/Concept_R",
           "dijit/form/CheckBox", 
           "dijit/form/NumberTextBox", 
+          "dijit/form/Select", 
+          "dijit/form/MultiSelect",
+          "rfd/widget/ExtendedSelector", 
           "dijit/popup", 
           "dijit/TooltipDialog", 
           "dijit/Dialog", 
@@ -220,10 +239,10 @@ require([ "dojo/parser",
           "dojo/domReady",
           "dijit/layout/BorderContainer", 
           "dijit/layout/TabContainer", 
-          "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on, domStyle,
+          "dijit/layout/ContentPane" ], function(parser, Button, registry, dom, ready, query, on, JSON, domStyle, domConstruct,
                                                  Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
                                                  Concept_R,
-                                                 CheckBox, NumberTextBox,
+                                                 CheckBox, NumberTextBox, Select, MultiSelect, ExtendedSelector,
                                                  popup, TooltipDialog, Dialog, formNP
                                                 ) {
     ready(function() 
@@ -240,8 +259,52 @@ require([ "dojo/parser",
 
         parser.parse();
 
-        var conf = confirm("OK?");
-        console.log("confirm: " + conf);
+        var sel = domConstruct.create("select", {multiple: true});
+        domConstruct.create("option", {value: "1 aaaa", label: "1 aaaa"}, sel);
+        domConstruct.place(sel, "select");
+
+
+        domConstruct.create("option", {value: 'aaaa', innerHTML: "asddd", label: "sdsd"}, "selecthtml");
+
+
+        var b = registry.byId("eButton");
+        var s = registry.byId("selecthtml");
+        var g = registry.byId("selectsingle");
+        var f = registry.byId("testForm");
+        var no = 1;
+        b.on("click", function(e)
+        {
+            no++;
+            domConstruct.create("option", {value: 'aaaa'+no, innerHTML: "asddd"+no}, "selecthtml");
+            //domConstruct.create("option", {value: 'aaaa'+no, innerHTML: "asddd"+no}, "selectsingle");
+            var dat = {data: "aaaa"+no, selected: true };
+            g.addOption({value: dat, innerHTML: "asddd"+no, label: 'llllll'+no});
+            s.set('value', ["aaaa"+no]);
+            // This programmatic select does not work
+            g.set('value', [dat]);
+            //s.options.push({value: "aaaa", innerHTML: 'bbbbb', label: 'ccccc'});
+            //s.sync();
+        });
+
+        g.on("change", function(newValue)
+        {
+            console.info("select value: " + JSON.stringify(newValue));
+        });
+
+        s.on("change", function(newValue) {
+            console.info("new select: " + newValue);
+        });
+
+        f.on("submit", function(e)
+        {
+            e.preventDefault();
+
+            var data = f.get('value');
+            console.log("form submitted: " + JSON.stringify(data));
+        });
+
+        //var conf = confirm("OK?");
+        //console.log("confirm: " + conf);
 
 //      This is with HTML markup TooltipDialog
 //        var tooltip = registry.byId("collectionTooltip");
@@ -249,6 +312,8 @@ require([ "dojo/parser",
 //        domStyle.set(tooltip.domNode, "visibility", "visible");
 
 //      This is creating TooltipDialog with inner content
+
+/*
         var toolDom = dojo.byId("collectionTooltip");
         var formDom = dom.byId("myForm");
         domStyle.set(toolDom, "visibility", "visible");
@@ -289,7 +354,7 @@ require([ "dojo/parser",
             console.log("clicked id_button");
             d.show();
         });
-
+*/
 /*
         var checkPaging = new CheckBox( 
             {

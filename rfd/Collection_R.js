@@ -40,6 +40,11 @@ define([
             //res.is_concept = this.is_concept;
             res.methods.splice(0, 0, this.methods);
             res.orderbys.splice(0, 0, this.orderbys);
+
+            
+            res.selected_rep = this.selected_rep;
+            res.clearReps();
+            res.representations.splice(0,0, this.representations);
             return res;
         }
     });

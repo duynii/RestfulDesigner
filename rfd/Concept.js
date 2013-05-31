@@ -4,7 +4,7 @@ define([
     "dojo/_base/declare",
     "dojo/json",
     "dojo/_base/array"
-], function(declare, JSON, arrayUtil){
+], function(declare, JSON, baseArray){
     return declare("Concept", null, {
         constructor: function(name, id, parentId){
             this.name = name;
@@ -30,16 +30,22 @@ define([
         print: function() {
             var str = " = id: " + this.id + " name: " + this.name + " parentID: " + this.parentId;
             str += "\nprops: \n";
-            arrayUtil.forEach(properties, function(prop, index) {
+            baseArray.forEach(properties, function(prop, index) {
                str += prop.toString() + "\n";
             });
             console.log(str);
+        },
+        //Return prop names in an array
+        getPropertyNames: function() {
+            return baseArray.map(this.properties, function(prop){
+                return prop.name;
+            });
         },
         // return -1 if not found otherwise an index
         _findProperty: function(name) 
         {
             var ind = -1;
-            arrayUtil.forEach(this.properties, function(prop, index)
+            baseArray.forEach(this.properties, function(prop, index)
             {
                 if(prop.name === name) {
                     ind = index;
@@ -63,7 +69,7 @@ define([
         {
             var indexOf = null;
 
-            arrayUtil.forEach(this.properties, function(item, index)
+            baseArray.forEach(this.properties, function(item, index)
             {
                 console.log("item: " + JSON.stringify(item));
                 if(prop.name == item.name) 
@@ -99,7 +105,7 @@ define([
 
             // Checks here
             /* TODO fix this, cannot return from loop
-            arrayUtil.forEach(this.properties, function(prop) {
+            baseArray.forEach(this.properties, function(prop) {
                 if(prop.name == name) {
                     console.warn("Property with name exists: " + name);
                     return false;

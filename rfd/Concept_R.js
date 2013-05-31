@@ -28,6 +28,10 @@ define([
         clone: function() 
         {
             var res = new Concept_R(this.id, this.parentId, this.concept);
+
+            res.selected_rep = this.selected_rep;
+            res.clearReps();
+            res.representations.splice(0,0, this.representations);
             //res.is_concept = this.is_concept;
             res.methods.splice(0, 0, this.methods);
             return res;

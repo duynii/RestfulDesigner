@@ -5,24 +5,22 @@ define([
     "dojo/_base/array"
 ], function(declare, arrayUtil){
     return declare("rfd/Representation", null, {
-        constructor: function(concept, fields){
-            this.concept = concept;
+        constructor: function(id, fields)
+        {
+            //unique name for this representation
+            this.id = id;
 
             fields = typeof fields !== 'undefined' ? fields : [];
             this.fields = fields;
-
-            this.id = this.toString();
-            this.label = this.toString();
         },
+        setId: function(id) { this.id = id; },
         // Push a field (Property object) into the array
         addField: function(field) {
             this.fields.push(field);
-            this.id = this.toString();
-            this.label = this.toString();
         },
         toString: function()
         {
-            return this.fields.join(',');
+            return this.id;
         },
         toPrint: function() {
             var str = "Fields: \n";

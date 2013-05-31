@@ -33,40 +33,36 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 //Set the identifier for editing.
                 this.resource_id.set('value', this.resource.toString());
 
+                var fullRep = new Representation("Full", this.resource.concept.getPropertyNames());
+                this.selectRep.addOption({value: fullRep, label: fullRep});
+                /*
+                baseArray.forEach(this.resource.representations, function(rep)
+                {
+                    this.selectRep.addOption({value: rep, label:rep});
+                },
+                this);
+*/
 
-                this.select = new ExtendedSelector(this.selectRep, {
-                    singular: true,
-                    onNewSelected: lang.hitch(this, function(data)
-                    {
-                        console.info("have new selected rep: " + data);
-                        this.resource.setSelectedRep(data);
-                    })
-                });
-                this.select.insertNodes(true, ["Full"], false, null);
-                this.select.hookOnNewSelected(function(data) {
-                    console.info("have new selected rep2: " + data);
+                var resource = this.resource;
+                this.selectRep.on("change", function(newValue)
+                {
+                    console.info("New selected rep: " + JSON.stringify(newValue));
+                    resource.setSelectedRep(newValue);
                 });
 
                 this.createButton.on("click", lang.hitch(this, function()
                 {
                     var d = new MakeRepDialog({
                         concept: this.resource.concept,
-                        onFinish: lang.hitch(this, function(rep)
+                        onFinish: lang.hitch(this, function(formData)
                         {
-                            console.info("New rep: " + rep);
+                            var rep = new Representation(formData.name, formData.fields);
+                            this.selectRep.addOption({value: rep, label: rep});
+                            this.selectRep.set('value', rep);
 
+                            this.resource.addRep(rep);
                             //if the representation is not already saved, add it
-                            if(true) //TODO
-                            {
-                                this.resource.addRep(rep);
-                                // new selected item 
-                                this.select.selectNone();
-                                this.select.insertNodes(true, [rep], false, null);
-                                d.hide();
-                            }
-                            else {
-                                alert("This representaion exists: " + rep);
-                            }
+                            d.hide();
                         }),
                         onHide: function() {
                             d.destroyRecursive();
