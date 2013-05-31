@@ -7,7 +7,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "dijit/Menu", "dijit/MenuItem", "dijit/Dialog", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
         "dijit/popup", "dijit/TooltipDialog", "dijit/focus",
-        "rfd/widget/ExtendedSelector",
         "rfd/controller/controller_concepts"
         ],
 
@@ -18,7 +17,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         classStyle,
         Menu, MenuItem, Dialog,
         on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil,
-        ExtendedSelector,
         controller)
     {
         return declare("ConceptWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
