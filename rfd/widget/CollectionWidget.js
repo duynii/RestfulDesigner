@@ -153,12 +153,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 //Template cant seem to handle more dijit widget inside it
                 var button = new Button({label: "Add"}, this.addNode);
 
-                this.filterField.options.push({value:'id', label: 'id key', selected: true});
 
                 this._setupEditing();
 
                 //Populate Filter
-                this._initFilterWidgets();
+                //this.filterField.options.push({value:'id', label: 'id key', selected: true});
+                //this._initFilterWidgets();
 
             },
             _onDeleteResource: function() {
