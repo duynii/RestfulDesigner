@@ -183,26 +183,6 @@ function(
     {
       var menubar = new MenuBar({});
 
-      var subMenu = new DropDownMenu({});
-      subMenu.addChild(new MenuItem({
-        label: 'Display as XML',
-        onClick: lang.hitch(this, _showExportXML)
-      }));
-      subMenu.addChild(new MenuItem({
-        label: 'Save to browser cookie',
-        iconClass: "dijitEditorIconCopy",
-        onClick: lang.hitch(this, _saveToCookie)
-      }));
-      subMenu.addChild(new MenuItem({
-        label: 'Load from cookie',
-        iconClass: "dijitEditorIconOpen",
-        onClick: lang.hitch(this, _displayLoadedXML)
-      }));
-
-      menubar.addChild(new PopupMenuBarItem({
-        label: 'File',
-        popup: subMenu
-      }));
       menubar.addChild(new MenuBarItem({
         label: 'Load',
         iconClass: "dijitEditorIconOpen",
@@ -288,7 +268,14 @@ function(
         init: function() 
         {
           var savedState = _loadFromCookie();
-          if( typeof savedState !== 'undefined' && savedState != null) {
+
+          var isLoad = false;
+          if( typeof savedState !== 'undefined' && savedState != null && savedState.length > 0) {
+            isLoad = confirm("Saved data found, proceed to restore previous states?");
+          }
+          if(isLoad)
+          {
+
             var data = JSON.parse(savedState);
             controller.init(data.concepts, data.branches); //supporting controller
           }
