@@ -70,7 +70,9 @@ define([
         constructor: function()
         {
         },
-
+        getAllBranches: function() {
+            return _tree.getBranches();
+        },
         queryById: function(id)
         {
             var concept =  store.get(id);

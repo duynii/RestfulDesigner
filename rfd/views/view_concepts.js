@@ -129,6 +129,9 @@ function(
       resDesigner.onBranchDrop = lang.hitch(controller, controller.onBranchDrop);
 
       resDesigner.onNewSelectedBranch = lang.hitch(this, _onBranchSelect);
+
+      // Load any existing branches - loaded from saved cookie
+      resDesigner.setBranches(controller.getAllBranches());
     },
     _onBranchSelect = function(branch)
     {

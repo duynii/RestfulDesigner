@@ -30,7 +30,9 @@ define([
         },
         addBranch: function(br) { this.store.put(br); }, // Triggers observers
         removeBranch: function(brId) { this.store.remove(brId); },
-        getBranches: function() { return this.branhces; },
+        getBranches: function() {  
+            return this.store.query(function(br) {return true;});
+        },
         toString: function()
         {
             return "TODO";

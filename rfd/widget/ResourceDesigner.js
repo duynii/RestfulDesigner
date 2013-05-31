@@ -75,6 +75,16 @@ define(["dojo/_base/declare",
                 }));
                 */
             },
+            // Like an init function, set existing branch to UI if they are loaded eg. from cookie XML
+            setBranches: function(branches) 
+            {
+                baseArray.forEach(branches, function(branch, index)
+                {
+                    this.addListItem(branch);
+                },
+                this);
+                this.container.sync();
+            },
             // Override this to find out when a new branch is selected,
             //  Not covering dropping resource into a new branch
             onNewSelectedBranch: function(branch) {
@@ -205,6 +215,7 @@ define(["dojo/_base/declare",
                     listitem.branch.addActiveResource(res);
                     listitem.addResource(res);
 
+                    topic.publish("save_update");
                 }
             },
             addListItem: function(branch, refBranchNode)
