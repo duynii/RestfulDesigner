@@ -285,9 +285,13 @@ function(
         init: function() 
         {
           var savedState = _loadFromCookie();
-          var data = JSON.parse(savedState);
-
-          controller.init(data.concepts, data.branches); //supporting controller
+          if( typeof savedState !== 'undefined' && savedState != null) {
+            var data = JSON.parse(savedState);
+            controller.init(data.concepts, data.branches); //supporting controller
+          }
+          else {
+            controller.init();
+          }
             // proceed directly with startup
             startup();
         }
