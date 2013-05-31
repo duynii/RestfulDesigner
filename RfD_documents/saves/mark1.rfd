@@ -7,6 +7,11 @@
 			"properties": 
 			[
 				{ 
+					"name": "id",
+					"type": "integer",
+					"indexed": "true"
+				},
+				{ 
 					"name": "title",
 					"type": "string",
 					"indexed": "true"
@@ -36,6 +41,11 @@
 			"name": "services",
 			"properties": 
 			[
+				{ 
+					"name": "id",
+					"type": "integer",
+					"indexed": "true"
+				},
 				{
 					"name": "name",
 					"type": "string",

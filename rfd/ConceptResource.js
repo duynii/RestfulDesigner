@@ -24,12 +24,6 @@ define([
 
             //TODO set concept name to resource's name
         },
-        //Return prop names in an array
-        getPropertyNames: function() {
-            return baseArray.map(this.properties, function(prop){
-                return prop.name;
-            });
-        },
         setSelectedRep: function(rep) { this.selected_rep = rep; },
         addRep:function(rep) { this.representations.push(rep); },
         clearReps: function() { this.representations.length = 0; },

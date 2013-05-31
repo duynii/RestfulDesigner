@@ -1,7 +1,7 @@
 CLASS_SPACING = 40;
 CLASS_Y_SPACING = 10;
 
-COOKIE_NAME = "RfD_cookie_28_05_2013";
+var COOKIE_NAME = "RfD_cookie_28_05_2013";
 
 define([
     "dojo/dom", "dojo/topic",
@@ -111,10 +111,10 @@ function(
           var name = "Class_" + temp_id_num;
           temp_id_num += 1;
           var concept = new Concept(name, name, null);
-          controller.getConcepts().push(concept);
+          controller.addConcept(concept);
           createConceptDisplay(concept);
           arrangeClasses();
-          _saveToCookie();
+          //_saveToCookie();
         })
       });
       menu.addChild(menuItem);
@@ -193,7 +193,7 @@ function(
       subMenu.addChild(new MenuItem({
         label: 'Load from cookie',
         iconClass: "dijitEditorIconOpen",
-        onClick: lang.hitch(this, _loadFromCookie)
+        onClick: lang.hitch(this, _displayLoadedXML)
       }));
 
       menubar.addChild(new PopupMenuBarItem({
@@ -203,7 +203,7 @@ function(
       menubar.addChild(new MenuBarItem({
         label: 'Load',
         iconClass: "dijitEditorIconOpen",
-        onClick: lang.hitch(this, _loadFromCookie)
+        onClick: lang.hitch(this, _displayLoadedXML)
       }));
       menubar.addChild(new MenuBarItem({
         label: 'Save',
@@ -235,6 +235,11 @@ function(
       //_displayExportXML(JSON.stringify(value, null, "  "));
       //_displayExportXML(value);
       return value;
+    },
+    _displayLoadedXML = function()
+    {
+      var data = _loadFromCookie();
+      _displayExportXML(data);
     },
     _showExportXML =  function()
     {
@@ -269,15 +274,20 @@ function(
         createResourceDesigner();
         createResourcesCatalogue();
 
+/*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
           _saveToCookie();
         }));
+*/
     };
     return {
         init: function() 
         {
-          controller.init(); //supporting controller
+          var savedState = _loadFromCookie();
+          var data = JSON.parse(savedState);
+
+          controller.init(data.concepts); //supporting controller
             // proceed directly with startup
             startup();
         }

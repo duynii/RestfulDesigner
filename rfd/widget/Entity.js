@@ -25,7 +25,7 @@ define(["dojo/_base/declare",
         "rfd/Concept", 
         "dojo/dnd/Container", "dojo/dnd/Selector", "dojo/dnd/Moveable", 
         "dojo/on", "dojo/json", "dojo/query", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/registry"
+        "dijit/registry", "rfd/controller/controller_concepts"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
@@ -37,7 +37,7 @@ define(["dojo/_base/declare",
         Menu, MenuItem,
         Concept, Container, Selector, Moveable,
         on, JSON, query, baseFx, baseArray, lang,
-        registry)
+        registry, controller)
     {
         /*
         * This is a custom widget that wraps a table dom.
@@ -148,6 +148,7 @@ define(["dojo/_base/declare",
                     }
                     else {
                         this.concept.setId(newValue);
+                        //controller.addConcept(this.concept, {overwrite: true});
                         this.titleNode.innerHTML = newValue;
                         this.resetErrorMsg();
                     }
@@ -212,6 +213,10 @@ define(["dojo/_base/declare",
                 var propertyId = this.container.current.id;
                 var prop = this.container.getItem(propertyId).data;
                 console.log("onItem Hitch: " + propertyId + ", " + JSON.stringify(prop));
+
+                if(prop.name == "id")  {// Cannot delete id field
+                    return; // no action
+                }
 
                 this.container.delItem(propertyId);
                 domConstruct.destroy(propertyId);

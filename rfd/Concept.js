@@ -10,7 +10,8 @@ define([
             this.name = name;
             this.id = id;
             this.parentId = parentId;
-            this.properties = new Array();
+            this.properties = [{name: "id", type: "integer", indexed: true}];
+
             // names of class/es this one belongs to
             //many to one relationship, this is the many side
             this.belongs_to = new Array();
@@ -23,6 +24,7 @@ define([
         },
         setId: function(id) {
             this.id = id;
+            this.name = id;
         },
         toString : function() {
             var str = "name: " + this.name + ", parent: " + this.parentId;

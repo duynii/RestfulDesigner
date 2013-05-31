@@ -24,12 +24,19 @@ define([
     concepts = null,
     //create to access static function of class
     //_dummyStatic = new StaticResource("dummy", "/"),
-    loadFromFile = function()
+    loadFromFile = function(raw_concepts)
     {
-        var data = JSON.parse(mark1);
+        raw_concepts = typeof raw_concepts !== 'undefined' ? raw_concepts : null;
+
+        //var data = JSON.parse(mark1);
+
+        if(raw_concepts == null) 
+        {
+            raw_concepts = JSON.parse(mark1).concepts;
+        }
 
         // Should put all classes in a Dictionary
-        var arr = baseArray.map(data.concepts, function(obj_concept, index)
+        var arr = baseArray.map(raw_concepts, function(obj_concept, index)
         {
             console.log("concept " + (index+1)  + " is " + obj_concept.name);
             // Create Concept class from db file's object
@@ -39,19 +46,20 @@ define([
             return concept;
         });
 
-        data.concepts = arr;
-        return data.concepts;
+        return arr;
     };
     return {
-        init: function()
+        init: function(concepts)
         {
-            concepts = loadFromFile();
+            //load from file or argument
+            var concepts = loadFromFile(concepts);
             store = new Memory({data: concepts});
         },
         //static: function() { return _dummyStatic; },
         constructor: function()
         {
         },
+
         queryById: function(id)
         {
             var concept =  store.get(id);
@@ -61,6 +69,9 @@ define([
         },
         query: function(obj) {
             return store.query(obj);
+        },
+        addConcept: function (concept, options) {
+            store.put(concept, options);
         },
         // Get existing concepts
         getConcepts: function() 
