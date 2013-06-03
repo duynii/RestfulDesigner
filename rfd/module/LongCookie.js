@@ -75,7 +75,7 @@ function(Dictionary, cookie, lang)
       var opts = {expires: EXPIRE_DAYS};
       lang.mixin(opts, options);
       cookie(COOKIE_NO, curCookieNo, opts);
-      for(var j=0; j<curCookieNo; j++) {
+      for(var j=0; j<NO_OF_COOKIE; j++) {
         cookie(COOKIE_NAME + (j+1), cookies[j], opts);
       }
 
