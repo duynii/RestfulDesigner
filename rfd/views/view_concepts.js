@@ -24,7 +24,7 @@ define([
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
-    "rfd/module/FoxCookie", "rfd/controller/controller_concepts",
+    "rfd/module/LongCookie", "rfd/controller/controller_concepts",
     "rfd/module"
     ],
 function(
@@ -41,7 +41,7 @@ function(
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
-            FoxCookie, controller
+            LongCookie, controller
             ) 
 {
     var store = null,
@@ -206,15 +206,15 @@ function(
     {
       var value = controller.getJSONString();
       console.info("Cookie length: " + value.length);
-      //var value = "sssss";)
-      cookie(COOKIE_NAME, value, {expires: 60, path: "/"});
+      //cookie(COOKIE_NAME, value, {expires: 60, path: "/"});
+      LongCookie.setItem(value, {});
 
 
       console.info("Saving program states");
       //_displayExportXML(value);
     },
     _loadFromCookie = function () {
-      var value = cookie(COOKIE_NAME);
+      var value = LongCookie.getItem();
 
       return value;
     },
