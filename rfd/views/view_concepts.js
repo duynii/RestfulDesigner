@@ -24,7 +24,7 @@ define([
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
           "dojo/text!RfD_documents/saves/mark1.rfd", 
           "dojo/text!rfd/widget/templates/NewProperty.html",
-    "rfd/controller/controller_concepts",
+    "rfd/module/FoxCookie", "rfd/controller/controller_concepts",
     "rfd/module"
     ],
 function(
@@ -41,7 +41,7 @@ function(
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
             text, newprop,
-            controller
+            FoxCookie, controller
             ) 
 {
     var store = null,
@@ -201,12 +201,14 @@ function(
       menubar.placeAt("toolbar");
       menubar.startup();
     },
+    //TO DO it cannot save long cookie (over 2200 chars, need custom module)
     _saveToCookie = function () 
     {
       var value = controller.getJSONString();
+      console.info("Cookie length: " + value.length);
       //var value = "sssss";)
-      //cookie(COOKIE_NAME, null, {expires: -1});
-      cookie(COOKIE_NAME, value, {expires: 60});
+      cookie(COOKIE_NAME, value, {expires: 60, path: "/"});
+
 
       console.info("Saving program states");
       //_displayExportXML(value);
