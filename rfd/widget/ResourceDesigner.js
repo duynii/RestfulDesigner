@@ -73,23 +73,6 @@ define(["dojo/_base/declare",
                 {
                     console.log("ListItem onMouseDown");
                 }));
-
-                on(this.listNode, "dblclick", lang.hitch(this, function()
-                {
-                    if(this.container.current == null) {
-                        return;
-                    }
-
-                    var li = this.container.getFirstSelectedWidget();
-                    if(li != null) 
-                    {
-                        var confirmed = confirm("Delete this branch? " + this.branch.toUrl());
-                        if(confirmed) {
-                            controller._tree.removeBranch(li.branch);
-                            li.destroyRecursive();
-                        }
-                    }
-                }));
                 */
 
                 topic.subscribe("branch_removed", lang.hitch(this, function(branch)

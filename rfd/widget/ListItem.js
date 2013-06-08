@@ -7,6 +7,7 @@ define(["dojo/_base/declare",
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
+        "rfd/widget/InheritedWidget",
         "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", "rfd/widget/CollectionWidget", 
         "rfd/widget/ConceptWidget", "rfd/widget/PartialWidget", "rfd/widget/CustomWidget", 
         "dijit/Menu",  "dijit/MenuItem", "dijit/form/Button", 
@@ -16,7 +17,9 @@ define(["dojo/_base/declare",
     function(declare, _WidgetBase, _TemplatedMixin, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
-        Branch, Section, classStyle, TemplateWidget, StaticWidget, CollectionWidget,
+        Branch, Section, classStyle, 
+        InheritedWidget,
+        TemplateWidget, StaticWidget, CollectionWidget,
         ConceptWidget, PartialWidget, CustomWidget,
         Menu, MenuItem, Button,
         on, baseFx, baseArray, lang, topic)
@@ -101,7 +104,7 @@ define(["dojo/_base/declare",
                     widget = new TemplateWidget({});
                 }
                 else if(resource.declaredClass == "StaticResource") {
-                    widget = new StaticWidget({});
+                    widget = new InheritedWidget({});
                 }
                 else if(resource.declaredClass == "Collection_R") {
                     widget = new CollectionWidget({resource: resource});
