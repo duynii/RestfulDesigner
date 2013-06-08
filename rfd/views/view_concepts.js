@@ -8,11 +8,11 @@ define([
     "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
     "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
     "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", 
-    "dojox/collections/Dictionary",
+    "dojox/collections/Dictionary", "dojo/text!../widget/templates/DesignerHelp.html",
     "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
-    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", 
-    "dijit/MenuBarItem", "dijit/form/Textarea", "dijit/layout/ContentPane",
+    "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", "dijit/form/DropDownButton", 
+    "dijit/MenuBarItem", "dijit/form/Textarea", "dijit/layout/ContentPane", "dijit/TooltipDialog",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
     "rfd/module/ClassStyle", "rfd/model/Branch",
@@ -30,9 +30,10 @@ define([
 function(
             dom, topic, domConstruct, domStyle, domGeometry, query, on, aspect, 
             JSON, keys, lang, baseArray, baseEvent, 
-            Dictionary,
+            Dictionary, designerHelpContent,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
-            MenuBar, PopupMenuBarItem, DropDownMenu, MenuBarItem, Textarea, ContentPane,
+            MenuBar, PopupMenuBarItem, DropDownMenu, DropDownButton, 
+            MenuBarItem, Textarea, ContentPane, TooltipDialog,
             Concept,
             Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, PartialConcept_R, 
@@ -245,6 +246,16 @@ function(
 
       dialog.show();
     },
+    _setHelpButtons = function(id, content)
+    {
+      new DropDownButton({
+        label: "Help",
+        dropDown: new TooltipDialog({
+          content: content
+        })
+      }, id, content);
+
+    },
     initUi = function() 
     {
         console.log("initUi called");
@@ -258,6 +269,7 @@ function(
         createResourceDesigner();
         createResourcesCatalogue();
 
+        _setHelpButtons("designerHelp", designerHelpContent);
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
