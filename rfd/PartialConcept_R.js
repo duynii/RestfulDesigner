@@ -3,10 +3,10 @@
 define([
     "dojo/_base/declare",
     "rfd/ConceptResource"
-], function(declare, ConceptResource){
+], function(declare, ConceptResource) {
+    var autoNo = 0;
     return declare("PartialConcept_R", ConceptResource, 
     {
-        var autoNo = 0;
         constructor: function(name, parentId, concept)
         {
             // 'name' and 'parentId' are auto init'ed in parent
@@ -21,6 +21,9 @@ define([
             this.id = "partial"+autoNo;
             this.name = "partial"+autoNo;
             this.param = null;
+        },
+        toString: function() {
+            return this.name;
         },
         clone: function() 
         {

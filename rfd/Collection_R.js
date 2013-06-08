@@ -29,7 +29,7 @@ define([
     	},
         toString: function() {
             return this.name;
-        }
+        },
         autoName: function() 
         {
             // Not needed for this

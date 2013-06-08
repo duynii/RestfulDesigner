@@ -107,6 +107,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 query("[name='entity_id']", this.domNode).forEach(function(node, index)
                 {
                     var label = labelsList[index];
+                    /*
                     var sel = new SelectWidget(
                         {
                             onChange: function(newValue) {
@@ -116,6 +117,8 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                         }, 
                         node
                     );
+                    */
+                    var sel = registry.getEnclosingWidget(node);
                     baseArray.forEach(this.concepts, function(item, index)
                     {
                         if(index == 0) {
@@ -180,7 +183,13 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 var data = form.get('value');
                 console.log("Custom submit: " + JSON.stringify(data));
 
-                var res = new Custom_R("dummy", "dummy");
+                if(!form.isValid() || data.name == "") {
+                    alert("Data submited in invalid: " + JSON.stringify(data));
+                    return;
+                }
+
+                var res = new Custom_R(data.name, "/");
+                //res.autoName();
                 this.onFinish(res);
             },
             onCollectionSubmit: function(form)
@@ -189,7 +198,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 console.log("Collection submit: " + JSON.stringify(data));
 
                 var filtered = baseArray.filter(this.concepts, function(concept) {
-                    return (concept.id == form.entity_id);
+                    return (concept.id == data.entity_id);
                 });
                 var concept = filtered[0];
 
@@ -201,7 +210,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 var data = form.get('value');
                 console.log("Concept_R submit: " + JSON.stringify(data));
                 var filtered = baseArray.filter(this.concepts, function(concept) {
-                    return (concept.id == form.entity_id);
+                    return (concept.id == data.entity_id);
                 });
                 var concept = filtered[0];
 
@@ -213,7 +222,7 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
                 var data = form.get('value');
                 console.log("PartialConcept_R submit: " + JSON.stringify(data));
                 var filtered = baseArray.filter(this.concepts, function(concept) {
-                    return (concept.id == form.entity_id);
+                    return (concept.id == data.entity_id);
                 });
                 var concept = filtered[0];
                 var res = new PartialConcept_R("dummy", "dummy", concept);

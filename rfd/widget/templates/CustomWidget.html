@@ -8,21 +8,20 @@
 			<label for="resource_id">Identifier:</label> 
 			<span style="width: 100px" data-dojo-attach-point="resource_id"
 			data-dojo-type="dijit/InlineEditBox">Class Name Edit</span>
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+            <input  data-dojo-attach-point="checkTemplateParam" name="checkTemplateParam" 
+                value="templatedParam"
+                data-dojo-type="dijit/form/CheckBox"
+                data-dojo-props="checked: true">Template Parameter?</input>
 			<hr/>
 			<!--
-			<select data-dojo-attach-point="typeNode" data-dojo-type="dojox/form/CheckedMultiSelect">
-				<option value="param">Input param</option>
-				<option value="param">Url end point</option>
-			</select>
-			-->
 				<input type="radio" name="type" value="param" checked data-dojo-attach-point="paramButton"
 			            data-dojo-type="dijit/form/RadioButton" />
 				<label >Input param</label>
 				<input type="radio" name="type" value="endpoint" data-dojo-attach-point="endpointButton" 
 			            data-dojo-type="dijit/form/RadioButton" />
 				<label >Restful endpoint</label>
-
-			<br/>
+			-->
 			<br/>
 			<span data-dojo-attach-point="paramNode">
 			    <select  name="paramSelect" data-dojo-attach-point="paramSelect"  data-dojo-type="dijit/form/Select">
@@ -35,16 +34,15 @@
 			            data-dojo-type="dijit/form/TextBox" />
 			</span>
 			<br/>
-			<span data-dojo-attach-point="methodNode" style="visibility: collapse;">
-				<label for="method">Method</label>
-			    <select  name="method" data-dojo-attach-point="methodSelect"  data-dojo-type="dijit/form/Select">
-    				<option value="POST" select>POST</option>
+			<span data-dojo-attach-point="methodNode" style="visibility: visible;">
+				<label for="method">Method: </label>
+			    <select  name="method" data-dojo-attach-point="methodSelect"  
+			    		 data-dojo-type="dijit/form/Select">
+    				<option value="NONE" select>NONE</option>
+    				<option value="POST">POST</option>
     				<option value="PUT">PUT</option>
+    				<option value="DELETE">DELETE</option>
     				<option value="GET">GET</option>
-    				<!--
-    					<option value="DELETE">DELETE</option>
-    					<option value="CREATE">CREATE</option>
-    				-->
 			    </select>
 			</span>
 		</form>

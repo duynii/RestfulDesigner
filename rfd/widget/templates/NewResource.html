@@ -5,7 +5,7 @@
     <option value="custom">Custom Resource</option>
 </select>
 <hr/>
-<div id="NRStack" data-dojo-type="dijit/layout/StackContainer" style="min-width: 500px; min-height:400px">
+<div id="NRStack" data-dojo-type="dijit/layout/StackContainer" style="min-width: 400px; min-height:300px">
     <div id="NRstatic" data-dojo-type="dijit/layout/ContentPane" title="New Static resource">
 		<div data-dojo-type="dijit/form/Form" id="staticForm" action="" method="">
         	<label>Identifier:</label>
@@ -39,19 +39,42 @@
     </div>
     <div id="NRcustom" data-dojo-type="dijit/layout/ContentPane" title="New Custom resource">
 		<div data-dojo-type="dijit/form/Form" id="customForm" action="" method="">
-            <div>
-               <label>Identifier:</label>
-               <input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+            <div style="height: 100%">
+               <label>Templated Identifier:</label>
+               <input type="text" name="name" required="true" data-dojo-type="dijit/form/ValidationTextBox"
+                style="width: 160px;"/>
+                <br />
+               <label for="selectTemplateType">Type:</label>
+                <select data-dojo-type="dijit/form/Select" id="selectTypeVerify" name="selectTemplateType">
+                        <option value="string" selected>String</option>
+                        <option value="integer" >Integer</option>
+                        <option value="decimal" >Decimal</option>
+                </select>
+               <!--
+                <input  data-dojo-attach-point="checkTemplateParam" name="checkTemplateParam" 
+                    value="templatedParam"
+                    data-dojo-type="dijit/form/CheckBox"
+                    data-dojo-props="checked: =true">Has Paging</input>
+                <span id="typeVerify">
+                    <select data-dojo-type="dijit/form/Select" id="selectTypeVerify">
+                        <option value="string" selected>String</option>
+                        <option value="integer" >Integer</option>
+                        <option value="decimal" >Decimal</option>
+                    </select>
+                    <input type="text" name="typeRegex" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+                </span>
+                <br />
                 <select name="type" data-dojo-type="dijit/form/Select">
-                    <option value="POST" selected>POST</option>
+                    <option value="NONE" selected>No Method</option>
+                    <option value="POST">POST</option>
                     <option value="PUT">PUT</option>
                     <option value="DELETE">DELETE</option>
                     <option value="GET">GET</option>
                 </select>
+                -->
             </div>
-        	<br/>
-            <hr/>
-        	<div style="float: right">
+            <hr style="float: bottom;"/>
+        	<div style="float: bottom right;">
 				<button data-dojo-type="dijit/form/Button" type="submit" >OK</button>
 			</div>
         </div>
@@ -64,7 +87,7 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="entity_id"></select>
+                <select name="entity_id" data-dojo-type="dijit/form/Select"></select>
             </div>
             <div>
                 <select id="property_select" name="property_select"></select>
@@ -84,8 +107,8 @@
                <label class="id_label" type="text" name="name"/>
             </div>
             <div>
-                <label>Concept: </label>
-                <select name="entity_id"></select>
+                <label for="entity_id">Concept: </label>
+                <select name="entity_id" data-dojo-type="dijit/form/Select"></select>
             </div>
         	<br/>
             <hr/>
@@ -102,7 +125,7 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="entity_id"></select>
+                <select name="entity_id" data-dojo-type="dijit/form/Select"></select>
             </div>
             <hr/>
             <br/>
@@ -120,7 +143,7 @@
             </div>
             <div>
                 <label>Concept: </label>
-                <select name="entity_id"></select>
+                <select name="entity_id" data-dojo-type="dijit/form/Select"></select>
             </div>
             <br/>
             <div style="float: right">

@@ -1,4 +1,4 @@
-/clone//http://dojotoolkit.org/documentation/tutorials/1.8/recipes/custom_widget/
+//http://dojotoolkit.org/documentation/tutorials/1.8/recipes/custom_widget/
 // myApp/widget/AuthorWidget.js
 define(["dojo/_base/declare",
         "dijit/_WidgetBase", 

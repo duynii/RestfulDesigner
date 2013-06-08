@@ -30,18 +30,37 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments);
 
+                this._initUI();
                 this._saveForm();
             },
             postCreate: function()
             {
                 this.inherited(arguments);
-                this._initUI();
             },
             _initUI: function()
             {
-                this.paramButton.on("change", lang.hitch(this, function(isChecked)
+                /*
+                this.methodSelect.on("change", lang.hitch(this, function(newValue)
                 {
-                    this._showMutualExUI(isChecked);
+                    //this._showMutualExUI(isChecked);
+                    this._saveForm();
+                }));
+                */
+
+                this.checkTemplateParam.set('value', this.resource.isTemplateParam);
+                domStyle.set(this.paramNode, "visibility", 
+                        this.resource.isTemplateParam ? "visible" : "collapse");
+
+                this.checkTemplateParam.on("change", lang.hitch(this, function(newValue)
+                {
+                    this.resource.isTemplateParam = newValue;
+                    domStyle.set(this.paramNode, "visibility", newValue ? "visible" : "collapse");
+                    //this.resource_id.set('value', this.resource.toString());
+                    //this.resource_id.innerHTML = this.resource;
+                    this.resource_id.domNode.innerHTML = this.resource;
+                    this.spanNode.innerHTML = this.resource;
+                    this.onResourceIdChanged();
+
                     this._saveForm();
                 }));
 
@@ -64,22 +83,26 @@ define(["dojo/_base/declare",
                 }
 
                 var data = this.form.get('value');
+                console.info("custom form: " + JSON.stringify(data));
 
-                var obj = null;
                 this.resource.clearMethods(); // clears it
-                if(data.type == 'param')
+                if(data.checkTemplateParam == "templatedParam")
                 {
-                    obj = {};
+                    var obj = {};
                     obj.type = data.paramSelect;
                     if(obj.type == 'string') {
                         obj.regex = data.regex;
                     }
                     this.resource.param = obj;
+                    this.resource.isTemplateParam = true;
                 }
-                else
-                {
-                    this.resource.addMethod(data.method);
+                else {
                     this.resource.param = null;
+                    this.resource.isTemplateParam = false;
+                }
+
+                if(data.method  != "NONE") {
+                    this.resource.addMethod(data.method);
                 }
 
                 //var json = JSON.stringify(this.resource);

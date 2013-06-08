@@ -10,6 +10,8 @@ define([
         {
             this.clearMethods();
             this.resource_type = this.declaredClass;
+
+            this.isTemplateParam = true;
         },
         autoName: function() 
         {
@@ -18,12 +20,16 @@ define([
             this.name = "param"+autoNo;
             this.param = null;
         },
+        toString: function() {
+            return this.isTemplateParam ? '{' + this.id + '}' : this.id;
+        },
         clone: function() 
         {
             var res = new Custom_R(this.id, this.parentId);
             res.is_concept = this.is_concept;
             res.methods.splice(0, 0, this.methods);
             res.param = this.param;
+            res.isTemplateParam = this.isTemplateParam;
             return res;
         }
     });
