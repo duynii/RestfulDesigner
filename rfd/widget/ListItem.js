@@ -106,7 +106,7 @@ define(["dojo/_base/declare",
                     widget = new TemplateWidget({});
                 }
                 else if(resource.declaredClass == "StaticResource") {
-                    widget = new InheritedWidget({});
+                    widget = new StaticWidget({});
                 }
                 else if(resource.declaredClass == "Collection_R") {
                     widget = new CollectionWidget({resource: resource});
