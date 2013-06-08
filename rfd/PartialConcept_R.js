@@ -4,8 +4,10 @@ define([
     "dojo/_base/declare",
     "rfd/ConceptResource"
 ], function(declare, ConceptResource){
-    return declare("PartialConcept_R", ConceptResource, {
-        constructor: function(name, parentId, json_data, template)
+    return declare("PartialConcept_R", ConceptResource, 
+    {
+        var autoNo = 0;
+        constructor: function(name, parentId, concept)
         {
             // 'name' and 'parentId' are auto init'ed in parent
 
@@ -15,7 +17,10 @@ define([
         },
         autoName: function() 
         {
-            // Not needed for this
+            autoNo++;
+            this.id = "partial"+autoNo;
+            this.name = "partial"+autoNo;
+            this.param = null;
         },
         clone: function() 
         {

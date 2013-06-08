@@ -1,4 +1,4 @@
-//http://dojotoolkit.org/documentation/tutorials/1.8/recipes/custom_widget/
+/clone//http://dojotoolkit.org/documentation/tutorials/1.8/recipes/custom_widget/
 // myApp/widget/AuthorWidget.js
 define(["dojo/_base/declare",
         "dijit/_WidgetBase", 
@@ -124,7 +124,7 @@ define(["dojo/_base/declare",
 
                 var dialog = new NewResourceDialog({
                     title:"Custom Dialog",
-                    style: "min-width: 500px; min-height: 400px",
+                    style: "min-width: 200px; min-height: 200px",
                     onFinish: lang.hitch(this, function(newRes)
                     {
                         // TODO Why are branches created here and only know in ListItem

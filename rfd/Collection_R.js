@@ -27,6 +27,9 @@ define([
             this.addMethod("POST"); // create
             this.resource_type = this.declaredClass;
     	},
+        toString: function() {
+            return this.name;
+        }
         autoName: function() 
         {
             // Not needed for this

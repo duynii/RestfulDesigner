@@ -177,19 +177,49 @@ define(["dojo/_base/declare", "dijit/Dialog", "dojo/_base/array",
             },
             onCustomSubmit: function(form)
             {
-                console.log("Custom submit: ");
+                var data = form.get('value');
+                console.log("Custom submit: " + JSON.stringify(data));
+
+                var res = new Custom_R("dummy", "dummy");
+                this.onFinish(res);
             },
             onCollectionSubmit: function(form)
             {
-                console.log("Collection submit: ");
+                var data = form.get('value');
+                console.log("Collection submit: " + JSON.stringify(data));
+
+                var filtered = baseArray.filter(this.concepts, function(concept) {
+                    return (concept.id == form.entity_id);
+                });
+                var concept = filtered[0];
+
+                var res = new Collection_R("dummy", "dummy", concept);
+                this.onFinish(res);
             },
             onConceptSubmit: function(form)
             {
-                console.log("Concept submit: ");
+                var data = form.get('value');
+                console.log("Concept_R submit: " + JSON.stringify(data));
+                var filtered = baseArray.filter(this.concepts, function(concept) {
+                    return (concept.id == form.entity_id);
+                });
+                var concept = filtered[0];
+
+                var res = new Concept_R("dummy", "dummy", concept);
+                this.onFinish(res);
             },
             onPartialSubmit: function(form)
             {
-                console.log("Partial submit: ");
+                var data = form.get('value');
+                console.log("PartialConcept_R submit: " + JSON.stringify(data));
+                var filtered = baseArray.filter(this.concepts, function(concept) {
+                    return (concept.id == form.entity_id);
+                });
+                var concept = filtered[0];
+                var res = new PartialConcept_R("dummy", "dummy", concept);
+                res.autoName();
+
+                this.onFinish(res);
             },
             func: function() {
                 console.log("func called");
