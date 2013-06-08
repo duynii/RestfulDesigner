@@ -96,11 +96,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
-
+                this.on("dblclick", lang.hitch(this, function()
+                {
+                    if( confirm("Delete this URI element? " + this.resource) ) {
+                        this._onDeleteResource();
+                    }
+                }));
             },
             _onDeleteResource: function() {
                 this.onDeleteResource();
-                // TODO emit event if no resource left
             },
             onDeleteResource: function() {
                 console.log("onDeleteResource of " + this.id);

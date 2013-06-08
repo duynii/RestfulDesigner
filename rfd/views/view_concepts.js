@@ -155,15 +155,14 @@ function(
       resCatalogue.addResource( new TemplatedResource("Static", "/", 
                                           {title: "my title", data: "my document"}, "empty") );
       resCatalogue.addResource( new Custom_R("param", "/") );
+      resCatalogue.addResource( new PartialConcept_R("Partial", "/", null) );
       baseArray.forEach(controller.getConcepts(), function(concept, index)
         {
           console.log("Looping through: " + concept.id);
           var coll_R = new Collection_R(concept.id, "/", concept);
           var concept_R = new Concept_R(concept.id, "/", concept);
-          var partial_R = new PartialConcept_R(concept.id, "/", concept);
           resCatalogue.addResource(coll_R);
           resCatalogue.addResource(concept_R);
-          resCatalogue.addResource(partial_R);
         }, 
         this
       );

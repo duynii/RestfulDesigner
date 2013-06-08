@@ -109,7 +109,7 @@ define([
         },
        onBranchingOut: function(branch, resource)
         {
-            console.log("onBranchingOut: " + branch + " - " + resource);
+
             //Test if it clashs with existing branch
             //Note: this checks that no branch starts with the specified URL also.
             var existing_branch = _tree.getBranch(branch.toUrl());
@@ -124,6 +124,19 @@ define([
         },
         onBranchDrop: function(branch_ref, resource)
         {
+            //Check that the previous resource is an individual resource
+            if(resource.declaredClass == "PartialConcept_R") {
+                var last = branch_ref.lastResource();
+
+                if(last != null && last.declaredClass != "Concept_R") {
+                    alert("Partial element must be added after Type II/Individual resource");
+                    return false;
+                }
+
+                resource.concept = last.concept;
+            }
+
+            //Create a branch copy just to add and call toUrl()
             var br = branch_ref.clone();
             br.addActiveResource(resource);
 
