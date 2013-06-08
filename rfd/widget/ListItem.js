@@ -93,6 +93,8 @@ define(["dojo/_base/declare",
                         topic.publish("branch_removed", this.branch);
                     }
                 }));
+
+                topic.subscribe
             },
             _createWidget: function(resource, isHidden)
             {
@@ -143,6 +145,11 @@ define(["dojo/_base/declare",
                     //this.onResourceRemoved(resource);
                     this._setUrlAttr(this.branch.toUrl());
                     topic.publish("resource_removed", resource);
+                });
+
+                widget.onResourceIdChanged = lang.hitch(this, function()
+                {
+                    this._setUrlAttr(this.branch.toUrl()); // update the URL
                 });
 
                 if(this.onBranchOut != null) {

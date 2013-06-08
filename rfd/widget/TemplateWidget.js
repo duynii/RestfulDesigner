@@ -30,6 +30,7 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments)
 
+
                 //Set the existing JSON doc
                 this.json_doc.set('value', this.resource.getJSONStr() );
             },
@@ -62,6 +63,7 @@ define(["dojo/_base/declare",
             _checkAcceptableJSON: function(str)
             {
 
-            }        });
+            }        
+        });
     }
 ); // and that's it!

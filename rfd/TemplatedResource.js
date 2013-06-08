@@ -20,7 +20,7 @@ define([
             this.resource_type = this.declaredClass;
         },
         getJSON: function() { return this.json_doc; },
-        getJSONStr: function() { return JSON.stringify(this.json_doc); },
+        getJSONStr: function() { return JSON.stringify(this.json_doc, null, "  "); },
         setJSON: function(data) { this.json_doc = data },
         print: function() 
         {

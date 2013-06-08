@@ -70,6 +70,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     {
                         this.resource.setId(newValue); // Set it
                         this.spanNode.innerHTML = this.resource;
+                        // Fires handler for parent
+                        this.onResourceIdChanged();
                     }
                 }));
 
@@ -110,7 +112,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             onBranchOutClick : function(resource) {
                 console.info("onBranchOutClick: " + resource);
             },
+            onResourceIdChanged: function() {
+                console.info("Default handler for resource id changed");
+            },
             // Event function to override
+            //TODO check that this renamed branch is unique
             onCheckResourceIdChange: function(resource) { return true; }
         });
     }
