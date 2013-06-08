@@ -23,6 +23,15 @@ html, body {
     display: block;
 }
 
+#loadingOverlay {
+    background:  #fff url('../../dijit/themes/claro/images/loadingAnimation.gif') no-repeat 10px 23px;
+}
+
+#loadingOverlay .loadingMessage {
+    padding: 25px 40px;
+    color: #999;
+}
+
 /* This works, ref: http://dojotoolkit.org/reference-guide/1.8/dijit/layout.html
  mainDiv is outer most div
  */
