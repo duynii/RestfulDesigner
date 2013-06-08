@@ -7,7 +7,7 @@ define([
     "dojo/dom", "dojo/topic",
     "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
     "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
-    "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", 
+    "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", "dojo/_base/window", "dojo/_base/fx",
     "dojox/collections/Dictionary", "dojo/text!../widget/templates/DesignerHelp.html",
     "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
@@ -29,7 +29,7 @@ define([
     ],
 function(
             dom, topic, domConstruct, domStyle, domGeometry, query, on, aspect, 
-            JSON, keys, lang, baseArray, baseEvent, 
+            JSON, keys, lang, baseArray, baseEvent, win, baseFx,
             Dictionary, designerHelpContent,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
             MenuBar, PopupMenuBarItem, DropDownMenu, DropDownButton, 
@@ -246,6 +246,39 @@ function(
 
       dialog.show();
     },
+    endLoading = function() 
+    {
+      // summary: 
+      //    Indicate not-loading state in the UI
+
+      baseFx.fadeOut({
+        node: dom.byId("loadingOverlay"),
+        onEnd: function(node){
+          domStyle.set(node, "display", "none");
+        }
+      }).play();
+    },
+
+    startLoading = function(targetNode) 
+    {
+      // summary: 
+      //    Indicate a loading state in the UI
+
+      var overlayNode = dom.byId("loadingOverlay");
+      if("none" == domStyle.get(overlayNode, "display")) 
+      {
+        var coords = domGeometry.getMarginBox(targetNode || win.body());
+        domGeometry.setMarginBox(overlayNode, coords);
+
+        // N.B. this implementation doesn't account for complexities
+        // of positioning the overlay when the target node is inside a 
+        // position:absolute container
+        domStyle.set(dom.byId("loadingOverlay"), {
+          display: "block",
+          opacity: 1
+        });
+      }
+    },
     _setHelpButtons = function(id, content)
     {
       new DropDownButton({
@@ -258,6 +291,7 @@ function(
     },
     initUi = function() 
     {
+
         console.log("initUi called");
         //var save = _loadFromCookie();
         //_displayExportXML(save);
@@ -276,10 +310,12 @@ function(
           _saveToCookie();
         }));
 */
+      endLoading();
     };
     return {
         init: function() 
         {
+          startLoading();
           var savedState = _loadFromCookie();
 
           var isLoad = false;

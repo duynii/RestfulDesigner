@@ -13,6 +13,16 @@ html, body {
     background-color: #d0e9fc;
 }
 
+.pageOverlay {
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1001;
+    display: block;
+}
+
 /* This works, ref: http://dojotoolkit.org/reference-guide/1.8/dijit/layout.html
  mainDiv is outer most div
  */
