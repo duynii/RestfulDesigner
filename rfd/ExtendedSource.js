@@ -36,6 +36,21 @@ define(["dojo/_base/declare", "dojo/dnd/Source",
                     domConstruct.destroy(node);
                 },
                 this);
+            },
+            getWidgetFromData: function(data)
+            {
+                var nodes = this.getAllNodes();
+                var widget = null;
+                nodes.forEach(function(node)
+                {
+                    var d = this.getItem(node.id).data;
+                    if(d == data) {
+                        widget = registry.getEnclosingWidget(node);
+                    }
+                },
+                this);
+
+                return widget;
             }
 
 

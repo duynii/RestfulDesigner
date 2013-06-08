@@ -73,7 +73,7 @@ define(["dojo/_base/declare",
                 topic.subscribe("resource_removed", lang.hitch(this, function(resource)
                 {
                     var updated = this.branch.removeResource(resource);
-                    if(updated) {
+                    if(updated && this.branch.elementSize() > 0) {
                         this._setUrlAttr(this.branch.toUrl());
 
                         //destroy the widget
@@ -82,6 +82,14 @@ define(["dojo/_base/declare",
                         wid.destroyRecursive();
                     }
                 }));             
+
+                this.on("dblclick", lang.hitch(this, function()
+                {
+                    var confirmed = confirm("Delete this branch item? " + this.branch.toUrl());
+                    if(confirmed) {
+                        topic.publish("branch_removed", this.branch);
+                    }
+                }));
             },
             _createWidget: function(resource, isHidden)
             {
@@ -122,8 +130,12 @@ define(["dojo/_base/declare",
 
                 this.res2widget.add(resource, widget);
 
-                widget.onDeleteResource = lang.hitch(this, function() {
+                widget.onDeleteResource = lang.hitch(this, function() 
+                {
                     this.branch.removeResource(resource);
+                    if(this.branch.elementSize() == 0) {
+                        return;
+                    }
                     widget.destroyRecursive();
                     //this.onResourceRemoved(resource);
                     this._setUrlAttr(this.branch.toUrl());

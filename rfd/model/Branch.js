@@ -1,9 +1,9 @@
 // Example class
 define([
     "dojo/_base/declare",
-    "dojo/_base/array", "dojo/_base/lang",
+    "dojo/_base/array", "dojo/_base/lang", "dojo/topic",
     "rfd/model/Section"
-], function(declare, baseArray, lang, Section){
+], function(declare, baseArray, lang, topic, Section){
     return declare("Branch", null, 
     {
         constructor: function(active, inactive)
@@ -46,6 +46,9 @@ define([
         {
             return this.inactive.last();
         },
+        elementSize: function() {
+            return this.active.size() + this.inactive.size();
+        },
         lastResource: function()
         {
             var res = this.active.last();
@@ -66,6 +69,10 @@ define([
                 }
             }
             this.id = this.toUrl(); 
+
+            if(this.elementSize() == 0) {
+                topic.publish("branch_removed", this);
+            }
 
             return true;
         },

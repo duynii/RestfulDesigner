@@ -91,6 +91,9 @@ define([
         {
             return store.query(function(item) {return true});
         },
+        getTree: function() {
+            return _tree;
+        },
         toJSON: function() // Get the whole JSON representation of program current state eg. a save file
         {
             var saveState = {
