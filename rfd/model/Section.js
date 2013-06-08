@@ -47,6 +47,15 @@ define([
         {
             this.resources.push(resource);
         },
+        removeResource: function(resource) {
+            var index = this.resources.indexOf(resource);
+            if(index != -1) {
+                this.resources.splice(index, 1);
+
+                return true;
+            }
+            return false;
+        },
         hasResourceId: function(id)
         {
             var ind = -1;

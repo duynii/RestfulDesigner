@@ -10,7 +10,7 @@ define(["dojo/_base/declare",
         "rfd/widget/TemplateWidget", "rfd/widget/StaticWidget", "rfd/widget/CollectionWidget", 
         "rfd/widget/ConceptWidget", "rfd/widget/PartialWidget", "rfd/widget/CustomWidget", 
         "dijit/Menu",  "dijit/MenuItem", "dijit/form/Button", 
-        "dojo/on",  "dojo/_base/fx",  "dojo/_base/array", "dojo/_base/lang"
+        "dojo/on",  "dojo/_base/fx",  "dojo/_base/array", "dojo/_base/lang", "dojo/topic"
         ],
 
     function(declare, _WidgetBase, _TemplatedMixin, template, 
@@ -19,7 +19,7 @@ define(["dojo/_base/declare",
         Branch, Section, classStyle, TemplateWidget, StaticWidget, CollectionWidget,
         ConceptWidget, PartialWidget, CustomWidget,
         Menu, MenuItem, Button,
-        on, baseFx, baseArray, lang)
+        on, baseFx, baseArray, lang, topic)
     {
         return declare("ListItem",[_WidgetBase, _TemplatedMixin], 
         {
@@ -31,10 +31,16 @@ define(["dojo/_base/declare",
             templateString: template,
             onBranchOut: null,
             lastNode: null,
+            //This holds an entire branch
+            branch: null,
+            res2widget: new Dictionary(),
  
             // A class to be applied to the root node in our template
             baseClass: "listItem",
- 
+            // Event notification of widget removed
+            onResourceRemoved: function(resource) {
+                console.info("Default resource removed: " + resource);
+            }, 
             _setBranchAttr: function(branch)
             {
                 if(branch != null) 
@@ -61,12 +67,26 @@ define(["dojo/_base/declare",
                 console.log("ListItem postcreate called");
                 this.branch = null;
                 //this.wid2Res = new Dictionary();               
-                //this.dom2branch = new Dictionary();               
+                //this.dom2branch = new Dictionary();  
+
+                // This branch could be the one changed
+                topic.subscribe("resource_removed", lang.hitch(this, function(resource)
+                {
+                    var updated = this.branch.removeResource(resource);
+                    if(updated) {
+                        this._setUrlAttr(this.branch.toUrl());
+
+                        //destroy the widget
+                        var wid = this.res2widget.entry(resource).value;
+                        this.res2widget.remove(resource);
+                        wid.destroyRecursive();
+                    }
+                }));             
             },
             _createWidget: function(resource, isHidden)
             {
-                var cssStyle = classStyle.entry(resource.declaredClass); 
-                cssStyle += (isHidden ? " hidden" : "");
+                //var cssStyle = classStyle.entry(resource.declaredClass); 
+                //cssStyle += (isHidden ? " hidden" : "");
 
                 var widget = null;
                 if(resource.declaredClass == "TemplatedResource") {
@@ -79,18 +99,19 @@ define(["dojo/_base/declare",
                     widget = new CollectionWidget({resource: resource});
                 }
                 else if(resource.declaredClass == "Concept_R") {
-                    widget = new ConceptWidget({});
+                    widget = new ConceptWidget({resource: resource});
                 }
                 else if(resource.declaredClass == "Custom_R") {
                     widget = new CustomWidget({});
                 }
                 else if(resource.declaredClass == "PartialConcept_R") {
-                    widget = new PartialWidget({});
+                    widget = new PartialWidget({resource: resource});
                 }
                 else
                 {
                     console.error("Unknown resource found in ListItem");
                 }
+
 
                 if(isHidden) {
                     domStyle.set(widget.domNode, {visibility: 'hidden'});
@@ -99,9 +120,15 @@ define(["dojo/_base/declare",
                 widget.init(resource);
                 widget.placeAt(this.domNode);
 
-                widget.onDeleteResource = function() {
+                this.res2widget.add(resource, widget);
+
+                widget.onDeleteResource = lang.hitch(this, function() {
+                    this.branch.removeResource(resource);
                     widget.destroyRecursive();
-                }
+                    //this.onResourceRemoved(resource);
+                    this._setUrlAttr(this.branch.toUrl());
+                    topic.publish("resource_removed", resource);
+                });
 
                 if(this.onBranchOut != null) {
                     widget.onBranchOutClick = lang.hitch(this, this._onBranchOut);
@@ -126,14 +153,8 @@ define(["dojo/_base/declare",
                 isHidden = typeof isHidden !== 'undefined' ? isHidden : false;
                 branch = typeof branch !== 'undefined' ? branch : null;
 
-                console.log("this.branch: " + this.branch);
-                console.log("adding res: " + resource.id + " branch: " + branch);
-
-                var cssStyle = classStyle.entry(resource.declaredClass); 
-                cssStyle += (isHidden ? " hidden" : "");
-
-                var myId = this.id;
-                // create a dom under self
+                //console.log("this.branch: " + this.branch);
+                //console.log("adding res: " + resource.id + " branch: " + branch);
 
                 // Create the button widget
                 var wid = this._createWidget(resource, isHidden);

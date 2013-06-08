@@ -56,6 +56,19 @@ define([
                 return this.inactive.last();
             }
         },
+        // Pass in a reference of a resource to be removed
+        //  the resource can be in active (but can also be in inactive)
+        removeResource: function(resource) {
+            if(!this.active.removeResource(resource)) {
+                if(!this.inactive.removeResource(resource)) {
+                    //console.error("Failed to remove a resource active and inactive");
+                    return false;
+                }
+            }
+            this.id = this.toUrl(); 
+
+            return true;
+        },
         //getActive: function() { return this.active; },
         //getInactive: function() { return this.inactive; },
         addActiveResource: function(resource) { 
