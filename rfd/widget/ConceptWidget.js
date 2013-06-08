@@ -1,4 +1,6 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+define(["dojo/_base/declare", 
+        //"dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+        "rfd/widget/StaticWidget",
         "dojo/text!./templates/ConceptWidget.html", 
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
@@ -10,7 +12,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "rfd/controller/controller_concepts"
         ],
 
-    function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
+    function(declare, 
+        //_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+        StaticWidget, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         TemplatedResource, MakeRepDialog, Representation, Branch, Section,
@@ -19,17 +23,18 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil,
         controller)
     {
-        return declare("ConceptWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
+        return declare("ConceptWidget",[StaticWidget], 
         {
             resource: null,
             //baseClass: "templatedResource",
             templateString: template,
             init: function(templateResource) 
             {
-                this.resource = templateResource;
-                this.spanNode.innerHTML = this.resource;
+                this.inherited(arguments);
+                //this.resource = templateResource;
+                //this.spanNode.innerHTML = this.resource;
                 //Set the identifier for editing.
-                this.resource_id.set('value', this.resource.toString());
+                //this.resource_id.set('value', this.resource.toString());
 
                 var fullRep = new Representation("Full", this.resource.concept.getPropertyNames());
                 this.selectRep.addOption({value: fullRep, label: fullRep});
@@ -69,22 +74,13 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     d.show();
                 }))
             },
-            setErrorMsg: function(msg)
-            {
-                this.errorNode.innerHTML = msg;
-                domStyle.set(this.errorNode, "visibility", "visible");
-            },
-            resetErrorMsg: function()
-            {
-                this.errorNode.innerHTML = "";
-                domStyle.set(this.errorNode, "visibility", "hidden");
-            },
             postCreate: function()
             {
                 this.inherited(arguments);
 
                 //this.spanNode.innerHTML = "Blah";
 
+/*
                 on(this.spanNode, "mouseover", lang.hitch(this, function()
                 {
                     popup.open(
@@ -133,11 +129,13 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
+                */
 
             },
             _saveForm : function() {
 
-            },
+            }
+            /*
             _onDeleteResource: function() {
                 this.onDeleteResource();
                 // TODO emit event if no resource left
@@ -154,6 +152,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             },
             // Event function to override
             onCheckResourceIdChange: function(resource) { return true; }
+            */
         });
     }
 ); // and that's it!

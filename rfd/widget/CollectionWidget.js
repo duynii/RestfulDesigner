@@ -1,4 +1,6 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+define(["dojo/_base/declare", 
+        //"dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+        "rfd/widget/StaticWidget",
         "dojo/text!./templates/CollectionWidget.html", 
         "dojox/collections/Dictionary",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
@@ -10,7 +12,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "dijit/form/Button", "dijit/form/Select"
         ],
 
-    function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
+    function(declare, 
+        //_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, 
+        StaticWidget, template, 
         Dictionary,
         domStyle, domGeometry, domConstruct, 
         TemplatedResource, Branch, Section,
@@ -21,17 +25,19 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
     {
 
         var img = '<img width="20" alt="C" height="20" src="../rfd/widget/images/coll_red.png" />';
-        return declare("CollectionWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
+        return declare("CollectionWidget",[StaticWidget], 
         {
             resource: null,
             //baseClass: "templatedResource",
             templateString: template,
             init: function(coll) 
             {
+                this.inherited(arguments);
                 this.resource = coll;
-                this.spanNode.innerHTML = this.resource + img;
                 //Set the identifier for editing.
-                this.resource_id.set('value', this.resource.id);
+                //this.resource_id.set('value', this.resource.id);
+
+                this.spanNode.innerHTML = this.resource + img;
 
                 this.checkPaging.set('value', coll.has_paging ? 'true' : 'false');
                 this.textPagingNo.set('value', coll.paging_size);
@@ -71,15 +77,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             },
             _setupEditing: function()
             {
-                this.checkPaging.on("onChange", lang.hitch(this, function(newValue)
+                this.checkPaging.on("change", lang.hitch(this, function(newValue)
                 {
                     console.info("checkPaging: " + newValue);
                     this.resource.has_paging = newValue;
                 }));
 
-                this.textPagingNo.on("onChange", lang.hitch(this, function(newValue)
+                this.textPagingNo.on("change", lang.hitch(this, function(newValue)
                 {
-                    if(value <=0) {
+                    if(newValue < 1) {
                         alert("Paging value cannot be 0 or negative, 10 or more recommended");
                     }
                     else {
@@ -87,6 +93,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     }
                 }));
             },
+            /*
             setErrorMsg: function(msg)
             {
                 this.errorNode.innerHTML = msg;
@@ -97,10 +104,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.errorNode.innerHTML = "";
                 domStyle.set(this.errorNode, "visibility", "hidden");
             },
+            */
             postCreate: function()
             {
                 this.inherited(arguments);
-
+/*
                 on(this.spanNode, "mouseover", lang.hitch(this, function()
                 {
                     popup.open(
@@ -128,7 +136,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         this.spanNode.innerHTML = this.resource + img;
                     }
                 }));
-
                 //Set branching out event
                 //Right click menu
                 var itemBranchOut = new MenuItem(
@@ -149,6 +156,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 menu.startup();
                 // Set click
                 this.branchButton.on("click", lang.hitch(this, this._onBranchOutClick));
+*/
 
                 //Template cant seem to handle more dijit widget inside it
                 var button = new Button({label: "Add"}, this.addNode);
@@ -161,6 +169,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 //this._initFilterWidgets();
 
             },
+            /*
             _onDeleteResource: function() {
                 this.onDeleteResource();
                 // TODO emit event if no resource left
@@ -177,6 +186,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             },
             // Event function to override
             onCheckResourceIdChange: function(resource) { return true; }
+            */
         });
     }
 ); // and that's it!
