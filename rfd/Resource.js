@@ -40,6 +40,18 @@ define([
             this.methods = [];
             this.clearMethods();
         },
+        hasMethod : function(method) 
+        {
+            if(this.methods.length == 0) {
+                return false;
+            }
+            var filtered = baseArray.filter(this.methods, function(item)
+            {
+                return item.name == method.name;
+            });
+
+            return filtered.length >= 1;
+        },
         setId: function(id) {
             this.id = id;
             this.name = id;

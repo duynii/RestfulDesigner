@@ -8,7 +8,7 @@ define(["dojo/_base/declare",
         "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dijit/Menu", "dijit/MenuItem", "dijit/form/RadioButton", "dojox/form/CheckedMultiSelect",
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", "dojo/json"
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", "dojo/json", "dojo/dom-class"
         ],
 
     function(declare, 
@@ -19,7 +19,7 @@ define(["dojo/_base/declare",
         TemplatedResource, Branch, Section,
         classStyle,
         Menu, MenuItem, RadioButton, CheckedMultiSelect,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, JSON)
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, JSON, domClass)
     {
         return declare("CustomWidget",[StaticWidget], 
         {
@@ -37,15 +37,34 @@ define(["dojo/_base/declare",
             {
                 this.inherited(arguments);
             },
+            _setStyle: function()
+            {
+                var isTemplate = this.checkTemplateParam.get('value');
+                domClass.remove(this.spanNode);
+                domClass.add(this.spanNode, "floatLeft");
+                if(this.resource.methods.length == 0) {
+                    if(!isTemplate) {
+                        domClass.add(this.spanNode, "staticResource");
+                    }
+                    else {
+                        domClass.add(this.spanNode, "customResource");
+                    }
+                }
+                else if(this.resource.hasMethod(this.resource.getMethod("POST")) ||
+                        this.resource.hasMethod(this.resource.getMethod("DELETE")) || 
+                        this.resource.hasMethod(this.resource.getMethod("GET"))) {
+
+                    domClass.add(this.spanNode, "controlResource");
+                }
+                else if(this.resource.hasMethod(this.resource.getMethod("PUT"))) {
+                    domClass.add(this.spanNode, "storeResource");
+                }
+                else {
+                    domClass.add(this.spanNode, "customResource");
+                }
+            },
             _initUI: function()
             {
-                /*
-                this.methodSelect.on("change", lang.hitch(this, function(newValue)
-                {
-                    //this._showMutualExUI(isChecked);
-                    this._saveForm();
-                }));
-                */
 
                 this.checkTemplateParam.set('value', this.resource.isTemplateParam);
                 domStyle.set(this.paramNode, "visibility", 
@@ -62,6 +81,7 @@ define(["dojo/_base/declare",
                     this.onResourceIdChanged();
 
                     this._saveForm();
+                    this._setStyle();
                 }));
 
                 var regexNode = this.regex.domNode; //widget
@@ -71,7 +91,11 @@ define(["dojo/_base/declare",
                     this._saveForm();
                 }));
 
-                this.methodSelect.on("change", lang.hitch(this, this._saveForm));
+                this.methodSelect.on("change", lang.hitch(this, function()
+                {
+                    this._saveForm();
+                    this._setStyle();
+                }));
                 this.regex.on("change", lang.hitch(this, this._saveForm));
             },
             _saveForm: function()
@@ -85,7 +109,6 @@ define(["dojo/_base/declare",
                 var data = this.form.get('value');
                 console.info("custom form: " + JSON.stringify(data));
 
-                this.resource.clearMethods(); // clears it
                 if(data.checkTemplateParam == "templatedParam")
                 {
                     var obj = {};
@@ -101,6 +124,7 @@ define(["dojo/_base/declare",
                     this.resource.isTemplateParam = false;
                 }
 
+                this.resource.clearMethods(); // clears it
                 if(data.method  != "NONE") {
                     this.resource.addMethod(data.method);
                 }

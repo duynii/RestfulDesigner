@@ -153,6 +153,23 @@ html, body, #mainDiv {
   cursor: pointer; /* cursor: hand; for IE5 */
   background-color: rgb(177, 142, 249);
 }
+.controlResource {
+  min-height: 35px;
+  background-color: rgb(0, 206, 209);
+}
+.controlResource:hover {
+  min-height: 35px;
+  background-color: rgb(30, 236, 239);
+}
+/*Goldenrod*/
+.storeResource {
+  min-height: 35px;
+  background-color: rgb(218, 165, 32);
+}
+.storeResource:hover {
+  min-height: 35px;
+  background-color: rgb(248, 195, 62);
+}
 .addButton {
 /*
     # Red
