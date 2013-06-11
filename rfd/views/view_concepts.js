@@ -281,12 +281,14 @@ function(
     },
     _setHelpButtons = function(id, content)
     {
-      new DropDownButton({
+      var wid = new DropDownButton({
         label: "Help",
         dropDown: new TooltipDialog({
           content: content
         })
       }, id, content);
+
+      domStyle.set(wid.domNode, "float", "right");
 
     },
     initUi = function() 
@@ -304,6 +306,8 @@ function(
         createResourcesCatalogue();
 
         _setHelpButtons("designerHelp", designerHelpContent);
+        _setHelpButtons("catalogueHelp", designerHelpContent);
+        _setHelpButtons("entityHelp", designerHelpContent);
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
