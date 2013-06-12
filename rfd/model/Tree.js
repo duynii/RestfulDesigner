@@ -29,7 +29,9 @@ define([
             return br;
         },
         addBranch: function(br) { this.store.put(br); }, // Triggers observers
-        removeBranch: function(brId) { this.store.remove(brId); },
+        removeBranch: function(brId) { 
+            this.store.remove(brId); 
+        },
         getBranches: function() {  
             return this.store.query(function(br) {return true;});
         },

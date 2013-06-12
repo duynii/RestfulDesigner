@@ -80,8 +80,8 @@ define(["dojo/_base/declare",
                     var widget = this.container.getWidgetFromData(branch);
                     if(widget != null) 
                     {
-                        //console.info("branch_removed branch: " + branch);
-                        controller.getTree().removeBranch(branch);
+                        console.info("branch_removed branch: " + branch);
+                        controller.getTree().removeBranch(branch.id);
                         widget.destroyRecursive();
                     }
                     else {

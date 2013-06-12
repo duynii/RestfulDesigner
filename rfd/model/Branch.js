@@ -72,7 +72,10 @@ define([
 
             if(this.elementSize() == 0) {
                 topic.publish("branch_removed", this);
-            }
+            } /*
+            else {
+                topic.publish("branch_updated", this);
+            }*/
 
             return true;
         },
@@ -140,6 +143,9 @@ define([
         toString: function()
         {
             return this.inactive + " -> " + this.active;
+        },
+        reCalcId: function () {
+            this.id = this.toUrl();
         },
         toUrl: function() {
             return this.inactive + this.active;

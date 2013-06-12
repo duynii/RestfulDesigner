@@ -94,7 +94,6 @@ define(["dojo/_base/declare",
                     }
                 }));
 
-                topic.subscribe
             },
             _createWidget: function(resource, isHidden)
             {
@@ -149,7 +148,9 @@ define(["dojo/_base/declare",
 
                 widget.onResourceIdChanged = lang.hitch(this, function()
                 {
+                    this.branch.reCalcId();
                     this._setUrlAttr(this.branch.toUrl()); // update the URL
+                    //topic.publish("branch_updated", this.branch);
                 });
 
                 if(this.onBranchOut != null) {
