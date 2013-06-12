@@ -8,7 +8,10 @@ define([
     "dojo/dom-construct", "dojo/dom-style", "dojo/dom-geometry",
     "dojo/query", "dojo/on", "dojo/aspect", "dojo/json", "dojo/keys",
     "dojo/_base/lang", "dojo/_base/array", "dojo/_base/event", "dojo/_base/window", "dojo/_base/fx",
-    "dojox/collections/Dictionary", "dojo/text!../widget/templates/DesignerHelp.html",
+    "dojox/collections/Dictionary", 
+    "dojo/text!../widget/templates/DesignerHelp.html",
+    "dojo/text!../widget/templates/CatalogueHelp.html",
+    "dojo/text!../widget/templates/EntityHelp.html",
     "dojo/parser", "dojo/cookie",
     "dijit/form/Button", "dijit/registry", "dijit/Menu", "dijit/MenuItem", "dijit/MenuSeparator",
     "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/DropDownMenu", "dijit/form/DropDownButton", 
@@ -30,7 +33,7 @@ define([
 function(
             dom, topic, domConstruct, domStyle, domGeometry, query, on, aspect, 
             JSON, keys, lang, baseArray, baseEvent, win, baseFx,
-            Dictionary, designerHelpContent,
+            Dictionary, designerHelpContent, catalogueHelpContent, entityHelpContent,
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
             MenuBar, PopupMenuBarItem, DropDownMenu, DropDownButton, 
             MenuBarItem, Textarea, ContentPane, TooltipDialog,
@@ -284,10 +287,10 @@ function(
       var wid = new DropDownButton({
         label: "Help",
         dropDown: new TooltipDialog({
+          style: "max-width: 600px;",
           content: content
         })
       }, id, content);
-
       domStyle.set(wid.domNode, "float", "right");
 
     },
@@ -306,8 +309,8 @@ function(
         createResourcesCatalogue();
 
         _setHelpButtons("designerHelp", designerHelpContent);
-        _setHelpButtons("catalogueHelp", designerHelpContent);
-        _setHelpButtons("entityHelp", designerHelpContent);
+        _setHelpButtons("catalogueHelp", catalogueHelpContent);
+        _setHelpButtons("entityHelp", entityHelpContent);
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
