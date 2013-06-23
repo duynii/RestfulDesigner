@@ -1,23 +1,3 @@
-/*\
-|*|
-|*|  :: cookies.js ::
-|*|
-|*|  A complete cookies reader/writer framework with full unicode support.
-|*|
-|*|  https://developer.mozilla.org/en-US/docs/DOM/document.cookie
-|*|
-|*|  This framework is released under the GNU Public License, version 3 or later.
-|*|  http://www.gnu.org/licenses/gpl-3.0-standalone.html
-|*|
-|*|  Syntaxes:
-|*|
-|*|  * docCookies.setItem(name, value[, end[, path[, domain[, secure]]]])
-|*|  * docCookies.getItem(name)
-|*|  * docCookies.removeItem(name[, path])
-|*|  * docCookies.hasItem(name)
-|*|  * docCookies.keys()
-|*|
-\*/
 
 
 define([
@@ -29,8 +9,8 @@ function(Dictionary, cookie, lang)
   //template for numbered cookie name
   var COOKIE_NAME = "RfD2013_";
   var COOKIE_NO = "RfD2013_count";
-  var NO_OF_COOKIE = 15;
-  var CHAR_PER_COOKIE = 2200;
+  var NO_OF_COOKIE = 10;
+  var CHAR_PER_COOKIE = 1000;
   var EXPIRE_DAYS = 365;
 
   var docCookies = 

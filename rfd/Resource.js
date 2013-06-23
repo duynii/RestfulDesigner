@@ -7,11 +7,11 @@ define([
 ], function(declare, Dictionary, baseArray)
 {
     var METHODS = { 
-                GET : { value: 0, name: "GET", code: "G" },
-                POST : { value: 1, name: "POST", code: "P" },
-                PUT : { value: 2, name: "PUT", code: "U" },
-                CREATE : { value: 3, name: "CREATE", code: "C" },
-                DELETE : { value: 4, name: "DELETE", code: "D" }
+                GET :   { id: "GET" },
+                POST :  { id: "POST"},
+                PUT :   { id: "PUT" },
+                CREATE : { id: "CREATE" },
+                DELETE : { id: "DELETE" }
     },
     dictionaryInited = false,
     initDictionary = function() 
@@ -19,11 +19,11 @@ define([
         if(dictionaryInited) {
             return;
         }
-        dictionary.add(METHODS.GET.name, METHODS.GET);
-        dictionary.add(METHODS.POST.name, METHODS.POST);
-        dictionary.add(METHODS.PUT.name, METHODS.PUT);
-        dictionary.add(METHODS.CREATE.name, METHODS.CREATE);
-        dictionary.add(METHODS.DELETE.name, METHODS.DELETE);
+        dictionary.add(METHODS.GET.id, METHODS.GET);
+        dictionary.add(METHODS.POST.id, METHODS.POST);
+        dictionary.add(METHODS.PUT.id, METHODS.PUT);
+        dictionary.add(METHODS.CREATE.id, METHODS.CREATE);
+        dictionary.add(METHODS.DELETE.id, METHODS.DELETE);
         dictionaryInited = true;
     }
     dictionary = new Dictionary();
@@ -47,7 +47,7 @@ define([
             }
             var filtered = baseArray.filter(this.methods, function(item)
             {
-                return item.name == method.name;
+                return item.id == method.id;
             });
 
             return filtered.length >= 1;
@@ -66,7 +66,7 @@ define([
         findMethod: function(name) 
         {
             var resultArr = baseArray.filter(this.methods, function(item) {
-                return item.name == name;
+                return item.id == id;
             });
 
             if(resultArr.length == 0) {

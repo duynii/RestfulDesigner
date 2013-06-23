@@ -1,3 +1,4 @@
+// This is just a DEMO inherited widget, has no use
 define(["dojo/_base/declare", 
         //"dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./templates/InheritedWidget.html", 

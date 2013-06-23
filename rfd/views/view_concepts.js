@@ -18,10 +18,8 @@ define([
     "dijit/MenuBarItem", "dijit/form/Textarea", "dijit/layout/ContentPane", "dijit/TooltipDialog",
     "rfd/Concept", "rfd/Resource", "rfd/StaticResource", "rfd/TemplatedResource",
     "rfd/ConceptResource", "rfd/Representation", "rfd/Concept_R", "rfd/Collection_R", "rfd/PartialConcept_R",
-    "rfd/module/ClassStyle", "rfd/model/Branch",
-    "rfd/widget/ListItem", 
-    "rfd/widget/NewResourceDialog", 
-    "rfd/widget/Entity",
+    "rfd/module/ClassStyle", "rfd/model/Branch", "rfd/widget/MethodWidget",
+    "rfd/widget/ListItem", "rfd/widget/NewResourceDialog", "rfd/widget/Entity",
     "rfd/widget/ResourceCatalogue", "rfd/widget/ResourceDesigner", 
     "dijit/form/CheckBox", "dijit/form/NumberTextBox", "dijit/Dialog", 
     "dojo/dnd/Container", "dojo/dnd/Selector", "rfd/ExtendedSource", "dojo/dnd/Moveable", 
@@ -37,10 +35,9 @@ function(
             parser, cookie, Button, registry, Menu, MenuItem, MenuSeparator,
             MenuBar, PopupMenuBarItem, DropDownMenu, DropDownButton, 
             MenuBarItem, Textarea, ContentPane, TooltipDialog,
-            Concept,
-            Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
+            Concept, Resource, StaticResource, TemplatedResource, ConceptResource, Representation,
             Concept_R, Collection_R, PartialConcept_R, 
-            classStyle, Branch,
+            classStyle, Branch, MethodWidget,
             ListItem, NewResourceDialog, Entity, ResourceCatalogue, ResourceDesigner,
             CheckBox, NumberTextBox, Dialog,
             Container, Selector, ExtendedSource, Moveable,
@@ -64,7 +61,7 @@ function(
     {
       var bottomLeft = dom.byId("bottomLeft");
       var left = 0;
-      var top = 0;
+      var top = 20;
       var maxHeight = 0;
       var divBox = domGeometry.getMarginBox(bottomLeft);
       // TODO, bug when adding new class, re-arrange oddly
@@ -308,9 +305,13 @@ function(
         createResourceDesigner();
         createResourcesCatalogue();
 
+        // Set the content of tooltip for help dropdown buttons
         _setHelpButtons("designerHelp", designerHelpContent);
         _setHelpButtons("catalogueHelp", catalogueHelpContent);
         _setHelpButtons("entityHelp", entityHelpContent);
+
+        var wid = new MethodWidget({methods: [{id: 'GET'}, {id: 'POST'}]});
+        wid.placeAt("testArea");
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
