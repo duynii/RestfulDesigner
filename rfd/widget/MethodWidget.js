@@ -69,11 +69,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     this.methodStore.put({id: method_id});
                     this.select.set('value', method_id);
                 }
-
+/*
                 baseArray.forEach(this.methods, function(m)
                 {
                     console.info("orig method: "  + JSON.stringify(m));
-                });
+                });  DEBUGGing only*/ 
             },
             _updateCheckBoxes: function()
             {
@@ -236,7 +236,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.storeParams = new Observable(new Memory({
                     idProperty: 'name',
                     data: method.params
-                }))
+                }));
+
+                domStyle.set(this.tableNode, "visibility", 
+                    method.id == "DELETE" ? "collapse" : "visible");
             }
         });
     }

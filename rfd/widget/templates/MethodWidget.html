@@ -29,8 +29,8 @@
 	</select>
 	<hr/>
 	<table>
-		<tr>
-			<td>
+		<tr data-dojo-attach-point="tableNode">
+			<td style="vertical-align:top;">
 				<form  data-dojo-type="dijit/form/Form" data-dojo-attach-point="paramForm">
 					<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 400px"></p>
 					<label for="name">param ID:</label>
@@ -58,8 +58,8 @@
 					<button data-dojo-type="dijit/form/Button" type="submit" class="floatRight">Add</button>
 				</form>
 			</td>
-			<td>
-				<ul class="floatLeft" data-dojo-attach-point="paramsNode" style="min-height: 100px">
+			<td style="vertical-align:top;">
+				<ul class="floatLeft" data-dojo-attach-point="paramsNode" style="min-height: 50px">
 					<label>Method Parameter/s</label>
 				</ul>
 				<br />
