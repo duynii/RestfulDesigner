@@ -8,6 +8,7 @@ define(["dojo/_base/declare", "dojo/dnd/Selector", "dojo/on", "dojo/_base/lang",
         return declare("ExtendedSelector",[ Selector], 
         {
             currentItemId: null,
+            // Works but have no need for it right now, func as well as onNewSelected are called.
             hookOnNewSelected: function(func)
             {
                 //this.on("click", lang.hitch(this, function()

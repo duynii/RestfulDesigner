@@ -1,6 +1,7 @@
 <div>
-	<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 400px"></p>
-	<div>
+	<label class="floatLeft">HTTP Methods Supported:</label>
+	<br />
+	<div class="floatLeft">
 		<input  data-dojo-attach-point="checkGET" name="checkGET" 
 		    value="GET" 
 		    data-dojo-type="dijit/form/CheckBox"
@@ -21,27 +22,22 @@
 		    data-dojo-type="dijit/form/CheckBox"
 		    data-dojo-props="checked: false"
 		    >DELETE</input> &nbsp;&nbsp;
-	</div>
-	<div>
-		<select class="floatLeft" data-dojo-attach-point="selectNode" class="floatLeft">
-    		<option value="string" select>String</option>
-		</select>
-		<hr/>
-			<div>
-				<ul class="floatLeft" data-dojo-attach-point="paramsNode" style="min-height: 100px">
-					<label>Method Parameter/s</label>
-				</ul>
-				<br />
-				<button class="floatLeft" data-dojo-type="dijit/form/Button"  
-					data-dojo-attach-point="deleteButton" class="floatRight">Delete</button>
-			</div>
-		<div >
-			<div>
-				<form data-dojo-type="dijit/form/Form" data-dojo-attach-point="paramForm">
+	</div>&nbsp;&nbsp;&nbsp;
+	<label for="selectNode:">Current:</label>
+	<select class="floatLeft" name="selectNode" data-dojo-attach-point="selectNode" class="floatLeft">
+    	<option value="string" select>String</option>
+	</select>
+	<hr/>
+	<table>
+		<tr>
+			<td>
+				<form  data-dojo-type="dijit/form/Form" data-dojo-attach-point="paramForm">
+					<p data-dojo-attach-point="errorNode" class="hidden" style="color: red; max-width: 400px"></p>
 					<label for="name">param ID:</label>
 					<input type="text" name="name" data-dojo-attach-point="param_id" 
-			            data-dojo-type="dijit/form/ValidationTextBox" style="width: 100px;"
+			            data-dojo-type="dijit/form/ValidationTextBox" style="width: 140px;"
 			            data-dojo-observer="idChanged" />	
+			        <br />
 					<label for="type">Data type:</label>
 					<select  name="type" data-dojo-attach-point="paramSelect"  data-dojo-type="dijit/form/Select">
     					<option value="string" select>String</option>
@@ -51,16 +47,27 @@
     					<option value="options">Options</option>
     					<option value="date">Date</option>
 					</select>
+			        <br />
 					<!-- Span to hide both child nodes at once -->
-					<span data-dojo-attach-point="spanNode" class="floatRight">
+					<span data-dojo-attach-point="spanNode"  style="visibility:visible;">
 						<label for="regex" data-dojo-atttach-point="dataLabel">data:</label>
-						<input type="text" name="data" data-dojo-attach-point="extraData" style="width: 120px"
+						<input type="text" name="data" data-dojo-attach-point="extraData" style="width: 170px"
 			            	data-dojo-type="dijit/form/TextBox" />	
+						<br />
 					</span>
-					<br />
 					<button data-dojo-type="dijit/form/Button" type="submit" class="floatRight">Add</button>
 				</form>
-			<div>
-		</div>
+			</td>
+			<td>
+				<ul class="floatLeft" data-dojo-attach-point="paramsNode" style="min-height: 100px">
+					<label>Method Parameter/s</label>
+				</ul>
+				<br />
+				<button class="floatRight" data-dojo-type="dijit/form/Button"  
+					data-dojo-attach-point="deleteButton" class="floatRight">Delete</button>
+			</td>
+		</tr>
+	</table>
+	<div>
 	</div>
 </div>

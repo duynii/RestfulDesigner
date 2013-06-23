@@ -43,6 +43,38 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 method = typeof method === 'undefined' ? null : method;
                 return method;
             },
+            // If method is checked, it is available to add parameters
+            // unchecked means unsupported 
+            _handleMethodChecking: function(method_id, newValue)
+            {
+                //console.info("_handleMethodChecking: " + method_id + ":" + newValue);
+                if(!newValue) 
+                {
+                    if(this.current_method == method_id) {
+                        this.current_method = null;
+                        this.paramList.clearAll();
+                        this.methodStore.remove(method_id);
+                        // The method select widget will jump to the first 'option' if the current is deleted
+                        // So trigger the method change handler
+                        if(this.storeMethods.length > 0) {
+                            this._selectMethodChanged(this.storeMethods[0].id);
+                        }
+                    }
+                    else {
+                        this.methodStore.remove(method_id);
+                    }
+                }
+                else
+                {
+                    this.methodStore.put({id: method_id});
+                    this.select.set('value', method_id);
+                }
+
+                baseArray.forEach(this.methods, function(m)
+                {
+                    console.info("orig method: "  + JSON.stringify(m));
+                });
+            },
             _updateCheckBoxes: function()
             {
                 this.checkGET.set('value', this._hasMethod('GET'));
@@ -54,18 +86,18 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             {
                 this.inherited(arguments);
 
-                this.params = new ExtendedSelector(this.paramsNode, {
+                // Using lang.hitch with lang.partial feature
+                this.checkGET.onChange = lang.hitch(this, this._handleMethodChecking, 'GET');
+                this.checkPOST.onChange = lang.hitch(this, this._handleMethodChecking, 'POST');
+                this.checkPUT.onChange = lang.hitch(this, this._handleMethodChecking, 'PUT');
+                this.checkDELETE.onChange = lang.hitch(this, this._handleMethodChecking, 'DELETE');
+
+                this.paramList = new ExtendedSelector(this.paramsNode, {
                     singular: true,
                     isSource: true, // Only acts as dnd target
                     accept: [], // Accept resource objects only
                     creator: this._createParam
                 });
-
-                this.params.hookOnNewSelected(function(d){
-                    console.info("hooked: " + JSON.stringify(d));
-                });
-
-
 
                 if(typeof this.methods == 'undefined' || this.methods == null) {
                     console.error("'methods' must be set in MethodWidget's constructor");
@@ -86,7 +118,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     searchAttr: 'id',
                     maxHeight: -1,
                     placeHolder: 'Select a method to add parameters',
-                    style: "width: 100px;",
+                    style: "width: 66px;",
                     store: this.methodStore,
                     onChange: lang.hitch(this, this._selectMethodChanged)
                 }, 
@@ -118,11 +150,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
                 this.deleteButton.on('click', lang.hitch(this, function()
                 {
-                    var node = this.params.getFirstSelected();
+                    var node = this.paramList.getFirstSelected();
                     if(node != null)
                     {
-                        //var data = this.params.getItem(node.id).data;
-                        this.params.deleteNode(node);
+                        var data = this.paramList.getItem(node.id).data;
+                        this.paramList.deleteNode(node);
+                        this.storeParams.remove(data.name);
                     }
                 }));
             },
@@ -134,12 +167,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             _onAddParameter: function(e)
             {
                 e.preventDefault();
-                //e.stopPropogation();
-
-                //this.methodStore.put({id: "PATCH"});
 
                 var data = this.paramForm.get('value');
-                console.info("Param form submit: " + JSON.stringify(data) );
+                //console.info("Param form submit: " + JSON.stringify(data) );
 
                 //Validate the data
                 if(this.paramForm.isValid() != true) {
@@ -152,6 +182,13 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     return;
                 }
 
+                //Check that param name is unique
+                var find = this.storeParams.get(data.name);
+                if(typeof find !== 'undefined') {
+                    this.setErrorMsg("Parameter with this ID exists for this HTTP method");
+                    return;
+                }
+                // If it is an options type, check proper JSON array
                 if(data.type == 'options') 
                 {
                     var options = null;
@@ -168,10 +205,13 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     }
                 }
 
-                this.params.insertNodes(false, [data], false, null);
+                this.resetErrorMsg();
+                // Form's data is treated like a param hash
+                this.paramList.insertNodes(false, [data], false, null);
                 // Now add the parameter to the store.
                 this.storeParams.put(data);
-
+                // Clear the form
+                this.paramForm.reset();
             },
             _selectMethodChanged: function(newValue)
             {
@@ -187,20 +227,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             },
             _setMethodParams : function(method)
             {
-                // Saves to prev method
-                var nodes = this.params.getAllNodes();
-                if(nodes.length > 0 && this.current_method != null) // Some existing nodes 
-                {
-                    console.info("current method inside onCHange: " + this.current_method);
-
-                    var prev_method = this.methodStore.get(this.current_method);
-                    prev_method.params = this.params.getAllData();
-                }
-
                 // Clear all for this HTTP method
-                this.params.clearAll();
+                this.paramList.clearAll();
                 // Populate existing methods
-                this.params.insertNodes(false, method.params, false, null);
+                this.paramList.insertNodes(false, method.params, false, null);
+                // Wraps the params in a store, to search by 'name' and adding to store
+                // The method.params reference is thus manipulated directly
+                this.storeParams = new Observable(new Memory({
+                    idProperty: 'name',
+                    data: method.params
+                }))
             }
         });
     }
