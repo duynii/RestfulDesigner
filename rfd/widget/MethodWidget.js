@@ -1,7 +1,7 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./templates/MethodWidget.html", 
         "dojox/collections/Dictionary", "dojox/form/Manager","dijit/form/Select", 
-        "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
+        "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", "dojo/dom-attr",
         "rfd/TemplatedResource", "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dojo/store/Memory", "dojo/store/Observable", "rfd/widget/ExtendedSelector",
         "dijit/Menu", "dijit/MenuItem", "dojo/json",
@@ -11,7 +11,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, 
         Dictionary, Manager, Select, 
-        domStyle, domGeometry, domConstruct, 
+        domStyle, domGeometry, domConstruct, domAttr,
         TemplatedResource, Branch, Section, classStyle,
         Memory, Observable, ExtendedSelector,
         Menu, MenuItem,
@@ -81,6 +81,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.checkPOST.set('value', this._hasMethod('POST'));
                 this.checkPUT.set('value', this._hasMethod('PUT'));
                 this.checkDELETE.set('value', this._hasMethod('DELETE'));
+
+                //domAttr.set(this.checkPUT.domNode, "disabled", !this._hasMethod('PUT'));
+                domStyle.set(this.checkGET.domNode, "visibility", this._hasMethod('GET') ? "visible" : "hidden");
+                domStyle.set(this.checkPOST.domNode, "visibility", this._hasMethod('POST') ? "visible" : "hidden");
+                domStyle.set(this.checkPUT.domNode, "visibility", this._hasMethod('PUT') ? "visible" : "hidden");
+                domStyle.set(this.checkDELETE.domNode, "visibility", this._hasMethod('DELETE') ? "visible" : "hidden");
+                //this.checkPUT.set('visibility', this._hasMethod('PUT') ? "visible" : "hidden");
+                //this.checkPUT.set('disabled', this._hasMethod('PUT'));
             },
             postCreate: function()
             {
