@@ -83,12 +83,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this.checkDELETE.set('value', this._hasMethod('DELETE'));
 
                 //domAttr.set(this.checkPUT.domNode, "disabled", !this._hasMethod('PUT'));
-                domStyle.set(this.checkGET.domNode, "visibility", this._hasMethod('GET') ? "visible" : "hidden");
-                domStyle.set(this.checkPOST.domNode, "visibility", this._hasMethod('POST') ? "visible" : "hidden");
-                domStyle.set(this.checkPUT.domNode, "visibility", this._hasMethod('PUT') ? "visible" : "hidden");
-                domStyle.set(this.checkDELETE.domNode, "visibility", this._hasMethod('DELETE') ? "visible" : "hidden");
+                domStyle.set(this.checkGET.domNode, "visibility", this._allowedMethod('GET') ? "visible" : "hidden");
+                domStyle.set(this.checkPOST.domNode, "visibility", this._allowedMethod('POST') ? "visible" : "hidden");
+                domStyle.set(this.checkPUT.domNode, "visibility", this._allowedMethod('PUT') ? "visible" : "hidden");
+                domStyle.set(this.checkDELETE.domNode, "visibility", this._allowedMethod('DELETE') ? "visible" : "hidden");
                 //this.checkPUT.set('visibility', this._hasMethod('PUT') ? "visible" : "hidden");
                 //this.checkPUT.set('disabled', this._hasMethod('PUT'));
+            },
+            _allowedMethod: function(method) {
+                return (this.allowed.indexOf(method) != -1);
             },
             postCreate: function()
             {
@@ -109,6 +112,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
 
                 if(typeof this.methods == 'undefined' || this.methods == null) {
                     console.error("'methods' must be set in MethodWidget's constructor");
+                }
+                if(typeof this.allowed == 'undefined' || this.allowed == null) {
+                    console.error("'allowed' methods must be set in MethodWidget's constructor");
                 }
                 // Create the store
                 this.methodStore = new Observable(new Memory({
