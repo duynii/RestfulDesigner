@@ -20,9 +20,6 @@ define([
             // What fields to display
             this.representations = [];
             this.selected_rep = null; //Meaning show all fields
-
-
-            //TODO set concept name to resource's name
         },
         setSelectedRep: function(rep) { this.selected_rep = rep; },
         addRep:function(rep) { this.representations.push(rep); },

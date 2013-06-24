@@ -39,14 +39,6 @@ define(["dojo/_base/declare",
                 this.checkPaging.set('value', coll.has_paging ? 'true' : 'false');
                 this.textPagingNo.set('value', coll.paging_size);
 
-/*
-                // Create widget to configure methods and parameters for each
-                this.methodWidget = new MethodWidget({
-                    methods: this.resource.methods,
-                    allowed: ['GET', 'POST', 'PUT', 'DELETE']
-                });
-                this.methodWidget.placeAt(this.methodWigetNode);
-*/
                 this.methodWidget.methods = coll.methods;
                 this.methodWidget.allowed = ['GET', 'POST', 'PUT', 'DELETE'];
                 this.methodWidget.init();

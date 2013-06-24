@@ -36,17 +36,19 @@
 			            data-dojo-type="dijit/form/TextBox" />
 			</span>
 			<br/>
-			<span data-dojo-attach-point="methodNode" style="visibility: visible;">
-				<label for="method">Method: </label>
-			    <select  name="method" data-dojo-attach-point="methodSelect"  
-			    		 data-dojo-type="dijit/form/Select">
-    				<option value="NONE" select>NONE</option>
-    				<option value="POST">POST</option>
-    				<option value="PUT">PUT</option>
-    				<option value="DELETE">DELETE</option>
-    				<option value="GET">GET</option>
-			    </select>
-			</span>
+			<br/>
+			<hr/>
+			<!--
+			<input  data-dojo-attach-point="checkMethod" name="checkMethod" 
+		    	value="support" 
+		    	data-dojo-type="dijit/form/CheckBox"
+		    	data-dojo-props="checked: true"
+		    	>Support HTTP Method/s?</input> &nbsp;&nbsp;
+			<br/>
+			-->
+			<div data-dojo-attach-point="methodNode" style="visibility: visible;">
+			    <div data-dojo-type="rfd/widget/MethodWidget" data-dojo-attach-point="methodWidget" />
+			</div>
 		</form>
 	</div>
 </button>

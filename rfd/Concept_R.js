@@ -18,6 +18,7 @@ define([
 
             this.methods.length = 0;
             this.methods.push("GET");
+            this.methods.push("PUT");
             this.methods.push("DELETE");
             this.resource_type = this.declaredClass;
         },

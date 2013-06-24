@@ -39,6 +39,7 @@ define(["dojo/_base/declare",
             },
             _setStyle: function()
             {
+                return; //TODO
                 var isTemplate = this.checkTemplateParam.get('value');
                 domClass.remove(this.spanNode);
                 domClass.add(this.spanNode, "floatLeft");
@@ -91,12 +92,30 @@ define(["dojo/_base/declare",
                     this._saveForm();
                 }));
 
-                this.methodSelect.on("change", lang.hitch(this, function()
-                {
-                    this._saveForm();
-                    this._setStyle();
-                }));
                 this.regex.on("change", lang.hitch(this, this._saveForm));
+
+                // By default just support POST
+                this.methodWidget.methods = this.resource.methods;
+                this.methodWidget.allowed = ['GET', 'POST', 'PUT', 'DELETE'];
+                this.methodWidget.init();
+                /*
+                var temp_methods = this.temp_methods;
+                var methods = this.resource.methods;
+                var wid = this.methodWidget;
+                this.checkMethod.on('change', function(newValue)
+                {
+                    wid.set('disabled', newValue);
+                    //domStyle.set(methodNode, "visibility", newValue === true ? 'visible' : 'hidden');
+                    if(newValue === true) 
+                    {
+                        methods = temp_methods;
+                    }
+                    else
+                    {
+                        methods = []; // no methods
+                    }
+                });
+                */
             },
             _saveForm: function()
             {
@@ -124,13 +143,6 @@ define(["dojo/_base/declare",
                     this.resource.isTemplateParam = false;
                 }
 
-                this.resource.clearMethods(); // clears it
-                if(data.method  != "NONE") {
-                    this.resource.addMethod(data.method);
-                }
-
-                //var json = JSON.stringify(this.resource);
-                //this.setErrorMsg(json);
                 this.resetErrorMsg();
             },
             _showMutualExUI: function(paramMode) {
