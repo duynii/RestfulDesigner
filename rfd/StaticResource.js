@@ -10,7 +10,6 @@ define([
         constructor: function(name, parentId)
         {
             this.clearMethods();   //Does not support anything
-            this.addMethod("GET");
             this.resource_type = this.declaredClass;
         },
     	createResource: function(parent)

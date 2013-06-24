@@ -61,7 +61,7 @@ define([
             return dictionary.entry(name).value;
         },
         addMethod: function(name) {
-            this.methods.push(this.getMethod(name));
+            this.methods.push({id: name});
         },
         findMethod: function(name) 
         {

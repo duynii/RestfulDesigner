@@ -98,6 +98,7 @@ define(["dojo/_base/declare",
                 this.methodWidget.methods = this.resource.methods;
                 this.methodWidget.allowed = ['GET', 'POST', 'PUT', 'DELETE'];
                 this.methodWidget.init();
+
                 /*
                 var temp_methods = this.temp_methods;
                 var methods = this.resource.methods;

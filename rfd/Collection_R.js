@@ -23,8 +23,8 @@ define([
             this.paging_size = 100;
 
             this.methods.length = 0;
-            this.addMethod("GET");  //only support GET
-            this.addMethod("POST"); // create
+            this.addMethod('GET');  //only support GET
+            this.addMethod('POST'); // create
             this.resource_type = this.declaredClass;
     	},
         toString: function() {

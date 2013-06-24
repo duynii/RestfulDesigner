@@ -17,9 +17,9 @@ define([
             this.id = this.name;
 
             this.methods.length = 0;
-            this.methods.push("GET");
-            this.methods.push("PUT");
-            this.methods.push("DELETE");
+            this.addMethod('GET');
+            this.addMethod('PUT');
+            this.addMethod('DELETE');
             this.resource_type = this.declaredClass;
         },
         autoName: function() 

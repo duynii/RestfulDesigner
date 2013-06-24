@@ -4,7 +4,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", "dojo/dom-attr",
         "rfd/TemplatedResource", "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dojo/store/Memory", "dojo/store/Observable", "rfd/widget/ExtendedSelector",
-        "dijit/Menu", "dijit/MenuItem", "dojo/json",
+        "dijit/Menu", "dijit/MenuItem", "dojo/query", "dijit/registry", "dojo/json",
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
         "dijit/popup", "dijit/TooltipDialog", "dijit/focus"
         ],
@@ -14,7 +14,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
         domStyle, domGeometry, domConstruct, domAttr,
         TemplatedResource, Branch, Section, classStyle,
         Memory, Observable, ExtendedSelector,
-        Menu, MenuItem,
+        Menu, MenuItem, query, registry,
         JSON, on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil)
     {
         return declare("MethodWidget",[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], 
@@ -34,6 +34,43 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             {
                 this.errorNode.innerHTML = "";
                 domStyle.set(this.errorNode, "visibility", "hidden");
+            },
+            setDisabled: function(isDisabled)
+            {
+                var nodes = query('[widgetid]', this.domNode);
+
+                if(length == 0) {
+                    console.error("Found no widget");
+                }
+
+                nodes.forEach(function(node)
+                {
+                    var wid = registry.getEnclosingWidget(node);
+                    wid.set('disabled', isDisabled);
+                });
+
+                domStyle.set(this.tableNode, "visibility", 
+                    isDisabled ? "collapse" : "visible");
+            },
+            hideDetails: function() {
+                domStyle.set(this.tableNode, "visibility", "collapse");
+            },
+            setReadonly: function(isReadonly)
+            {
+                var nodes = query('[widgetid]', this.domNode);
+
+                if(length == 0) {
+                    console.error("Found no widget");
+                }
+
+                nodes.forEach(function(node)
+                {
+                    var wid = registry.getEnclosingWidget(node);
+                    wid.set('readOnly', isReadonly);
+                });
+
+                domStyle.set(this.tableNode, "visibility", 
+                    isReadonly ? "collapse" : "visible");
             },
             _hasMethod: function(id) {
                 var method = this.methodStore.get(id);

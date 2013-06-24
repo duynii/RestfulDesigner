@@ -33,6 +33,12 @@ define(["dojo/_base/declare",
 
                 //Set the existing JSON doc
                 this.json_doc.set('value', this.resource.getJSONStr() );
+
+                this.methodWidget.methods = this.resource.methods;
+                this.methodWidget.allowed = [];
+                this.methodWidget.init();
+                this.methodWidget.hideDetails();
+                this.methodWidget.setDisabled(true);
             },
             postCreate: function()
             {

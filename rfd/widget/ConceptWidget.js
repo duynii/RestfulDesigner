@@ -68,7 +68,13 @@ define(["dojo/_base/declare",
                         }
                     });
                     d.show();
-                }))
+                }));
+
+                this.methodWidget.methods = this.resource.methods;
+                this.methodWidget.allowed = [];
+                this.methodWidget.init();
+
+                this.methodWidget.setDisabled(true);
             },
             postCreate: function()
             {
