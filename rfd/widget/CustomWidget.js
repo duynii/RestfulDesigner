@@ -39,7 +39,6 @@ define(["dojo/_base/declare",
             },
             _setStyle: function()
             {
-                return; //TODO
                 var isTemplate = this.checkTemplateParam.get('value');
                 domClass.remove(this.spanNode);
                 domClass.add(this.spanNode, "floatLeft");
@@ -98,6 +97,8 @@ define(["dojo/_base/declare",
                 this.methodWidget.methods = this.resource.methods;
                 this.methodWidget.allowed = ['GET', 'POST', 'PUT', 'DELETE'];
                 this.methodWidget.init();
+
+                this.methodWidget.onMethodChange = lang.hitch(this, this._setStyle);
 
                 /*
                 var temp_methods = this.temp_methods;

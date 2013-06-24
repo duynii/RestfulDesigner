@@ -25,6 +25,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             current_method: null,
             //baseClass: "templatedResource",
             templateString: template,
+            // To be overriden
+            onMethodChange: function()
+            {
+                console.log("default onMethodChange");
+            },
             setErrorMsg: function(msg)
             {
                 this.errorNode.innerHTML = msg;
@@ -107,11 +112,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                     this.methodStore.put({id: method_id});
                     this.select.set('value', method_id);
                 }
+
+                // Trigger handler
+                this.onMethodChange();
 /*
                 baseArray.forEach(this.methods, function(m)
                 {
                     console.info("orig method: "  + JSON.stringify(m));
-                });  DEBUGGing only*/ 
+                });  DEBUGGing only
+*/ 
             },
             _updateCheckBoxes: function()
             {
@@ -202,6 +211,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         var data = this.paramList.getItem(node.id).data;
                         this.paramList.deleteNode(node);
                         this.storeParams.remove(data.name);
+                        // Trigger handler
+                        this.onMethodChange();
                     }
                 }));
 
