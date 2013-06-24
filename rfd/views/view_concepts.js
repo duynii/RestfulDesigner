@@ -310,12 +310,14 @@ function(
         _setHelpButtons("catalogueHelp", catalogueHelpContent);
         _setHelpButtons("entityHelp", entityHelpContent);
 
+/*
         var wid = new MethodWidget({
           methods: [{id: 'GET'}, {id: 'POST'}], 
           allowed: ["GET", "POST", "DELETE"] 
         });
         wid.placeAt("testArea");
         wid.init();
+*/
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {
