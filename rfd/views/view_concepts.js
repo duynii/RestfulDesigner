@@ -315,6 +315,7 @@ function(
           allowed: ["GET", "POST", "DELETE"] 
         });
         wid.placeAt("testArea");
+        wid.init();
 /*
         topic.subscribe("save_update", lang.hitch(this, function(branch, resource)
         {

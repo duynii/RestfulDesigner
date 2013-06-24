@@ -25,9 +25,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             current_method: null,
             //baseClass: "templatedResource",
             templateString: template,
-            init: function(templateResource) 
-            {
-            },
             setErrorMsg: function(msg)
             {
                 this.errorNode.innerHTML = msg;
@@ -47,7 +44,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             // unchecked means unsupported 
             _handleMethodChecking: function(method_id, newValue)
             {
+                if(this.inited == false) {
+                    return;
+                }
                 //console.info("_handleMethodChecking: " + method_id + ":" + newValue);
+
                 if(!newValue) 
                 {
                     if(this.current_method == method_id) {
@@ -77,10 +78,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             },
             _updateCheckBoxes: function()
             {
-                this.checkGET.set('value', this._hasMethod('GET'));
-                this.checkPOST.set('value', this._hasMethod('POST'));
-                this.checkPUT.set('value', this._hasMethod('PUT'));
-                this.checkDELETE.set('value', this._hasMethod('DELETE'));
+                this.checkGET.set('value', this._hasMethod('GET') != null);
+                this.checkPOST.set('value', this._hasMethod('POST') != null);
+                this.checkPUT.set('value', this._hasMethod('PUT') != null);
+                this.checkDELETE.set('value', this._hasMethod('DELETE') != null);
 
                 //domAttr.set(this.checkPUT.domNode, "disabled", !this._hasMethod('PUT'));
                 domStyle.set(this.checkGET.domNode, "visibility", this._allowedMethod('GET') ? "visible" : "hidden");
@@ -96,13 +97,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
             postCreate: function()
             {
                 this.inherited(arguments);
-
-                // Using lang.hitch with lang.partial feature
-                this.checkGET.onChange = lang.hitch(this, this._handleMethodChecking, 'GET');
-                this.checkPOST.onChange = lang.hitch(this, this._handleMethodChecking, 'POST');
-                this.checkPUT.onChange = lang.hitch(this, this._handleMethodChecking, 'PUT');
-                this.checkDELETE.onChange = lang.hitch(this, this._handleMethodChecking, 'DELETE');
-
+                this.inited = false;
+            },
+            init: function() 
+            {
                 this.paramList = new ExtendedSelector(this.paramsNode, {
                     singular: true,
                     isSource: true, // Only acts as dnd target
@@ -119,6 +117,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // Create the store
                 this.methodStore = new Observable(new Memory({
                     idProperty: 'id',
+                    getLabel: function(item) {
+                        return item.id;
+                    },
                     data: this.methods
                 }));
                 // Get all methods
@@ -127,11 +128,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 this._updateCheckBoxes();
 
                 this.select = new Select({ 
-                    name: 'methodSelect',
                     labelAttr: 'id',
-                    searchAttr: 'id',
                     maxHeight: -1,
-                    placeHolder: 'Select a method to add parameters',
                     style: "width: 66px;",
                     store: this.methodStore,
                     onChange: lang.hitch(this, this._selectMethodChanged)
@@ -141,7 +139,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                 // prog. select works
                 //this.select.set('value', 'POST');
 
-                if(this.storeMethods.length > 0) {
+                if(this.storeMethods.length > 10) {
                     this.current_method = this.storeMethods[0].id;
                     this._selectMethodChanged(this.current_method);
                 }
@@ -172,6 +170,13 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",  "dijit/_TemplatedMixin", "di
                         this.storeParams.remove(data.name);
                     }
                 }));
+
+                // Using lang.hitch with lang.partial feature
+                this.checkGET.onChange = lang.hitch(this, this._handleMethodChecking, 'GET');
+                this.checkPOST.onChange = lang.hitch(this, this._handleMethodChecking, 'POST');
+                this.checkPUT.onChange = lang.hitch(this, this._handleMethodChecking, 'PUT');
+                this.checkDELETE.onChange = lang.hitch(this, this._handleMethodChecking, 'DELETE');
+                this.inited = true;
             },
             _createParam: function(param, hint) 
             {

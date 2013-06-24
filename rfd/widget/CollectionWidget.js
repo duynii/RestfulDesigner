@@ -2,25 +2,25 @@ define(["dojo/_base/declare",
         //"dijit/_WidgetBase",  "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
         "rfd/widget/StaticWidget",
         "dojo/text!./templates/CollectionWidget.html", 
-        "dojox/collections/Dictionary",
+        "dojox/collections/Dictionary", "rfd/widget/MethodWidget",
         "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-construct", 
-        "rfd/TemplatedResource", 
-        "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
+        "rfd/TemplatedResource", "rfd/model/Branch", "rfd/model/Section", "rfd/module/ClassStyle", 
         "dijit/Menu", "dijit/MenuItem", 
         "dojo/on", "dojo/dom", "dojo/aspect", "dojo/_base/fx", "dojo/_base/array", "dojo/_base/lang",
-        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", 
+        "dijit/popup", "dijit/TooltipDialog", "dijit/focus", "dojo/query",
         "dijit/form/Button", "dijit/form/Select"
         ],
 
     function(declare, 
         //_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, 
         StaticWidget, template, 
-        Dictionary,
+        Dictionary, MethodWidget,
         domStyle, domGeometry, domConstruct, 
         TemplatedResource, Branch, Section,
         classStyle,
         Menu, MenuItem,
-        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil, 
+        on, dom, aspect, baseFx, baseArray, lang, popup, TooltipDialog, focusUtil,
+        query, 
         Button, Select)
     {
 
@@ -39,6 +39,17 @@ define(["dojo/_base/declare",
                 this.checkPaging.set('value', coll.has_paging ? 'true' : 'false');
                 this.textPagingNo.set('value', coll.paging_size);
 
+/*
+                // Create widget to configure methods and parameters for each
+                this.methodWidget = new MethodWidget({
+                    methods: this.resource.methods,
+                    allowed: ['GET', 'POST', 'PUT', 'DELETE']
+                });
+                this.methodWidget.placeAt(this.methodWigetNode);
+*/
+                this.methodWidget.methods = coll.methods;
+                this.methodWidget.allowed = ['GET', 'POST', 'PUT', 'DELETE'];
+                this.methodWidget.init();
             },
             _initFilterWidgets: function()
             {
